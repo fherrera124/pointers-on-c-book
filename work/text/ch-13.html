@@ -1,0 +1,1398 @@
+<html xmlns="http://www.w3.org/1999/xhtml" class="translated-ltr">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Desconocido</title>
+
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css">
+  <link href="../page_styles.css" rel="stylesheet" type="text/css">
+
+<body id="G6PI0-e167752e5b154d43a225b5f350ab7738" class="calibre">
+  <h1 id="nav_point_254" class="not-in-toc">Chapter 13 Advanced Pointers Topics</h1>
+
+  <p class="zw">This chapter is a collection of various techniques involving pointers. Some of them are
+    very useful, others are of more academic interest, and a few are just fun, but all are
+    good illustrations of various principles in the language.</p>
+
+  <h2 id="nav_point_255" class="calibre24">13.1 More Pointers to Pointers</h2>
+
+  <p class="zw">We used pointers to pointers in the last chapter to simplify the function that inserts a
+    new value into a singly linked list. There are many other areas where having a pointer
+    to a pointer is also valuable.</p>
+
+  <p class="zw">Here is a general example.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00260.gif" class="calibre14"></p>
+
+  <p class="zw">These declarations create the following variables in memory. If these are automatic
+    variables, we cannot make any assumptions about their initial values.</p>
+
+  <p class="tu"><img alt="" src="../images/00261.jpeg" class="calibre14"></p>
+
+  <p class="zw">Given this information, what is the effect of each of these statements?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00262.gif" class="calibre14"></p>
+
+  <p class="zw">① If ppi is an automatic variable, it is uninitialized and a random value is printed. If it
+    is a static variable, zero is printed.</p>
+
+  <p class="zw">② This statement prints, as a decimal integer, the address where ppi is stored. This
+    value is not very useful.</p>
+
+  <p class="zw">③ The result of this statement is unpredictable. Indirection should not be performed
+    on ppi because it is not yet initialized.</p>
+
+  <p class="zw">The next two statements are more useful.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">ppi = &amp;pi;</code></pre>
+
+  <p class="zw">This statement initializes ppi to point to the variable pi. We can now safely apply
+    indirection to ppi.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">*ppi = &amp;i;</code></pre>
+
+  <p class="zw">This statement initializes pi (which is accessed indirectly through ppi) to point to i.
+    After these last two statements, the variables look like this:</p>
+
+  <p class="tu"><img alt="" src="../images/00263.jpeg" class="calibre14"></p>
+
+  <p class="zw">Now, each of the following statements has the same effect:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">i='a';
+*pi='a';
+**ppi='a';</code></pre>
+
+  <p class="zw">Why would anyone ever use the more complicated versions with indirection if a
+    simple assignment to i does the job? Because the simple assignment is not always
+    possible, such as in the linked list insertion. We could not use a simple assignment in
+    that function because the variable name was not known within the scope of the
+    function. All the function had was a pointer to the location that needed to be changed,
+    so indirection was used on the pointer to access the desired variable.</p>
+
+  <p class="zw">In the previous example, the variable i is an integer, and pi is a pointer to an
+    integer. But ppi is pointing at pi, so it is a pointer to a pointer to an integer. Suppose
+    we wanted another variable, one that would point to ppi. Its type, of course, would be
+    "pointer to a pointer to a pointer to an integer," and it would be declared in this way:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　***pppi;</code></pre>
+
+  <p class="zw">The more levels of indirection, the less often you will need to use it. But once
+    you truly understand indirection, it is easy to apply as many levels of indirection as
+    you need for any situation.</p>
+
+  <p class="editing-tag">TIP</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Use only as many levels of indirection as you really need. Otherwise, your programs
+      will end up being larger, slower, and harder to maintain.</p>
+  </blockquote>
+
+  <h2 id="nav_point_256" class="calibre24">13.2 Advanced Declarations</h2>
+
+  <p class="zw">Before using more advanced pointer types, we must see how they are declared. Earlier
+    chapters introduced the idea of a declaration expression and how variables in C are
+    declared by inference. We saw some examples of declaration by inference when we
+    declared pointers to arrays in Chapter 8. Let's explore this topic by looking at a
+    sequence of increasingly complex declarations.</p>
+
+  <p class="zw">We'll start with some easy ones.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　f;　　/* an integer */
+int　　*f;　/* a pointer to an integer */</code></pre>
+
+  <p class="zw">Remember how the second declaration works, though; it declares the <strong
+      class="calibre3">expression</strong> *f to be an integer. From this fact you must deduce that f is a pointer to an
+    integer.
+    This interpretation of C declarations is validated by the declaration</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int*　f, g;</code></pre>
+
+  <p class="zw">which does not declare two pointers. Despite the spacing, the star is associated with f,
+    and only f is a pointer, g is an ordinary integer.</p>
+
+  <p class="zw">Here is another one you have seen before:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　f();</code></pre>
+
+  <p class="zw">It declares f to be a function that returns an integer. The old-style declaration says
+    nothing about the function's parameters. It only declares the type of value that f will
+    return. I will use this style for now to keep the examples simpler and return to full
+    prototypes later.</p>
+
+  <p class="zw">Here's a new one:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　*f();</code></pre>
+
+  <p class="zw">To figure this one out, you must determine how the expression *f() is evaluated. The
+    function call operator () goes first because its precedence is higher than that of
+    indirection, so f is a function that returns a pointer to an integer.</p>
+
+  <p class="zw">If "declaration by inference" seems like a nuisance, consider that the
+    expressions used for declaring variables are evaluated with the same rules used for
+    ordinary expressions. You don't need to learn a separate syntax for declarations. If you
+    can evaluate complex expressions, you can also figure out complex declarations
+    because they work the same way.</p>
+
+  <p class="zw">The next declaration is more interesting.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　(*f)();</code></pre>
+
+  <p class="zw">Figuring out what the parentheses mean is an important step in deciphering this
+    declaration. There are two sets of parentheses, and each has a different meaning. The
+    second set of parentheses is the function call operator, but the first set is used only for
+    grouping. It forces the indirection to be applied before the function call, making f a
+    pointer to a function that returns an integer.</p>
+
+  <p class="zw">A pointer to a function? Yes, each function in a program begins at some address
+    in memory, so it is possible for a variable to point to that location. The initialization
+    and use of pointers to functions is covered later in this chapter.</p>
+
+  <p class="zw">The next declaration should now be easy:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　*(*f)();</code></pre>
+
+  <p class="zw">It is the same as the previous example except that in order to get an integer,
+    indirection is applied to the value returned by the function. Here f is a pointer to a
+    function that returns a pointer to an integer.</p>
+
+  <p class="zw">Now let's consider arrays, too.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　f[];</code></pre>
+
+  <p class="zw">indicates that f is an array of integers. The size has been omitted for now because
+    we're not concerned with the array's size, only its type <a id="ac131" href="#anchor131" class="calibre5"><sup
+        class="calibre15">[1]</sup></a> .</p>
+
+  <p class="zw">How about this one? </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　*f[];</code></pre>
+
+  <p class="zw">Again, there are two operators. The subscript has the higher precedence, so f is now
+    an array of pointers to integers.</p>
+
+  <p class="zw">The next example is a trick question, but try to figure it out anyway.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　f()[];</code></pre>
+
+  <p class="zw">f appears to be a function that returns an array of integers. The trick is that it is
+    illegal—functions can only return scalars, not arrays.</p>
+
+  <p class="zw">Here is another one that will require some thought:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　f[]();</code></pre>
+
+  <p class="zw">Now f appears to be an array of functions that return integers. This declaration is also
+    illegal because array elements must all be the same size, but it is quite reasonable for
+    different functions to be different sizes.</p>
+
+  <p class="zw">The next declaration is legal, though:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　(*f[])();</code></pre>
+
+  <p class="zw">You must first find all of the operators and then apply them in the correct order. Once
+    again, there are two sets of parentheses with different meanings. The parenthesized
+    expression *f[] is evaluated first, so f is an array of pointers to something. The
+    trailing () is the function call operator, so f must be an array of pointers to functions
+    that return integers.</p>
+
+  <p class="zw">If you got that last one right, then this one should be easy:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　*(*f[])();</code></pre>
+
+  <p class="zw">The only change is one final indirection, so this declaration creates an array of pointers
+    to functions that return pointers to integers.</p>
+
+  <p class="zw">Up to now, I've used old-style declarations to keep the examples simple. But
+    ANSI C lets us use full function prototypes to make the declaration more specific. For
+    example:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　(*f)( int, float );
+int　　*(*g[])( int, float );</code></pre>
+
+  <p class="zw">declares f to be a pointer to a function that takes two arguments, an integer and a
+    float, and returns an integer. g is an array of pointers to functions that take two
+    arguments, an integer and a float and return a pointer to an integer. Despite the
+    increased complexity in the declaration, the prototype form is greatly preferred
+    because of the additional information it gives the compiler.</p>
+
+  <p class="editing-tag">TIP</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">If you have a UNIX system and have access to the Internet, you can get cdec1, a program that
+      converts between C declarations and English. It can explain an existing C declaration:</p>
+  </blockquote>
+
+  <p class="calibre13"><img alt="" src="../images/00264.gif" class="calibre14"></p>
+
+  <blockquote class="ti_shi">
+    <p class="calibre2">or give you the syntax for a declaration:</p>
+  </blockquote>
+
+  <p class="calibre13"><img alt="" src="../images/00265.gif" class="calibre14"></p>
+
+  <blockquote class="ti_shi">
+    <p class="calibre2">The source code for cdec1 can be found in Volume 14 of the archives for the
+      comp.sources.unix newsgroup.</p>
+  </blockquote>
+
+  <h2 id="nav_point_257" class="calibre24">13.3 Pointers to Functions</h2>
+
+  <p class="zw">You will not use pointers to functions every day. However, they have their uses, and
+    the two most common are jump tables and passing a function pointer as an argument
+    in a function call. We'll explore both of these techniques this section. First, though, it is
+    important to point out a common error.</p>
+
+  <p class="editing-tag">CAUTION!</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Simply declaring a pointer to a function does not make it usable. Like any other
+      pointer, a pointer to a function must be initialized to point to something before
+      indirection can be performed on it. The following code fragment illustrates one way to
+      initialize a pointer to a function.</p>
+  </blockquote>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　f( int );
+int　　(*pf)( int ) = &amp;f;</code></pre>
+
+  <blockquote class="ti_shi">
+    <p class="calibre2">The second declaration creates pf, a pointer to a function, and initializes it to point to
+      the function f. The initialization can also be accomplished with an assignment
+      statement. It is important to have a prototype for f prior to the initialization, for
+      without it the compiler would be unable to check whether the type of f agreed with
+      that of pf.</p>
+  </blockquote>
+
+  <p class="zw">The ampersand in the initialization is optional, because the compiler always
+    converts function <strong class="calibre3">names</strong> to function <strong class="calibre3">pointers</strong>
+    wherever they are used. The ampersand does explicitly what the compiler would have done implicitly anyway.</p>
+
+  <p class="zw">After the pointer has been declared and initialized, there are three ways to call
+    the function:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00266.gif" class="calibre14"></p>
+
+  <p class="zw">The first statement simply calls the function f by name, though its evaluation is
+    probably not what you expected. The function name f is first converted to a pointer to
+    the function; the pointer specifies where the function is located. The function call
+    operator then invokes the function by executing the code beginning at this address.</p>
+
+  <p class="zw">The second statement applies indirection to pf, which converts the function
+    pointer to a function name. This conversion is not really necessary, because the
+    compiler converts it back to a pointer before applying the function call operator.
+    Nevertheless, this statement has exactly the same effect as the first one.</p>
+
+  <p class="zw">The third statement has the same effect as the first two. Indirection is not
+    needed, because the compiler wants a pointer to the function anyway. This example
+    shows how function pointers are usually used.</p>
+
+  <p class="zw">When would anyone ever want to use a pointer to a function? As mentioned
+    earlier, the two most common uses of pointers to functions are passing a function
+    pointer as an argument in a function call and jump tables. Let's look at an application
+    of each.</p>
+
+  <h3 id="nav_point_258" class="calibre7">13.3.1 Callback Functions</h3>
+
+  <p class="zw">Here is a simple function that locates a value in a singly linked list. Its arguments are a
+    pointer to the first node in the list and the value to locate.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00267.gif" class="calibre14"></p>
+
+  <p class="zw">This function looks simple enough, but it works only with linked lists whose values
+    are integers. If you also had a linked list of strings, you would need to write a different
+    function, identical in every respect to this one except for the type of the parameter
+    value and the manner in which the node values are compared. </p>
+
+  <p class="zw">A more general approach is to make the searching function typeless so that it
+    will work on lists with values of any type. We must revise two aspects of the function
+    to make it typeless. First, we must change how the comparison is performed so that
+    the function can compare values of any type. This goal sounds impossible. If you write
+    statements to compare integer values, how can they possibly work with other types
+    such as strings? The solution uses a pointer to a function. The caller writes a function
+    to compare two values and passes a pointer to it as an argument to the search
+    function. The search function then calls the comparison function to make comparisons.
+    In this way, values of any type may be compared.</p>
+
+  <p class="zw">The second aspect we must change is to pass a <strong class="calibre3">pointer</strong> to the value
+    rather than the value. The function will receive this argument in a void* parameter. The pointer to
+    the value is then passed to the comparison function. This change also enables string
+    and array objects to be used. String and arrays cannot be passed as arguments, but
+    pointers to them can.</p>
+
+  <p class="zw">Functions used in this manner are <strong class="calibre3">callback functions</strong> because the user
+    passes a
+    pointer to a function to some other routine, which then "calls back" to the user's
+    function. You can use the technique any time you are writing a function that must be
+    able to perform different types of work at a given point or perform work that can be
+    defined only by the function's caller. Many windowing systems use callback functions
+    to connect actions, such as dragging the mouse and clicking buttons, to specific
+    functions in the user's program.</p>
+
+  <p class="zw">We cannot write an accurate prototype for the callback function in this context
+    because we don't know what type of values are being compared. Indeed, we want the
+    search function to work with any type of value. The solution to this dilemma is to
+    declare the arguments as void *, which means "a pointer to something whose type we
+    do not know."</p>
+
+  <p class="editing-tag">TIP</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Before using the pointers in the comparison function, they must be cast to the correct
+      type. Because a cast circumvents the usual type checking, be extremely careful that the
+      function is called with the proper type of arguments.</p>
+
+    <p class="calibre2">In this case, the callback function compares two values. The search function
+      passes pointers to the two values to be compared and checks the returned value; for
+      example, zero for equal values and nonzero for unequal values. The search function is
+      now typeless because it doesn't perform the actual comparison. It is true that the caller
+      must now write the necessary comparison function, but doing so is easy because the
+      caller knows what type of values are contained in the list. And if several lists with
+      different types of values are used, writing one comparison function for each type
+      allows a single search function to operate on all of the lists.</p>
+  </blockquote>
+
+  <p class="zw">Program 13.1 is an implementation of a typeless search function. Note that the
+    third parameter to the function is a pointer to a function. The full prototype is used to
+    declare this parameter. Note also that the parameter node is not declared const even
+    though the function never modifies any of the nodes to which it points. If node were
+    declared const the function would have to return a const result, which would restrict
+    the caller from modifying the node that was located.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** Function to search a linked list for a specific value. Arguments
+** are a pointer to the first node in the list, a pointer to the
+** value we're looking for, and a pointer to a function that compares
+** values of the type stored on the list.
+*/
+#include &lt;stdio.h&gt;
+#include "node.h"
+
+Node *
+search_list( Node *node, void const *value,
+　　int (*compare)( void const *, void const * ) )
+{
+　　　while( node != NULL ){ 
+　　　　if( compare( &amp;node-&gt;value, value ) == 0 )
+　　　　 break;
+　　　node = node-&gt;link;
+　　　}
+　　　return node;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Program 13.1 Typeless linked list search</strong></p>
+
+  <p class="calibre11">search.c</p>
+
+  <p class="zw">Pointers to the value argument and &amp;node-&gt;value are passed to the comparison
+    function. The latter is the value in the node we are currently examining. I chose the
+    counter-intuitive convention of having the comparison function return zero for equal
+    operands in order to be compatible with the specification for comparison functions
+    used by several functions in the standard library. In this specification, unequal
+    operands are reported more explicitly—a negative value indicates that the first
+    argument was less than the second, and a positive value indicates that it was greater.</p>
+
+  <p class="zw">To search a particular linked list, the user would write the appropriate
+    comparison function and pass pointers to it and to the desired value. For example,
+    here is a comparison function for searching a list of integers.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00268.gif" class="calibre14"></p>
+
+  <p class="zw">The function would be used like this:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">desired_node = search_list( root, &amp;desired_value,
+　　 compare_ints );</code></pre>
+
+  <p class="zw">Note the casts: The arguments to the comparison function must be declared void * to
+    match the prototype of the search function; they are then cast to int * in order to
+    compare the values as integers.</p>
+
+  <p class="zw">If you wish to search a list of strings, this code will do the job:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00269.gif" class="calibre14"></p>
+
+  <p class="zw">It happens that the library function strcmp does exactly the comparison we need,
+    though some compilers will issue warnings because its arguments are declared char *
+    rather than void *.</p>
+
+  <h3 id="nav_point_259" class="calibre7">13.3.2 Jump Tables</h3>
+
+  <p class="zw">Jump tables are best explained with an example. The following code fragment is from
+    a program that implements a pocket calculator. Other parts of the program have
+    already read in two numbers (op1 and op2) and an operator (oper). This code tests the
+    operator to determine which function to invoke.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00270.gif" class="calibre14"></p>
+
+  <p class="zw">For a fancy calculator with a hundred or so operators, this switch statement will
+    become extremely large.</p>
+
+  <p class="zw">Why are functions being called to perform these operations? It is good design to
+    separate the operations from the code that chooses among them. The more complex
+    operations will certainly be implemented as separate functions because of their size,
+    but even the simple operations may have side effects, such as saving a constant value
+    for later operations.</p>
+
+  <p class="zw">In order to use a switch, the codes that represent the operators must be
+    integers. If they are consecutive integers starting with zero, we can use a jump table to
+    accomplish the same thing. A jump table is just an array of pointers to functions.</p>
+
+  <p class="zw">There are two steps in creating a jump table. First, an array of pointers to
+    functions is declared and initialized. The only trick is to make sure that the prototypes
+    for the functions appear before the array declaration.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00271.gif" class="calibre14"></p>
+
+  <p class="zw">The proper order for the functions' names in the initializer list is determined by
+    the integer codes used to represent each operator in the program. This example
+    assumes that ADD is zero, SUB is one, MUL is two, and so forth.</p>
+
+  <p class="zw">The second step is to replace the entire switch statement with this one!</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">result = oper_func[ oper ]( op1, op2 );</code></pre>
+
+  <p class="zw">oper selects the correct pointer from the array, and the function call operator executes
+    it.</p>
+
+  <p class="editing-tag">CAUTION!</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">An out-of-bounds subscript is just as illegal on a jump table as it is on any other array,
+      but it is much more difficult to diagnose. There are three places where the program
+      might terminate when this error occurs. First, if the subscript value is far enough out
+      of bounds, the location that it identifies might be outside of the memory allocated to
+      the program. Some operating systems detect this error and abort the program, but
+      others do not. If the program is terminated, the fault will be reported near the jump
+      table statement, making the problem fairly easy to diagnosis.</p>
+
+    <p class="calibre2">If the program does not abort, the value identified by the illegal subscript is
+      fetched, and the processor jumps to that location. This unpredictable value may or
+      may not represent a valid address for the program. If it does not the program may
+      also abort, but the address reported for the fault is essentially a random number,
+      making debugging more difficult.</p>
+
+    <p class="calibre2">If the program hasn't failed yet, the machine will begin to execute instructions
+      at the bogus address obtained with the illegal subscript, and debugging the error
+      becomes much harder. If the random address is in an area in memory that contains
+      data, the program usually aborts very quickly due to an illegal instruction or an illegal
+      operand address (although data values sometimes represent valid instructions, they
+      do not often make any sense). The only clue to how the computer got where it did is
+      the return address stored on the stack by the function call made in the jump table. If
+      any of the random instructions modified the stack or changed the stack pointer when
+      they were executed, this clue is lost.</p>
+
+    <p class="calibre2">Worse still is if the random address happens to be in the middle of a function.
+      Then the function executes merrily along, changing who knows what data, until it is
+      finished. But the return address isn't where the function expects it to be on the stack,
+      so another random value is used instead. This value becomes the address of the next
+      instruction to execute, and the computer goes to a different random location and
+      continues to execute whatever it finds there.</p>
+
+    <p class="calibre2">The problem is that the instructions destroy the last clue as to how the
+      computer got to where the fault finally occurs. Without this information, it is difficult
+      to pinpoint the source of the problem. If you are suspicious of a jump table, then print
+      a message before and after its function call. It will then be obvious if the called
+      function never returns. The trick is to realize that a fault in one part of the program
+      might be caused by an error in a jump table in some distant, unrelated part of the
+      program.</p>
+  </blockquote>
+
+  <p class="zw"><br class="calibre1"></p>
+
+  <p class="editing-tag">TIP</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">It is much easier to make sure that the subscript used in a jump table is within range in
+      the first place. In the calculator example, the function that reads in the operator and
+      converts it to its corresponding integer should verify that the operator is valid.</p>
+  </blockquote>
+
+  <h2 id="nav_point_260" class="calibre24">13.4 Command Line Arguments</h2>
+
+  <p class="zw">Processing command line arguments is another application of pointers to pointers.
+    Some operating systems, including UNIX and MS-DOS, let the user write arguments
+    on the command that initiates the execution of a program. These arguments are passed
+    to the program, which can process them in any way it sees fit.</p>
+
+  <h3 id="nav_point_261" class="calibre7">13.4.1 Passing Command Line Arguments</h3>
+
+  <p class="zw">How are these arguments passed to the program? The main function of a C program
+    has two parameters <a id="ac132" href="#anchor132" class="calibre5"><sup class="calibre15">[2]</sup></a> . The
+    first, often called argc, is a count of the number of
+    arguments in the command line. The second, often called argv, points to the values of
+    the arguments. Because there isn't an inherent limit on the number of arguments, argv
+    points to the first element of what is essentially an array. Each of these elements is a
+    pointer to the text of one argument. If the program needs to access the command line
+    arguments, the main function is declared with these parameters:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int
+main( int argc, char **argv )</code></pre>
+
+  <p class="zw">Note that the names argc and argv are frequently used but are not magical in any way.
+    They could be called "fred" and "ginger" if you so desired, though the program would
+    be harder to read.</p>
+
+  <p class="zw">Figure 13.1 shows how the arguments in this command line would be passed:
+  </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">$ cc –c –o main.c insert.c –o test</code></pre>
+
+  <p class="tu"><img alt="" src="../images/00272.jpeg" class="calibre14"></p>
+
+  <p class="tu_ti">Figura 13.1 Parámetros de la línea de comandos</p>
+
+  <p class="zw">Note the array of pointers: Each element of this array is a pointer to a character,
+    and the array is terminated by a NULL pointer. The value in argc and this NULL may both be used to determine how
+    many arguments were passed, argv points to the first
+    element of this array, which is why it is declared as a pointer to a pointer to a
+    character.</p>
+
+  <p class="zw">One last thing to observe is that the very first argument is the name of the
+    program. What is the purpose of passing the program name as an argument? Surely
+    the program knows what it is. Usually this argument is ignored, but it can be useful
+    for programs that are commonly invoked with different sets of options. The UNIX ls
+    command, which lists the files in a directory, is such a program. On many UNIX
+    systems, the command has several different names. When invoked with the name ls,
+    it produces a brief listing of files. When invoked with the name l, it produces a
+    multicolumn brief listing, and the name l1 produces a detailed listing. The program
+    examines the first argument to determine which name was used to invoke it and
+    selects options based on the name.</p>
+
+  <p class="zw">On some systems, the argument strings are stored one right after the other, so
+    advancing a pointer to the first argument past the end of the string will take you to the
+    beginning of the next one. This arrangement is implementation dependent, though, so
+    you must not depend upon it. To find the beginning of an argument, use the
+    appropriate pointer from the array.</p>
+
+  <p class="zw">How does a program access these arguments? Program 13.2 is a very simple
+    example—it simply prints out all of its arguments (except for the program name)
+    much like the UNIX echo command.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+** A program to print its command line arguments.
+*/
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int
+main( int argc, char **argv )
+{
+　　　　　/* 
+　　　　　** Print arguments until a NULL pointer is reached (argc is
+　　　　　** not used). The program name is skipped.
+　　　　　*/
+　　　　　while( *++argv != NULL )
+　　　　　　　printf( "%s\n", *argv );
+　　　　　return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Porgram 13.2 Print command line arguments</strong>
+  </p>
+
+  <p class="calibre11">echo.c</p>
+
+  <p class="zw">The while loop increments argv and then checks *argv to see if the end of the
+    argument list has been reached. It is looking for the NULL that terminates the list. If
+    there is another argument, the body of the loop is executed and prints it. By
+    incrementing argv first in the loop, the program name is automatically skipped.</p>
+
+  <p class="zw">The %s code used in the format string of printf requires an argument that is a
+    pointer to character. printf assumes that this character is the first of NUL-terminated
+    string. Applying indirection on argv yields the value to which it points, a pointer to a
+    character – just what the format requires.</p>
+
+  <h3 id="nav_point_262" class="calibre7">13.4.2 Processing Command Line Arguments</h3>
+
+  <p class="zw">Let's write a program that processes command line arguments more realistically. This
+    program will handle a very common paradigm—option arguments followed by file
+    name arguments. After the program name, there may be zero or more options,
+    followed by zero or more file names, like this:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">prog –a –b –c name1 name2 name3</code></pre>
+
+  <p class="zw">Each option argument is a dash followed by a single letter that identifies which of
+    several possible options is desired. Each file name argument is processed in some way.
+    If there are no file names, the standard input is processed instead.</p>
+
+  <p class="zw">To make these examples generic, our program sets variables to remember
+    which options were found. Other parts of a real program might then test these
+    variables to determine what processing was requested. In a real program, the
+    processing required for an option might also be done when the option is discovered in
+    the arguments.</p>
+
+  <p class="zw">Program 13.3 resembles Program 13.2 because it contains a loop that goes
+    through all of the arguments. The main difference is that we must now distinguish
+    between option arguments and tile name arguments. The loop stops when it reaches
+    an argument that does not begin with a dash. A second loop processes the file names.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+** Process command-line arguments 
+*/
+#include &lt;stdio.h&gt;
+#define　TRUE　1
+
+/*　
+** Prototypes for functions that do the real work.。
+*/
+void　process_standard_input( void );
+void　process_file( char *file_name );
+
+/*　
+** Option flags, default initialization is FALSE.。
+*/
+int　option_a, option_b　/* etc. */ ;
+
+void
+main( int argc, char **argv )
+{
+　　　　　 /* 
+　　　　　 ** Process option arguments: skip to next argument, and
+　　　　　 ** check that it begins with a dash.
+　　　　　 */
+　　　　　 while( *++argv != NULL &amp;&amp; **argv == '-' ){　
+　　　　　 /* 
+　　　　　 ** Check the letter after the dash.
+　　　　　 */
+　　　　　　　　　 switch( *++*argv ){
+　　　　　　　　　 case 'a':
+　　　　　　　　　　　　　 option_a = TRUE;
+　　　　　　　　　　　　　 break;
+
+　　　　　　　　　　case 'b':
+　　　　　　　　　　　　　 option_b = TRUE;
+　　　　　　　　　　　　　 break;
+
+　　　　　　　　　　/* etc. */
+　　　　　　　　　　}
+　　　　　 }
+
+　　　　　 /* 
+　　　　　 ** Process file name arguments 
+　　　　　 */
+　　　　　 if( *argv == NULL )
+　　　　　　　　process_standard_input();
+　　　　　　　　else {
+　　　　　　　　　　　do {
+　　　　　　　　　　　　　　 process_file( *argv );
+　　　　　　　　　　　} while( *++argv != NULL );
+　　　　　　　　}
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Program 13.3 Processing command line arguments</strong></p>
+
+  <p class="calibre11">cmd_line.c</p>
+
+  <p class="zw">Notice the test that was added to the while loop in Program 13.3:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">**argv == '-'</code></pre>
+
+  <p class="zw">The double indirection accesses the first character of the argument, as illustrated in
+    Figure 13.2. If this character is not a dash then there aren't any more options and the
+    loop breaks. Note that it is important to test *argv before testing **argv. If *argv were
+    NULL, the second indirection in **argv would be illegal.</p>
+
+  <p class="tu"><img alt="" src="../images/00273.jpeg" class="calibre14"></p>
+
+  <p class="tu_ti">Figure 13.2 Accessing the argument</p>
+
+  <p class="zw">The *++*argv expression in the switch statement is one you have seen before.
+    The first indirection goes to where argv points, and this location is incremented. The
+    last indirection follows the incremented pointer, as diagrammed in Figure 13.3. The
+    switch statement sets a variable depending on which option letter was found, and the
+    ++ in tile while loop advances argv to the next argument for the next iteration of the
+    loop.</p>
+
+  <p class="tu"><img alt="" src="../images/00274.jpeg" class="calibre14"></p>
+
+  <p class="tu_ti">Figure 13.3 Accessing the next character in the argument</p>
+
+  <p class="zw">When there aren't any more options, the file names are handled. If argv is
+    pointing to the null, there aren't any and the standard input is processed. Otherwise,
+    each name is processed one by one. The function calls in this program are generic so
+    they don't show any of the work that a real program might perform. Nevertheless, this
+    design is good. The main program deals with the arguments so that the functions
+    doing the processing don't have to worry about parsing options or looping through
+    file names.</p>
+
+  <p class="zw">Some programs allow the user to put multiple option letters in one argument,
+    like this:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">prog –abc name1 name2 name3</code></pre>
+
+  <p class="zw">At first you might think that this change will complicate our program, but it
+    turns out to be fairly easy to process. Each argument may now contain multiple
+    options, so we use another loop to process them. The loop should terminate when it
+    encounters the trailing NUL byte at the end of the argument.</p>
+
+  <p class="zw">The switch statement in Program 13.3 is replaced by the following code
+    fragment:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00275.jpeg" class="calibre14"></p>
+
+  <p class="zw">The test in the loop advances the argument pointer beyond the dash and makes a copy
+    of the character found there. If this character is not the NUL byte, then the switch
+    statement is used as before to set the appropriate variable. Note that the option
+    character is saved in a local variable opt to avoid having to evaluate **argv in the
+    switch statement.</p>
+
+  <p class="editing-tag">TIP</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Be aware that the command line arguments may only be processed once in this
+      manner because the pointers to the arguments are destroyed by the inner loop. If the
+      arguments must be processed more than once, make a copy of each pointer that you
+      must increment as you go through the list.</p>
+
+    <p class="calibre2">There are other possibilities for processing options. For example, the options
+      might be words rather than single letters, or there might be values associated with
+      some options, as in this example:</p>
+  </blockquote>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">cc –o prog prog.c</code></pre>
+
+  <p class="zw">One of the chapter problems expands on this idea.</p>
+
+  <h2 id="nav_point_263" class="calibre24">13.5 String Literals</h2>
+
+  <p class="zw">It is time to take a closer look at a topic mentioned earlier: string literals. When a string
+    literal appears in an expression, its value is a pointer constant. The compiler stores a
+    copy of the specified characters somewhere in memory, and the pointer points to the
+    first of these characters. But when array names are used in expressions, their values
+    are also pointer constants. We can perform subscripting, indirection, and pointer
+    arithmetic on them. Are these operations meaningful on string literals, too? Let's look
+    at some.</p>
+
+  <p class="zw">What is the meaning of this expression?</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">"xyz" + 1</code></pre>
+
+  <p class="zw">To most programmers, it looks like gibberish. It appears to be trying to perform some
+    kind of addition on a string. But when you remember that the string literal is a pointer,
+    the meaning becomes clear. This expression computes the sum of the pointer value
+    plus one. The result is a pointer to the second character in the literal: y.</p>
+
+  <p class="zw">How about this expression?</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">*"xyz"</code></pre>
+
+  <p class="zw">When indirection is applied to a pointer, the result is the thing to which it points. The
+    type of a string literal is "pointer to character," so the result of the indirection is the
+    character to which it points: x. Note that the result is not the entire string, just the first
+    character.</p>
+
+  <p class="zw">This next example also looks strange, but by now you should be able to figure
+    out that the value of this expression is the character z.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">"xyz" [2]</code></pre>
+
+  <p class="zw">The last example contains an error. The offset of four goes off the end of the
+    string, so the result is an unpredictable character.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">*( "xyz" + 4 )</code></pre>
+
+  <p class="zw">When would anyone ever want to use expressions like these? The function in
+    Program 13.4 is one useful example. Can you figure out what this mystery function
+    does? Here is a hint: Trace the function with several different input values and see
+    what is printed. The answer is given at the end of the chapter.</p>
+
+  <p class="zw">In the meantime, let's look at another example. Program 13.5 contains a
+    function that converts binary values to characters and prints them. You first saw this
+    function as Program 7.6. For this example, we'll modify it to print values in
+    hexadecimal. The first change is easy: just divide by 16 instead of 10. But now the
+    remainder might be any value from 0 to 15, and the values from 10 to 15 should be
+    printed as the letters A to F. The following code is a typical approach to this new
+    problem.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00276.gif" class="calibre14"></p>
+
+  <p class="zw">I've used a local variable to save the remainder rather than computing it three separate
+    times. For remainders in the range 0 through 9, a digit is printed the same as before. But the other remainders are
+    printed as letters- The test is needed because the letters A
+    through F do not immediately follow the digits in any common character set.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+**　Mystery function
+**
+**　The argument is a value in the range 0 through 100.
+*/
+#include &lt;stdio.h&gt;
+
+void
+mystery( int n )
+{
+　　　n += 5;
+　　　n /= 10;
+　　　printf( "%s\n", "**********" + 10 - n );　
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Program 13.4 Mystery function</strong></p>
+
+  <p class="calibre11">mystery.c</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** Take an integer value (unsigned), convert it to characters, and
+** print it. Leading zeros are suppressed.
+*/
+#include &lt;stdio.h&gt;
+
+void
+binary_to_ascii( unsigned int value )
+{
+　　　unsigned int　quotient;
+
+　　　quotient = value / 10;
+　　　if( quotient != 0 )
+　　　　　binary_to_ascii( quotient ); 
+　　　putchar( value % 10 + '0' );
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Program 13.5 Convert a binary integer to characters</strong></p>
+
+  <p class="calibre11">btoa.c</p>
+
+  <p class="zw">The following code solves the problem in a different way.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">putchar( "0123456789ABCDEF" [value % 16 ] );</code></pre>
+
+  <p class="zw">Once again the remainder will be a value in the range of 0 through 15, but this time it
+    is used as a subscript to select one of the characters from the string literal to print. The
+    previous code is complicated because the letters and digits are not adjacent in the
+    character set. This solution avoids the complication by defining a string in which they
+    are adjacent. The remainder selects the right digit from this string.</p>
+
+  <p class="zw">This second approach is faster than the traditional one, because fewer
+    operations are needed. The code may or may not be smaller than the original,
+    however. The decrease in instructions is offset by the addition of the 17-byte string
+    literal.</p>
+
+  <p class="editing-tag">TIP</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">However, a large reduction in readability is a big price to pay for a small improvement
+      in execution speed. When you use an unusual technique or statement, be sure that you
+      include a comment describing how it works. Once this example has been explained, it
+      is actually easier to follow than the traditional code because it is shorter.</p>
+  </blockquote>
+
+  <p class="zw">Now back to the mystery function. Did you figure it out? It prints a number of
+    stars proportional to the value of the argument. It prints 0 stars if the argument was 0,
+    10 stars if the argument was 100, and an intermediate number of stars for intermediate
+    values. In other words, this function prints one bar of a histogram, and it does it much
+    more easily and efficiently than the more traditional loop.</p>
+
+  <h2 id="nav_point_264" class="calibre24">13.6 Summary</h2>
+
+  <p class="zw">If declared properly, a pointer variable may point to another pointer variable. Like any
+    other pointer variable, a pointer to a pointer must be initialized before it can be used.
+    Two indirection operations are needed on a pointer to a pointer to obtain the target
+    object. More levels of indirection are allowed (for example, a pointer to a pointer to a
+    pointer to an int), but are needed less often than simpler pointers. You may also
+    create pointer variables that point to functions and arrays, and create arrays of such
+    pointers.</p>
+
+  <p class="zw">Declarations in C are by inference. The declaration </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　　*a;</code></pre>
+
+  <p class="zw">declares the expression *a to be an integer. You must then infer that a is a pointer to an
+    integer. With declaration by inference, the rules for reading declarations are the same
+    as those for reading expressions.</p>
+
+  <p class="zw">You can use pointers to functions to implement callback functions. A pointer to
+    your callback function is passed as an argument to another function, which calls your
+    function using the pointer. With this technique, you can create generic functions that
+    perform common operations such as searching a linked list. Any work that is specific
+    to one instance of the problem, such as comparing values in the list, is performed in a
+    callback function supplied by the client.</p>
+
+  <p class="zw">Jump tables also use pointers to functions. A jump table performs a selection
+    much like a switch statement. The table consists of an array of pointers to functions
+    (which must have identical prototypes). One pointer is selected with a subscript, and
+    the corresponding function is called. Always verify that the subscript value is in the
+    proper range, because debugging errors in jump tables is difficult.</p>
+
+  <p class="zw">If an execution environment implements command line arguments, the
+    arguments are passed to the main function via two parameters, often called argc and
+    argv. argc is an integer and contains a count of the number of arguments. argv is a
+    pointer to a sequence of pointers to characters. Each pointer in the sequence points to a
+    command line argument. The sequence is terminated with a NULL pointer. The first
+    argument is the name of the program. A program can access its command line
+    arguments by using indirection on argv.</p>
+
+  <p class="zw">The value of a string literal that appears in an expression is a constant pointer to
+    the first character in the literal. Like array names, you can use string literals in pointer
+    expressions and with subscripts.</p>
+
+  <h2 id="nav_point_265" class="calibre24">13.7 Summary of Cautions</h2>
+
+  <p class="zw">1. Applying indirection to an uninitialized pointer (page 356).</p>
+
+  <p class="zw">2. Using an out-of-bounds subscript in a jump table (page 361).</p>
+
+  <h2 id="nav_point_266" class="calibre24">13.8 Summary of Programming Tips</h2>
+
+  <p class="zw">1. Avoid using more levels of indirection than necessary (page 353).</p>
+
+  <p class="zw">2. The cdec1 program is helpful for deciphering complicated declarations (page 355).</p>
+
+  <p class="zw">3. Be careful when casting from void * to other pointer types (page 358).</p>
+
+  <p class="zw">4. Always validate the subscript used in a jump table (page 362).</p>
+
+  <p class="zw">5. Destructively processing command line arguments prevents them from being
+    processed again later (page 369).</p>
+
+  <p class="zw">6. Unusual code should always be accompanied by a comment describing what it
+    does and how it works (page 371).</p>
+
+  <h2 id="nav_point_267" class="calibre24">13.9 Questions</h2>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">1. A list of declarations is shown below.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00277.gif" class="calibre14"></p>
+
+  <p class="calibre13"><img alt="" src="../images/00278.gif" class="calibre14"></p>
+
+  <p class="zw">Match each of the declarations with the best description from this list.</p>
+
+  <ol class="roman">
+
+    <li>Pointer to an int.</li>
+
+    <li>Pointer to a pointer to an int.</li>
+
+    <li>Array of int.</li>
+
+    <li>Pointer to array of int.</li>
+
+    <li>Array of pointer to int.</li>
+
+    <li>Pointer to array of pointer to int.</li>
+
+    <li>Array of pointer to pointer to int.</li>
+
+    <li>Function returning int.</li>
+
+    <li>Function returning pointer to int.</li>
+
+    <li>Function returning pointer to pointer to int.</li>
+
+    <li>Pointer to function returning int.</li>
+
+    <li>Pointer to function returning pointer to int.</li>
+
+    <li>Pointer to function returning pointer to pointer to int.</li>
+
+    <li>Array of pointer to function returning int.</li>
+
+    <li>Array of pointer to function returning pointer to int.</li>
+
+    <li>Array of pointer to function returning pointer to pointer to int.</li>
+
+    <li>Function returning pointer to function returning int.</li>
+
+    <li>Function returning pointer to pointer to function returning int.</li>
+
+    <li>Function returning pointer to function returning pointer to int.</li>
+
+    <li>Pointer to function returning pointer to function returning int.</li>
+
+    <li>Pointer to function returning pointer to pointer to function returning
+      int.</li>
+
+    <li>Pointer to function returning pointer to function returning pointer to
+      int.</li>
+
+    <li>Pointer to function returning pointer to array of int.</li>
+
+    <li>Pointer to function returning pointer to array of pointer to int.</li>
+
+    <li>Pointer to function returning pointer to array of pointer to function
+      returning pointer to int.</li>
+
+    <li>Illegal</li>
+  </ol>
+
+  <p class="zw">2. Given the following declarations:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">char　　*array[10];
+char　　**ptr = array;</code></pre>
+
+  <p class="zw">what is the effect of adding one to the variable ptr?</p>
+
+  <p class="zw">3. Suppose you are writing a function that begins like this:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">void func( int ***arg ){</code></pre>
+
+  <p class="zw">What is the type of the argument? Draw a diagram that shows how this variable
+    would be correctly used. What expression would you use to get the integer that the
+    argument is referring to?</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">4. How can the following code fragment be
+    improved?
+  </p>
+
+  <p class="calibre13"><img alt="" src="../images/00279.gif" class="calibre14"></p>
+
+  <p class="zw">5. Given the following declarations:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00280.gif" class="calibre14"></p>
+
+  <p class="zw">determine the value of each of the following expressions.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00281.gif" class="calibre14"></p>
+
+  <p class="zw">6. Given the following declarations:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00282.gif" class="calibre14"></p>
+
+  <p class="zw">explain the meaning of each of these statements.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00283.gif" class="calibre14"></p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">7. Many implementations of ANSI C include a
+    function called getopt. This function
+    helps process command line arguments. However, getopt is not mentioned in the
+    Standard. What are the advantages and disadvantages of having such a function?</p>
+
+  <p class="zw">8. What (if anything) is wrong with this code fragment, and how would you fix it?</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">char　　* pathname = "/usr/temp/xxxxxxxxxxxxxxx"
+…
+/*
+**Insert the filename in to the pathname.
+*/
+strcpy ( pathname+10 , "abcde");</code></pre>
+
+  <p class="zw">9. What (if anything) is wrong with the following code fragment, and how would you
+    fix it?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00284.gif" class="calibre14"></p>
+
+  <p class="zw">10. What (if anything) is wrong with the following code fragment, and how would you
+    fix it?</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">char　　 *pathname [20] = "/usr/temp/ ";
+…
+/*
+**　Append the filename to the pathname.
+*/
+stroat (pathrame,filename);</code></pre>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">11. The Standard slates that the effects of
+    modifying a string literal are undefined.
+    What problems might be caused if you did modify string literals?</p>
+
+  <h2 id="nav_point_268" class="calibre24">13.10 Programming Exercises</h2>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★ 1. Write a program that reads from the
+    standard input and computes the percentage
+    of characters it finds in each of the following categories:</p>
+
+  <p class="zw">　　control characters</p>
+
+  <p class="zw">　　whitespace characters</p>
+
+  <p class="zw">　　digits</p>
+
+  <p class="zw">　　lower case letters</p>
+
+  <p class="zw">　　upper case letters/p>
+
+  <p class="zw">　　punctuation characters</p>
+
+  <p class="zw">　　non-printable characters</p>
+
+  <p class="zw">The character categories are to be as they are defined for the ctype.h functions. Do
+    not use a series of if statements.</p>
+
+  <p class="zw">★ 2. Write a general-purpose function to traverse a singly linked list. It should take two
+    parameters: a pointer to the first node in the list and a pointer to a callback
+    function. The callback function should take a single argument, a pointer to a list
+    node, and should be invoked once for each node in the list. What does the function
+    need to know about the nodes in the list?</p>
+
+  <p class="zw">★★ 3. Convert the following code fragment so that it uses a jump table instead of a
+    switch statement.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">Node　*list;
+Node　*current;
+Transaction　*transaction;
+typedef enum　{ NEW, DELETE, FORWARD, BACKWARD,
+　　SEARCH, EDIT } Trans_type;
+...
+switch( transaction-&gt;type ) {
+case　　NEW
+　　　　add_new_trans(list,transaction);　
+　　　　break;</code></pre>
+
+  <p class="calibre13"><img alt="" src="../images/00285.gif" class="calibre14"></p>
+
+  <p class="zw">★★★★ 4. Write a function called sort that will sort an array of any kind of value. To make
+    the function generic, one of its arguments must be a pointer to a callback
+    comparison function that the caller will supply. The comparison function will take
+    two arguments, which are pointers to the values being compared, it will return an
+    integer that is zero if the two values are equal, less than zero if the first value is less
+    than the second, and greater than zero if the first value is greater than the second. <br class="calibre1">
+    The arguments to sort will be: <br class="calibre1">
+    1. a pointer to the first value in the array to be sorted, <br class="calibre1">
+    2. the number of values in the array, <br class="calibre1">
+    3. the size of each array element, and <br class="calibre1">
+    4. a pointer to the comparison callback function. <br class="calibre1">
+    The sort function does not return a value. <br class="calibre1">
+    You will not be able to declare the array argument with its real type because the
+    function can be called to sort different types of array. If you treat the data as if it
+    were an array of characters, you can use the third argument both to locate the
+    beginning of each element of the actual array and to interchange two array
+    elements one byte at a time. <br class="calibre1">
+    You may use the following algorithm for a simple exchange sort, or you may
+    feel free to use any better algorithm you know.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">for <em class="calibre9">i</em> = 1 to number-of-records – 1 do
+　　for <em class="calibre9">j</em> = <em class="calibre9">i</em> + 1 to number-of-records do
+　　　　　　if record <em class="calibre9">i</em> &gt; record <em class="calibre9">j</em> then
+　　　　　　　　　 interchange records <em class="calibre9">i</em> and <em class="calibre9">j</em>
+</code></pre>
+
+  <p class="zw">★★★★★ 5. Writing the code to process command line arguments is tedious, which suggests
+    that there ought to be a standard function to do it. Different programs handle their
+    arguments in different ways, however, so the function must be flexible in order for
+    it to be useful in more than just a couple of programs. For this project, you will
+    write such a function. Your routine will provide flexibility by locating and
+    extracting the arguments. Callback functions provided by the user will perform the
+    actual processing.</p>
+
+  <p class="zw">Here is a prototype for your function. Note that the fourth and fifth arguments
+    prototype callback functions.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00286.gif" class="calibre14"></p>
+
+  <p class="zw">The first two parameters are those received by the main function, which are passed
+    unchanged to do_args. The third is a string that identifies what command line
+    arguments are expected. The last two parameters are pointers to functions
+    provided by the user.</p>
+
+  <p class="zw">do_args processes command line arguments like this:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　Skip past the program name argument 
+　　While the next argument begins with a dash
+　　　　For each character in the argument after the dash
+　　　　　　Process the character
+　　Return a pointer to the next argument pointer.</code></pre>
+
+  <p class="zw">To "process the character," you must first see whether the character is in the control
+    string. If it is not there, call the function to which illegal_arg points, passing the
+    character as an argument. If it is there but is not followed by a plus, call the
+    function to which do_arg points, passing the character and a NULL pointer as
+    arguments.</p>
+
+  <p class="zw">If the character is in control and is followed by a plus, then there should be a
+    value associated with the character. If there are any more characters in the current
+    argument, they are the desired value. Otherwise, the next argument is the value.
+    In either case, you should call the function to which do_arg points, passing as
+    arguments the character and a pointer to the value. If there wasn't a value (no
+    additional characters and no next argument), then yon should call the illegal_arg
+    function instead. <strong class="calibre3">Note:</strong> Be sure that the characters in the value are not processed
+    as arguments later!</p>
+
+  <p class="zw">When all the arguments that begin with a dash have been processed, you 
+    should return a pointer to the pointer to the next command line argument (that is, a 
+    value such as  &amp;argv[4] or argv + 4). If all of the command line arguments began 
+    with dashes, you will return a pointer to the NULL that terminates the command 
+    line argument list.</p>
+
+  <p class="zw">The function must not modify either the command line argument pointers or 
+    the arguments. To illustrate, suppose that the program prog calls this function: the 
+    following examples show the results with several different sets of arguments.</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">Command line:</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="zw">$ prog –x –yz</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="zw">control:</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="zw">"x"</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">do_args calls:</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="zw">(*do_arg) ('x', 0)</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+
+        </td>
+        <td class="calibre21">
+          <p class="zw">(*illegal_arg) ('y')</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">and returns:</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="zw">&amp;argv[3]</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="zw">Command line:</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="zw">$ prog –x –y –z</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">control:</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="zw">"x+y+z+"</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="zw">do_args calls:</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="zw">(*do_arg) ('x', “-y”)</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+
+        </td>
+        <td class="calibre21">
+          <p class="zw">(*illegal_arg) ('z')</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="zw">and returns:</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="zw">&amp;argv[4]</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">Command line:</p>
+        </td>
+
+        <td colspan="2" class="calibre21">
+          <p class="zw">$ prog –abcd –ef ghi jkl</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="zw">control:</p>
+        </td>
+
+        <td colspan="2" class="calibre21">
+          <p class="zw">"ab+cdef+g"</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">do_args calls:</p>
+        </td>
+
+        <td colspan="2" class="calibre21">
+          <p class="zw">(*do_arg) ('a', 0)</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+
+        </td>
+        <td colspan="2" class="calibre21">
+          <p class="zw">(*do_arg) ('b', "cd")</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+
+        </td>
+        <td colspan="2" class="calibre21">
+          <p class="zw">(*do_arg) ('e', 0)</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+
+        </td>
+        <td colspan="2" class="calibre21">
+          <p class="zw">(*do_arg) ('f', "ghi")</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">and returns:</p>
+        </td>
+
+        <td colspan="2" class="calibre21">
+          <p class="zw">&amp;argv[4]</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="zw">Command line:</p>
+        </td>
+
+        <td colspan="2" class="calibre21">
+          <p class="zw">$ prog –a b –c –d –e –f</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">control:</p>
+        </td>
+
+        <td colspan="2" class="calibre21">
+          <p class="zw">"abcdef"</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="zw">do_args calls:</p>
+        </td>
+
+        <td colspan="2" class="calibre21">
+          <p class="zw">(*do_arg) ('a', 0)</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="zw">and returns:</p>
+        </td>
+
+        <td colspan="2" class="calibre21">
+          <p class="zw">&amp;argv[2]</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <hr class="calibre4">
+
+  <p class="calibre2"><a id="anchor131" href="#ac131" class="calibre5">[1]</a> Even without a size, these declarations
+    are still legal if they are external or are function parameters.</p>
+
+  <p class="calibre2"><a id="anchor132" href="#ac132" class="calibre5">[2]</a> Actually, some operating systems also
+    pass a third parameter to the main function, a pointer to a list of environment
+    variables and their values. Consult your compiler's or operating system's documentation for details.
+  </p>
+
+</body>
+
+</html>

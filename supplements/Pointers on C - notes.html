@@ -1,0 +1,126 @@
+
+<!-- saved from url=(0052)http://www.cs.rit.edu/~kar/pointers.on.c/ctype.shtml -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<title>Pointers on C - Home Page</title>
+
+<style type="text/css"></style></head>
+
+<body bgcolor="#eeeeee">
+
+<h1 align="center"> <i>Pointers on C</i></h1>
+<h2 align="center"><i>Some Notes On the Character Classification Macros</i></h2>
+<h3>Introduction</h3>
+<p>The character classification macros (defined in <font face="Courier New, Courier, mono">ctype.h</font>) 
+  provide a portable mechanism for determining whether a character is alphabetic, 
+  numeric, punctuation, white space, etc. It is portable in that it does not require 
+  the use of specific character constants for comaprison, which would be valid 
+  on other machines only if they used the same character set. Consider this simple 
+  example:</p>
+<p><font face="Courier New, Courier, mono">if( ch &gt;= 'A' &amp;&amp; ch &lt;= 
+  'Z' ) ...</font></p>
+<p>The intent is to determine whether the character contained in the variable 
+  <font face="Courier New, Courier, mono">ch</font> is an upper-case alphabetic 
+  character. This test works fine on computers whose character set is ASCII or 
+  Extended ASCII ¹, but fails on compters that use the EBCDIC character set 
+  (which, admittedly, are far less common these days than they were many years 
+  ago). Conversely, the test:</p>
+<p><font face="Courier New, Courier, mono">if( isupper( ch ) ) ...</font></p>
+<p>will work regardless of the character set used by a particular machine because 
+  the macro is implemented on each machine to work properly with its character 
+  set.</p>
+<h3>Implementation</h3>
+<p>These macros are often implemented with a table-lookup mechanism. A table is 
+  created that contains an entry for every character value, and each entry contains 
+  flags to indicate whether the corresponding character is numeric, alphabetic, 
+  upper case, lower case, etc. This table is automatically linked with the program 
+  when the macros are used. The macro merely uses its argument as a subscript 
+  to access an entry from this table and tests whether that entry contains the 
+  flag for the desired characteristic.</p>
+<h3>The Problem</h3>
+<p>I will describe the problem in the context of computers with 8-bit bytes, as 
+  they are the most common these days. This table-lookup scheme generally worked 
+  fine in the days of ASCII when the values assigned to characters did not exceed 
+  127. If the high-order bit of the byte was used at all, it was often used as 
+  a parity bit for the detection of errors when characters were transmitted over 
+  communications lines that were not as reliable as today's. Once the characters 
+  were received and checked for errors, the parity bit was replaced with a 0.</p>
+<p>The problem began with the expansion of the character set to include numerous 
+  additional characters, for example currency symbols (such as ¢, £, 
+  ¥), punctuation (such as ¡ and ¿), special characters (such 
+  as ©, ±, and ½), and--most notably--characters that exist 
+  in many languages but not in English (such as à, á, æ, etc.). 
+  To represent all these additional characters without omitting any of the standard 
+  ASCII characters, the values from 128 through 255 are used and the resulting 
+  character set is commonly referred to as Extended ASCII ².</p>
+<p>Now consider three traditional aspects of the C language:</p>
+<ol>
+  <li>Characters are promoted to integers before being used for any type of arithmetic.</li>
+  <li>The default character type, either signed or unsigned, is not specified 
+    by the Standard so that the implementer can choose whichever is most efficient 
+    for a particular machine.</li>
+  <li>There is no range checking on array subscripts.</li>
+</ol>
+<p>The combination of these three characteristics make it risky to use the character 
+  classification macros with Extended ASCII characters. Consider the expression 
+  <font face="Courier New, Courier, mono">isupper(ch)</font> where the variable 
+  <font face="Courier New, Courier, mono">ch</font> contains the value <font face="Courier New, Courier, mono">0xc2</font> 
+  (which is the character Â):</p>
+<ol>
+  <li>The macro evaluates to an expression something like this: <font face="Courier New, Courier, mono">( 
+    _chartypes[ ch ] &amp; _CTYPE_UPPER )</font></li>
+  <li>Because it is used in an expression, the value <font face="Courier New, Courier, mono">ch</font> 
+    is first promoted to an integer. </li>
+  <li>On a 32-bit machine whose default character type is signed, the result of 
+    this promotion will be <font face="Courier New, Courier, mono">0xffffffc2</font>, 
+    or -62, due to sign extension.</li>
+  <li>The machine now accesses <font face="Courier New, Courier, mono">_chartypes[ 
+    -62 ]</font> to see if it contains the bit <font face="Courier New, Courier, mono">CTYPE_UPPER.</font></li>
+  <li>Because there is no range checking on subscripts, the access is attempted.</li>
+  <li>If you are extremely lucky, the access is to a memory location outside of 
+    the bounds of the program, and the program stops with an error.</li>
+  <li>However, it is much more likely that the access will succeed and produce 
+    an indeterminate result.</li>
+</ol>
+<p>Note that the implementer will have constructed a classification table containing 
+  the proper flags in each of its 256 entries for each of the 256 Extended ASCII 
+  characters. However, the test fails because the memory location that is checked 
+  lies outside of this table.</p>
+<h3>The Solution</h3>
+<p>The solution is simple, though tedious. All arguments to the character classification 
+  macros should be cast as unsigned integers. Because they are going to be promoted 
+  to integers anyway, there is no point in casting the arguments to unsigned charcters, 
+  though it does no harm to do so. The drawback of casting is the tedium of doing 
+  it every time and the ease of forgetting to do it.</p>
+<p>A better solution is to define your own set of macros to use instead of the 
+  character classification macros, as in this example:</p>
+<p><font face="Courier New, Courier, mono">#define safe_isupper(ch) isupper((unsigned 
+  int)ch)</font></p>
+<p>This solution is also not perfect, as it is easy to forget and use the standard 
+  macros by mistake. Nor is it possible to undefine the standard macros to prevent 
+  their accidental use because they are needed to expand the newly defined macros.</p>
+<p>As is often the case in C, discipline (and a good memory) are needed to reliably 
+  avoid the problem.</p>
+<h3>Postscript</h3>
+<p>I would love for this discussion to find its way into Pointers on C, but that 
+  will never happen as the publisher has no interest in bringing out an updated 
+  edition.</p>
+<h3>Footnotes</h3>
+<p>¹ One could argue that this test would fail for Extended ASCII character 
+  sets in that it would not classify characters such as À, Ç, Ê 
+  and Í as "upper case alphabetic."</p>
+<p>² "Extended ASCII" is actually a misnomer, for it implies that 
+  the ASCII definition itself was extended. In fact, this is not true (ref: http://en.wikipedia.org/wiki/Extended_ascii).</p>
+<p>K. Reek 1/16/2011</p>
+<p>Page views: 2854
+
+</p>
+<p><a href="http://www.cs.rit.edu/~kar/index.html"><img src="./Pointers on C - notes_files/back_button.gif" alt="[Return]" align="center" border="0" width="40" height="40"></a><a href="http://www.cs.rit.edu/~kar/index.html">Back 
+
+  to my home page.</a> </p>
+
+
+
+
+
+</body></html>

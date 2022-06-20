@@ -1,0 +1,811 @@
+<html xmlns="http://www.w3.org/1999/xhtml" class="translated-ltr">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Desconocido</title>
+
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css">
+  <link href="../page_styles.css" rel="stylesheet" type="text/css">
+
+<body id="7K4G0-e167752e5b154d43a225b5f350ab7738" class="calibre">
+  <h1 id="nav_point_67" class="not-in-toc">Capítulo 4 Declaraciones</h1>
+
+  <p class="zw">En este capítulo, encontrará que C implementa todas las declaraciones que tienen otros lenguajes
+    modernos de alto nivel. Además, la mayoría de ellos funcionan de la forma esperada. La instrucción if se usa para
+    seleccionar uno de los varios códigos candidatos a ejecutar, mientras que las instrucciones while, for y do se usan
+    para implementar diferentes tipos de bucles.</p>
+
+  <p class="zw">Sin embargo, en comparación con otros lenguajes, las declaraciones de C todavía tienen algunas
+    diferencias. Por ejemplo, C no tiene sentencias de asignación especiales, sino que usa "sentencias de expresión". La
+    instrucción switch implementa la función de la instrucción case en otros lenguajes, pero la forma en que se
+    implementa es inusual.</p>
+
+  <p class="zw">Sin embargo, antes de discutir los detalles de las declaraciones de C, revisemos primero los diferentes
+    tipos de fuentes que usaré en la descripción gramatical. El código se <code
+      class="calibre8">Courier New</code>expresará estrictamente y la descripción abstracta del código se expresará en
+    <em class="calibre9">cursiva<code class="calibre8">Courier New</code></em> . Algunas declaraciones también tienen
+    partes opcionales. Si decide utilizar la parte opcional, estará estrictamente en <strong
+      class="calibre3">negrita<code class="calibre8">Courier New</code></strong> . Las descripciones de las partes
+    opcionales del código estarán en <strong class="calibre3"><em class="calibre9">negrita y cursiva<code
+          class="calibre8">Courier New</code></em></strong> . Al mismo tiempo, la sangría utilizada al describir la
+    sintaxis de la declaración será la misma que la sangría utilizada en el ejemplo del programa. Estos espacios en
+    blanco no son importantes para el compilador, pero son extremadamente importantes para la persona que lee el código
+    (probablemente usted).
+  </p>
+
+  <h2 id="nav_point_68" class="calibre24">4.1 Declaración vacía</h2>
+
+  <p class="zw">La declaración más simple en C es la <strong class="calibre3">declaración vacía</strong> , que en sí
+    misma contiene solo un punto y coma. La declaración vacía en sí misma no realiza ninguna tarea, pero a veces es
+    útil. Se aplica a situaciones en las que la gramática requiere una declaración completa, pero no la necesita para
+    realizar ninguna tarea. Algunos ejemplos más adelante en este capítulo contienen algunas declaraciones vacías.</p>
+
+  <h2 id="nav_point_69" class="calibre24">4.2 Declaración de expresión</h2>
+
+  <p class="zw">Dado que C no tiene una "instrucción de asignación" especial, ¿cómo realiza la asignación? La respuesta
+    es que la asignación es una operación, al igual que la suma y la resta, por lo que la asignación se realiza dentro
+    de expresiones.</p>
+
+  <p class="zw">Solo necesita agregar un punto y coma después de la expresión para convertir la expresión en una
+    declaración. Por lo tanto, las siguientes dos expresiones</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">x = y + 3;
+ch = getchar();</code></pre>
+
+  <p class="zw">En realidad, es una declaración de expresión, no una declaración de asignación.</p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Es muy importante comprender esta diferencia, porque declaraciones como las siguientes son
+      perfectamente legales:</p>
+  </blockquote>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">y + 3;
+getchar();</code></pre>
+
+  <blockquote class="ti_shi">
+    <p class="calibre2">Cuando se ejecutan estas declaraciones, las expresiones se evalúan, pero sus resultados no se
+      almacenan en ningún lugar porque no utilizan operadores de asignación. Por lo tanto, la primera oración no tiene
+      ningún efecto y la segunda oración lee el siguiente carácter en la entrada, pero luego lo descarta <a id="ac41"
+        href="#anchor41"
+        class="calibre5"><sup class="calibre23">[1]</sup></a> .</p>
+  </blockquote>
+
+  <p class="zw">Si le parece extraño escribir una declaración que no tiene ningún efecto, considere la siguiente
+    declaración:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">printf( "Hello world!\n");</code></pre>
+
+  <p class="zw">printf es una función, la función devolverá un valor, pero normalmente no nos importa el valor de
+    retorno de la función printf (el número de caracteres que imprime), por lo que es normal ignorarlo. El llamado "sin
+    efecto" simplemente significa que se ignora el valor de la expresión. La función printf se realiza un trabajo útil,
+    tal efecto se denomina " <strong class="calibre3">efecto</strong> secundario (efecto secundario)".</p>
+
+  <p class="zw">Aquí hay otro ejemplo:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">a++;</code></pre>
+
+  <p class="zw">Esta declaración no tiene un operador de asignación, pero es una declaración de expresión muy razonable.
+    El operador ++ aumentará el valor de la variable a, que es su efecto secundario. También hay algunos operadores con
+    efectos secundarios, los discutiré en el próximo capítulo.</p>
+
+  <h2 id="nav_point_70" class="calibre24">4.3 Bloque de código</h2>
+
+  <p class="zw">Un bloque de código es una lista de declaraciones y declaraciones opcionales dentro de un par de llaves.
+    La sintaxis del bloque de código es muy sencilla:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">{
+　 <strong class="calibre3"><em class="calibre9">declarations</em></strong>
+<em class="calibre9">　 <strong class="calibre3">statements</strong></em>
+}
+</code></pre>
+
+  <p class="zw">Los bloques de código se pueden usar cuando se requieren declaraciones. Le permite usar múltiples
+    declaraciones donde la gramática solo requiere una declaración. El bloque de código también le permite colocar la
+    declaración de los datos muy cerca de donde se usa.</p>
+
+  <h2 id="nav_point_71" class="calibre24">4.4 declaración if</h2>
+
+  <p class="zw">La instrucción if en C no es muy diferente de las instrucciones if en otros idiomas. Su sintaxis es la
+    siguiente:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">if( <em class="calibre9">expression </em>)
+　  <em class="calibre9">statement</em>
+<strong class="calibre3">else</strong>
+　 <strong class="calibre3"><em class="calibre9">statement</em></strong>
+</code></pre>
+
+  <p class="zw">Los paréntesis son parte de la instrucción if, no parte de la expresión, por lo que debe aparecer,
+    incluso para expresiones extremadamente simples.</p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Las dos partes de declaración anteriores pueden ser bloques de código. Un error común es
+      olvidarse de agregar llaves al escribir la segunda declaración en cualquier cláusula de declaración de una
+      declaración if. Muchos programadores tienden a agregar llaves en todo momento para evitar este tipo de error.</p>
+  </blockquote>
+
+  <p class="zw">Si el valor de la expresión es verdadero, entonces se ejecuta la primera instrucción; de lo contrario,
+    se omite. Si hay una cláusula <strong class="calibre3">else</strong> , la <strong
+      class="calibre3">declaración</strong> posterior se ejecutará solo cuando el valor de expresión sea falso.</p>
+
+  <p class="zw">Solo hay una diferencia entre las declaraciones if en C y las declaraciones if en otros idiomas. C no
+    tiene un tipo booleano, pero usa un tipo entero en su lugar. De esta manera, expresión puede ser cualquier expresión
+    que pueda producir un resultado entero: un valor cero significa "falso" y un valor distinto de cero significa
+    "verdadero".</p>
+
+  <p class="zw">C tiene todos los operadores relacionales que espera, pero su resultado es el valor entero 0 o 1, no el
+    booleano "verdadero" o "falso". Los operadores relacionales se utilizan de esta manera para realizar las funciones
+    de los operadores relacionales en otros lenguajes.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00018.gif" class="calibre14"></p>
+
+  <p class="zw">En la declaración if anterior, el valor de la expresión x&gt; 3 será 0 o 1. Si el valor es 1, imprimirá
+    Mayor; si el valor es 0, imprimirá No mayor.</p>
+
+  <p class="zw">Las variables enteras también se pueden utilizar para representar valores booleanos, como se muestra a
+    continuación:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00019.gif" class="calibre14"></p>
+
+  <p class="zw">La función de este segmento de código es exactamente la misma que la del segmento de código anterior, la
+    única diferencia entre ellos es que el resultado de la comparación (0 o 1) se almacena primero en una variable y
+    luego se prueba. Aquí hay una trampa potencial. Aunque todos los valores distintos de cero se consideran verdaderos,
+    comparar dos valores distintos de cero para la igualdad resultará en falso. Discutiré este tema en detalle en el
+    próximo capítulo.</p>
+
+  <p class="zw">Cuando aparecen las sentencias if anidadas, habrá un problema de "otro colgando". Por ejemplo, en el
+    siguiente ejemplo, ¿a qué instrucción if crees que pertenece la cláusula else?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00020.gif" class="calibre14"></p>
+
+  <p class="zw">Aquí introduzco una sangría deliberada en la cláusula else de una manera extraña, pero no te doy ninguna
+    pista. La respuesta a esta pregunta, como la mayoría de los otros lenguajes, es que la cláusula else está
+    subordinada a la declaración if incompleta más cercana a ella. Si desea que esté subordinado a la primera
+    instrucción if, puede completar la segunda instrucción if y agregar una cláusula else vacía, o encerrarla en un
+    bloque de código con llaves, como se muestra a continuación Mostrar:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00021.gif" class="calibre14"></p>
+
+  <h2 id="nav_point_72" class="calibre24">4.5 declaración while</h2>
+
+  <p class="zw">La instrucción while en C también tiene muchas similitudes con las instrucciones while en otros idiomas.
+    La única diferencia real es su parte de expresión, que es similar a una declaración if. La siguiente es la sintaxis
+    de la instrucción while:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">while( <em class="calibre9">expression</em> )
+　 　<em class="calibre9">statement</em>
+</code></pre>
+
+  <p class="zw">La prueba de bucle se realiza antes de que el cuerpo del bucle comience a ejecutarse, por lo que si el
+    resultado de la prueba es falso al principio, el cuerpo del bucle no se ejecutará en absoluto. De manera similar,
+    cuando el cuerpo del bucle requiere varias declaraciones para completar la tarea, se puede implementar mediante
+    bloques de código.</p>
+
+  <h3 id="nav_point_73" class="calibre7">4.5.1 declaraciones de interrupción y continuación</h3>
+
+  <p class="zw">La sentencia break se puede utilizar en el ciclo while para terminar el ciclo de forma permanente.
+    Después de que se ejecuta la instrucción de interrupción, la siguiente instrucción ejecutada en el flujo de
+    ejecución es la instrucción que debe ejecutarse después de que el ciclo finalice normalmente.</p>
+
+  <p class="zw">También puede utilizar la instrucción continue en el ciclo while, que se utiliza para terminar
+    permanentemente el ciclo actual. Después de ejecutar la instrucción continue, el siguiente paso en el flujo de
+    ejecución es volver a probar el valor de la expresión y decidir si continuar el ciclo.</p>
+
+  <p class="zw">Si alguna de estas dos declaraciones aparece dentro de un bucle anidado, solo afecta al bucle más
+    interno. No puede usar declaraciones break o continue para afectar la ejecución del bucle externo.</p>
+
+  <h3 id="nav_point_74" class="calibre7">4.5.2 El proceso de ejecución de la instrucción while</h3>
+
+  <p class="zw">Ahora podemos ilustrar el flujo de control en el ciclo while en forma de gráfico. Teniendo en cuenta que
+    es posible que algunos lectores nunca hayan visto el diagrama de flujo antes, daré una pequeña explicación aquí. Los
+    diamantes representan juicios, los recuadros representan acciones que deben realizarse y las flechas representan el
+    flujo de control entre ellos. La figura 4.1 ilustra el proceso de operación de la instrucción while. Su ejecución
+    comienza desde arriba, que consiste en calcular el valor de la expresión expr. Si su valor es 0, el ciclo termina.
+    De lo contrario, se ejecuta el cuerpo del bucle y luego el flujo de control vuelve a la parte superior y se reinicia
+    el siguiente bucle. Por ejemplo, el siguiente ciclo copia caracteres de la entrada estándar a la salida estándar
+    hasta que se encuentra la marca de fin de archivo.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">while((ch=getchar())!=EOF)
+　　　Putchar(ch);</code></pre>
+
+  <p class="tu"><img alt="" src="../images/00022.jpeg" class="calibre14"></p>
+
+  <p class="tu_ti">Figura 4.1 El proceso de ejecución de la instrucción while</p>
+
+  <p class="zw">Si la instrucción continue se ejecuta en el cuerpo del bucle, el resto del cuerpo del bucle ya no se
+    ejecutará, pero comenzará inmediatamente el siguiente ciclo. La instrucción continue es muy útil cuando el cuerpo
+    del bucle solo se ejecutará cuando encuentre ciertos valores.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00023.gif" class="calibre14"></p>
+
+  <p class="zw">Otro método es transferir la prueba a la instrucción if y dejar que controle el flujo de todo el ciclo.
+    La diferencia entre estos dos métodos es solo de estilo y no hay diferencia en la eficiencia de ejecución.</p>
+
+  <p class="zw">Si se ejecuta una declaración de interrupción dentro del ciclo, el ciclo se cerrará permanentemente. Por
+    ejemplo, necesitamos procesar una lista de valores que terminan con un valor negativo:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00024.gif" class="calibre14"></p>
+
+  <p class="zw">Otra forma es agregar esta prueba a la expresión while, como se muestra a continuación:</p>
+  <pre
+    class="dai_ma_wu_xing_hao"><code class="calibre8">　　　while( scanf( "%f", &amp;value ) == 1 &amp;&amp; value &gt;= 0 ) {</code></pre>
+
+  <p class="zw">Sin embargo, si se deben realizar algunos cálculos antes de poder probar el valor, es más difícil
+    utilizar este estilo.</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Ocasionalmente, la instrucción while puede completar la tarea de toda la instrucción en la
+      expresión, por lo que el cuerpo del ciclo no tiene nada que ver. En este caso, el cuerpo del bucle está
+      representado por una declaración vacía. Es mejor usar una sola línea para representar una declaración vacía. Como
+      se muestra en el ciclo a continuación, descarta los caracteres restantes en la línea de entrada actual.</p>
+  </blockquote>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">while( (ch = getchar() ) != EOF &amp;&amp; ch != '\n' )
+　     ;</code></pre>
+
+  <blockquote class="ti_shi">
+    <p class="calibre2">Este formulario muestra claramente que el cuerpo del bucle está vacío, para no hacer que la
+      gente piense erróneamente que la siguiente declaración del programa es el cuerpo del bucle.</p>
+  </blockquote>
+
+  <h2 id="nav_point_75" class="calibre24">4.6 para declaración</h2>
+
+  <p class="zw">La instrucción for en C se usa más comúnmente que la instrucción for en otros idiomas. De hecho, la
+    instrucción C for es una abreviatura de una forma de combinación de instrucción muy común del ciclo while. La
+    sintaxis de la instrucción for es la siguiente:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">for( <em class="calibre9">expression1; expression2; expression3</em> )
+　  <em class="calibre9">statement</em>
+</code></pre>
+
+  <p class="zw">La declaración se llama cuerpo del bucle. expression1 es la parte de <strong
+      class="calibre3">inicialización</strong> , solo se ejecuta una vez al comienzo del ciclo. expression2 se llama
+    parte <strong class="calibre3">condicional</strong> , debe ejecutarse una vez antes de cada ejecución del cuerpo del
+    bucle, al igual que la expresión en la instrucción while. Expression3 se denomina parte de <strong
+      class="calibre3">ajuste</strong> , que se ejecuta cada vez que se ejecuta el cuerpo del bucle, justo antes de que
+    se ejecute la parte de condición. Las tres expresiones son opcionales y se pueden omitir. Si se omite la parte de la
+    condición, significa que el valor de la prueba siempre es verdadero.</p>
+
+  <p class="zw">La instrucción break y la instrucción continue también se pueden usar en la instrucción for. La
+    instrucción break sale inmediatamente del bucle y la instrucción continue transfiere el flujo de control
+    directamente a la parte de ajuste.</p>
+
+  <h4 class="sigil_not_in_toc1">El proceso de ejecución de la declaración for</h4>
+
+  <p class="zw">El proceso de ejecución de la instrucción for es casi exactamente el mismo que el de la siguiente
+    instrucción while:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00025.gif" class="calibre14"></p>
+
+  <p class="zw">La figura 4.2 describe el proceso de ejecución de la instrucción for. ¿Puedes encontrar la diferencia
+    entre este y el enunciado while?</p>
+
+  <p class="zw">La diferencia entre el proceso de ejecución de la instrucción for y la instrucción while es cuando
+    aparece la instrucción continue. En la instrucción for, la instrucción continue omite el resto del cuerpo del bucle
+    y regresa directamente a la parte de ajuste. En la instrucción while, la parte de ajuste es parte del cuerpo del
+    bucle, por lo que continue también la omitirá.</p>
+
+  <p class="tu"><img alt="" src="../images/00026.jpeg" class="calibre14"></p>
+
+  <p class="tu_ti">Figura 4.2 El proceso de ejecución de la instrucción for</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">El bucle for tiene una ventaja estilística: recopila todas las expresiones utilizadas para
+      manipular el bucle y las coloca en el mismo lugar para facilitar la búsqueda. Esta ventaja es más prominente
+      cuando el cuerpo del lazo es relativamente grande. Por ejemplo, el siguiente ciclo inicializa todos los elementos
+      de una matriz a 0.</p>
+  </blockquote>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">for( i = 0; i &lt; MAX_SIZE; i += 1 )
+　　　　　 array[i] = 0;</code></pre>
+
+  <blockquote class="ti_shi">
+    <p class="calibre2">El siguiente ciclo while realiza la misma tarea, pero debe observar en tres lugares diferentes
+      para determinar cómo funciona el ciclo.</p>
+  </blockquote>
+
+  <p class="calibre13"><img alt="" src="../images/00027.gif" class="calibre14"></p>
+
+  <h2 id="nav_point_76" class="calibre24">4.7 declaración de hacer</h2>
+
+  <p class="zw">La instrucción do en lenguaje C es muy similar a la instrucción repeat en otros idiomas. Es muy similar
+    a la instrucción while, excepto que su prueba se realiza después de que se ejecuta el cuerpo del bucle, en lugar de
+    antes del cuerpo del bucle. Por lo tanto, el cuerpo de este bucle se ejecuta al menos una vez. La siguiente es su
+    sintaxis.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">do
+<em class="calibre9">　　　　　 statement</em>
+while( <em class="calibre9">expression</em> );
+</code></pre>
+
+  <p class="zw">Como es habitual, si se necesitan varias sentencias en el cuerpo del bucle, pueden aparecer en forma de
+    bloques de código. La figura 4.3 muestra el flujo de ejecución de la instrucción do.</p>
+
+  <p class="tu"><img alt="" src="../images/00028.jpeg" class="calibre14"></p>
+
+  <p class="tu_ti">Figura 4.3 El proceso de ejecución de la instrucción do</p>
+
+  <p class="zw">¿Cómo elegimos entre la instrucción while y la instrucción do?</p>
+
+  <p class="zw"><strong class="calibre3">Cuando necesite que el cuerpo del bucle se ejecute al menos una vez, elija
+      hacer.</strong></p>
+
+  <p class="zw">El siguiente bucle imprime de 1 a 8 espacios a su vez, utilizados para avanzar a la siguiente tabulación
+    (cada 8 columnas es una unidad), describa su proceso de ejecución.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">do{
+　　　　column+=1;
+　　　　putchar('');
+}while(column%8!=0);</code></pre>
+
+  <h2 id="nav_point_77" class="calibre24">4.8 declaración de cambio</h2>
+
+  <p class="zw">La declaración de cambio de C es bastante inusual. Es similar a las declaraciones de casos en otros
+    idiomas, pero hay una diferencia importante en un aspecto. Primero, echemos un vistazo a su sintaxis, donde el
+    resultado de la expresión debe ser un valor entero.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">switch( <em class="calibre9">expression</em> )
+　 　 <em class="calibre9">statement</em>
+</code></pre>
+
+  <p class="zw">Aunque es legal usar una sola declaración en el cuerpo de la declaración de cambio, obviamente no tiene
+    sentido hacerlo. La declaración de cambio en el uso real es generalmente la siguiente:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">switch( <em class="calibre9">expression</em> ){
+　　　　　<em class="calibre9">statement-list</em>
+}
+</code></pre>
+
+  <p class="zw">A lo largo de la lista de declaraciones hay una o más etiquetas de casos, en la siguiente forma:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　case <em class="calibre9">constant-expression</em>:
+</code></pre>
+
+  <p class="zw">Cada etiqueta de caso debe tener un valor único. <strong class="calibre3">La</strong> expresión <strong
+      class="calibre3">constante se</strong> refiere a una expresión que se evalúa durante la compilación, no puede ser
+    ninguna variable. Lo inusual aquí es que la etiqueta del caso no divide la lista de declaraciones en varias partes,
+    solo determinan el punto de entrada de la lista de declaraciones.</p>
+
+  <p class="zw">Rastreemos la ejecución de la declaración de cambio. La primera es calcular el valor de expresión;
+    luego, el flujo de ejecución va a la instrucción cuyo valor de etiqueta de caso coincide con el valor de expresión
+    en la lista de instrucciones. Desde esta instrucción, hasta que el final de la lista de instrucciones es la parte
+    inferior de la instrucción de cambio, se ejecutan todas las instrucciones entre ellas.</p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">¿Ha encontrado alguna diferencia en el proceso de ejecución de la instrucción de cambio? El
+      flujo de ejecución se ejecutará a través de cada etiqueta de caso en lugar de permanecer en una sola etiqueta de
+      caso, por lo que la etiqueta de caso solo determina el punto de entrada de la lista de declaraciones en lugar de
+      dividirlos. Si cree que este comportamiento no parece tan correcto, hay una forma de corregirlo: la declaración de
+      ruptura.</p>
+  </blockquote>
+
+  <h3 id="nav_point_78" class="calibre7">4.8.1 Declaración de interrupción en el conmutador</h3>
+
+  <p class="zw">Si se encuentra una instrucción de interrupción durante la ejecución de una instrucción de cambio, el
+    flujo de ejecución saltará inmediatamente al final de la lista de instrucciones. De todas las declaraciones de
+    cambio en la declaración C, el 97% tiene una declaración de interrupción en cada caso. El siguiente programa de
+    ejemplo verifica el carácter ingresado por el usuario y llama a la función seleccionada por el carácter para
+    ilustrar el uso de la instrucción break.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">switch( command ){
+case 'A':
+　　　　　 add_entry();
+　　　　　 break;
+case 'D':
+　　　　　 delete_entry();
+　　　　　 break;
+case 'P':
+　　　　　 print_entry();
+　　　　　 break;
+case 'E':
+　　　　　 edit_entry();
+　　　　　 break;
+}</code></pre>
+
+  <p class="zw">El efecto real de la declaración de ruptura es dividir la lista de declaraciones en diferentes partes.
+    De esta manera, la declaración de cambio puede funcionar de una manera más tradicional.</p>
+
+  <p class="zw">Entonces, ¿cuál es el punto de agregar una declaración de interrupción después de la última declaración
+    de caso? No tiene ningún efecto en tiempo de ejecución porque ya no hay ninguna declaración después de él, pero no
+    hay nada de malo en hacerlo. La razón para agregar esta declaración de interrupción es para facilitar el
+    mantenimiento futuro. Si alguien decide agregar otro caso a esta declaración de cambio en el futuro, puede evitar la
+    situación en la que se olvida agregar la declaración de interrupción después de la última declaración de caso
+    anterior.</p>
+
+  <p class="zw">En la declaración de cambio, la declaración de continuación no tiene ningún efecto. Solo cuando la
+    instrucción switch está dentro de un bucle, puede colocar la instrucción continue dentro de la instrucción switch.
+    En este caso, es mejor decir que la instrucción continue actúa sobre la instrucción switch como actúa sobre el
+    bucle.</p>
+
+  <p class="zw">Para permitir que el mismo grupo de declaraciones se ejecute con dos o más valores de expresión
+    diferentes, puede hacer que corresponda a múltiples etiquetas de caso, como se muestra a continuación:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00029.gif" class="calibre14"></p>
+
+  <p class="zw">Esta técnica puede lograr el objetivo, porque el flujo de ejecución se ejecutará a través de estas
+    etiquetas de casos paralelas. C no tiene una forma conveniente de especificar un rango de valores, por lo que cada
+    valor en el rango debe darse en una etiqueta de caso separada. Si este rango es muy grande, probablemente debería
+    usar una serie de declaraciones if anidadas en su lugar.</p>
+
+  <h3 id="nav_point_79" class="calibre7">4.8.2 cláusula predeterminada</h3>
+
+  <p class="zw">La siguiente pregunta es, ¿qué pasa si el valor de la expresión no coincide con el valor de todas las
+    etiquetas de caso? En realidad, no es nada, se saltan todas las oraciones. El programa no terminará ni provocará
+    ningún error, porque esta situación no se considera un error en C.</p>
+
+  <p class="zw">Pero, ¿qué sucede si no desea ignorar los valores de expresión que no coinciden con todas las etiquetas
+    de mayúsculas y minúsculas? Puede agregar una cláusula predeterminada a la lista de declaraciones y poner la
+    siguiente etiqueta</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">default:</code></pre>
+
+  <p class="zw">Escriba en cualquier posición donde pueda aparecer una etiqueta de caso. Cuando el valor de la expresión
+    de cambio no coincide con el valor de todas las etiquetas de caso, se ejecutará la declaración que sigue a la
+    cláusula predeterminada. Por lo tanto, solo puede aparecer una cláusula predeterminada en cada instrucción de
+    cambio. Sin embargo, puede aparecer en cualquier lugar de la lista de sentencias y el flujo de sentencias se
+    ejecutará a través de la cláusula predeterminada como una etiqueta de caso.</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Es un buen hábito poner una cláusula predeterminada en cada declaración de cambio, porque al
+      hacerlo se puede detectar cualquier valor ilegal. De lo contrario, el programa continuará ejecutándose con
+      indiferencia, sin provocar ningún error. La única excepción razonable a esta regla es que el valor de la expresión
+      ha sido verificado para su validez anteriormente, y solo está interesado en la parte del valor que puede aparecer
+      en la expresión.</p>
+  </blockquote>
+
+  <h3 id="nav_point_80" class="calibre7">4.8.3 El proceso de ejecución de la declaración de cambio</h3>
+
+  <p class="zw">¿Por qué se implementa la declaración de cambio de esta manera? Muchos programadores piensan que esto es
+    un error, pero ocasionalmente es necesario dejar que la ejecución fluya de un grupo de instrucciones al siguiente.
+  </p>
+
+  <p class="zw">Por ejemplo, considere un programa que cuenta el número de caracteres, palabras y líneas en la entrada
+    del programa. Todos los caracteres deben contarse, pero los espacios y las tabulaciones también se utilizan como
+    terminadores de palabras. Entonces, cuando se cuentan, el valor del contador de caracteres y el valor del contador
+    de palabras deben aumentar. También hay un carácter de nueva línea, este carácter es el terminador de la línea y
+    también el terminador de la palabra. Entonces, cuando ocurre un salto de línea, los valores de los tres contadores
+    deben aumentar. Ahora, observe esta declaración de cambio:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00030.gif" class="calibre14"></p>
+
+  <p class="zw">Comparada con la situación que puede aparecer en el programa real, la lógica anterior es demasiado
+    simple. Por ejemplo, si aparecen varios espacios juntos, solo el primer espacio se puede utilizar como terminador de
+    palabras. Sin embargo, este ejemplo logra la función que necesitamos: las líneas nuevas aumentan los valores de los
+    tres contadores, los espacios y las tabulaciones aumentan los valores de dos contadores y todos los demás caracteres
+    solo aumentan el valor del contador de caracteres.</p>
+
+  <p class="zw">El comentario FALL THRU en el ejemplo anterior puede dejar claro al lector que el flujo de ejecución
+    ahora se ejecutará a través de la etiqueta de caso. Sin este comentario, un programador de mantenimiento que no sea
+    lo suficientemente cuidadoso para encontrar errores puede pensar que la falta de una declaración de interrupción
+    aquí es un error, que es la raíz del error, por lo que ya no tendrán problemas para encontrar el error real. En
+    cualquier caso, debido al hecho de que es muy raro dejar que el flujo de ejecución de la instrucción switch pase a
+    través de la etiqueta del caso, cuando esto sucede, es fácil hacer que la gente piense erróneamente que se trata de
+    un error. Sin embargo, al "arreglar" este problema, no solo se perdió el error que estaba buscando, sino que también
+    introdujo errores nuevos. Haga el esfuerzo de escribir una nota ahora, y puede ahorrar mucho tiempo al mantener el
+    programa en el futuro.</p>
+
+  <h2 id="nav_point_81" class="calibre24">4.9 declaración goto</h2>
+
+  <p class="zw">Finalmente, introduzcamos la instrucción goto, su sintaxis es la siguiente:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">goto <em class="calibre9">语句标签</em> ;
+</code></pre>
+
+  <p class="zw">Para utilizar una instrucción goto, debe agregar una etiqueta de instrucción delante de la instrucción a
+    la que desea saltar. La etiqueta de la declaración es el identificador seguido de dos puntos. Las sentencias Goto
+    que contienen estas etiquetas pueden aparecer en cualquier lugar de la misma función.</p>
+
+  <p class="zw">Goto es una declaración peligrosa, porque en el proceso de aprender C, es fácil formar una dependencia
+    de él. Los programadores sin experiencia a veces usan sentencias goto para evitar pensar en el diseño del programa.
+    Los programas escritos de esta manera siempre son mucho más difíciles de mantener que los programas escritos con
+    cuidado. Por ejemplo, aquí hay un programa que usa sentencias goto para realizar la clasificación de intercambio de
+    elementos de matriz.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00031.gif" class="calibre14"></p>
+
+  <p class="zw">Este es un programa pequeño, pero tienes que pasar mucho tiempo estudiándolo antes de poder descubrir su
+    estructura. El siguiente es un programa con la misma función, pero no usa sentencias goto. Puedes ver fácilmente su
+    estructura.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00032.gif" class="calibre14"></p>
+
+  <p class="zw">Sin embargo, en un caso, incluso para un programa bien estructurado, el uso de la instrucción goto puede
+    ser muy apropiado, es decir, para saltar de múltiples bucles anidados. Dado que la instrucción break solo afecta al
+    bucle más interno que la rodea, solo hay una forma de salir inmediatamente del bucle profundamente anidado, que es
+    usar la instrucción goto. Como se muestra en el siguiente ejemplo:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00033.gif" class="calibre14"></p>
+
+  <p class="zw">Hay dos formas de evitar el uso de declaraciones goto en esta situación. La primera solución es
+    establecer un indicador de estado cuando desee salir de todos los bucles, pero este indicador debe probarse en cada
+    bucle:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00034.gif" class="calibre14"></p>
+
+  <p class="zw">Esta técnica puede lograr el propósito de salir de todos los bucles, pero la situación es muy
+    complicada. Otra solución es poner todos los bucles en una sola función.Cuando un desastre golpea el bucle más
+    interno, puede usar la instrucción return para salir de esta función. El capítulo 7 discutirá la declaración de
+    devolución.</p>
+
+  <h2 id="nav_point_82" class="calibre24">4.10 Resumen</h2>
+
+  <p class="zw">Muchas declaraciones en C se comportan de manera similar a declaraciones similares en otros lenguajes.
+    La sentencia if ejecuta sentencias basadas en condiciones, mientras que la sentencia while ejecuta repetidamente
+    algunas sentencias. Dado que C no tiene un tipo booleano, estas declaraciones utilizan expresiones enteras cuando se
+    prueban valores. Los valores cero se interpretan como falsos y los valores distintos de cero se interpretan como
+    verdaderos. La instrucción for es una abreviatura de una combinación de bucles while de uso común. Recopila las
+    expresiones que controlan el bucle y las coloca en un lugar para facilitar la búsqueda. La instrucción do es similar
+    a la instrucción while, pero la primera puede garantizar que el cuerpo del bucle se ejecute al menos una vez.
+    Finalmente, la instrucción goto transfiere el flujo de ejecución del programa de una instrucción a otra. En general,
+    debemos evitar las declaraciones goto.</p>
+
+  <p class="zw">C también tiene algunas declaraciones que se comportan de manera ligeramente diferente a declaraciones
+    similares en otros lenguajes. Las operaciones de asignación se realizan en declaraciones de expresión, no en
+    declaraciones de asignación especiales. La tarea realizada por la sentencia switch es similar a la de las sentencias
+    case en otros lenguajes, pero la sentencia switch se ejecuta a través de todas las etiquetas case cuando se ejecuta.
+    Para evitar este comportamiento, debe agregar una declaración de interrupción después de cada declaración de caso.
+    La cláusula predeterminada de la instrucción switch se utiliza para capturar la situación en la que el valor de
+    todas las expresiones no coincide con el valor de todas las etiquetas de caso. Si no hay una cláusula
+    predeterminada, cuando el valor de la expresión no coincide con el valor de todas las etiquetas de caso, se omitirá
+    todo el cuerpo de la instrucción de cambio y no se ejecutará.</p>
+
+  <p class="zw">Cuando es necesario que aparezca una declaración pero no es necesario realizar ninguna tarea, se puede
+    utilizar una declaración vacía. Los bloques de código le permiten escribir múltiples declaraciones donde la
+    gramática requiere que aparezca una sola declaración. Cuando se ejecuta la instrucción break dentro del bucle, el
+    bucle saldrá. Cuando la instrucción continue se ejecuta dentro del bucle, se omite el resto del cuerpo del bucle y
+    el siguiente bucle comienza inmediatamente. En los bucles while y do, la posición donde comienza el siguiente bucle
+    es la parte de prueba de expresión. Pero en el ciclo for, la posición donde comienza el siguiente ciclo es la parte
+    de ajuste.</p>
+
+  <p class="zw">¡Eso es todo! C no tiene declaraciones de entrada / salida; la E / S se implementa llamando a funciones
+    de biblioteca. C tampoco tiene declaraciones de manejo de excepciones, también se realizan llamando a funciones de
+    biblioteca.</p>
+
+  <h2 id="nav_point_83" class="calibre24">4.11 Resumen de advertencias</h2>
+
+  <p class="zw">1. Escribe expresiones que no produzcan ningún resultado.</p>
+
+  <p class="zw">2. Asegúrese de agregar llaves alrededor de la lista de declaraciones en la declaración if.</p>
+
+  <p class="zw">3. En la declaración de cambio, el flujo de ejecución se retrasa inesperadamente de un caso al
+    siguiente.</p>
+
+  <h2 id="nav_point_84" class="calibre24">4.12 Resumen de consejos de programación</h2>
+
+  <p class="zw">1. En un bucle sin un cuerpo de bucle, use un punto y coma para indicar una declaración vacía y deje que
+    ocupe una línea por sí sola.</p>
+
+  <p class="zw">2. El bucle for es más legible que el bucle while porque recopila las expresiones utilizadas para
+    controlar el bucle en un solo lugar.</p>
+
+  <p class="zw">3. Utilice la cláusula predeterminada en cada declaración de cambio.</p>
+
+  <h2 id="nav_point_85" class="calibre24">4.13 Problema</h2>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">1. ¿Son legales las siguientes expresiones? Si
+    es legal, ¿qué tarea realiza?</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　 3 * x * x – 4 * x + 6;</code></pre>
+
+  <p class="zw">2. ¿Cuál es la sintaxis de la declaración de asignación?</p>
+
+  <p class="zw">3. ¿Es legal usar bloques de código de la siguiente manera? Si es legal, ¿alguna vez has querido usarlo
+    así?</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　...
+<em class="calibre9">　　statement</em>
+　　{
+<em class="calibre9">　　　　　　　statement</em>
+<em class="calibre9">　　　　　　　statement</em> 
+　 }
+<em class="calibre9">　　statement</em>
+</code></pre>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">4. Cuando escribe una declaración if, si no hay
+    una declaración en la cláusula then <a id="ac42"
+      href="#anchor42"
+      class="calibre5"><sup class="calibre15">[2]</sup></a> , pero hay una declaración en la cláusula else, ¿cómo la
+    escribe? ¿Puedes cambiar a otras formas para lograr el mismo objetivo?</p>
+
+  <p class="zw">5. ¿Qué salida producirá el siguiente bucle?</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　 int  i;
+　 ...
+　 for( i = 0; i &lt; 10; i += 1 )
+　　　　　　　printf( "%d\n", i);</code></pre>
+
+  <p class="zw">6. ¿Cuándo es más apropiado usar una instrucción while que una instrucción for?</p>
+
+  <p class="zw">7. El siguiente fragmento de código se utiliza para copiar la entrada estándar a la salida estándar y
+    calcular la suma de comprobación de los caracteres. ¿Hay algún error en él?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00035.gif" class="calibre14"></p>
+
+  <p class="zw">8. ¿Cuándo es más apropiado usar una instrucción do que una instrucción while?</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">9. ¿Qué resultado producirá el siguiente
+    fragmento de código? Nota: El operador% ubicado entre el operando izquierdo y el operando derecho se usa para
+    generar el resto de la división entre los dos.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00036.gif" width="65%" class="calibre27"></p>
+
+  <p class="zw">10. Escriba algunas declaraciones para leer un valor entero de la entrada estándar y luego imprima
+    algunas líneas en blanco. Este valor especifica el número de líneas en blanco.</p>
+
+  <p class="zw">11. Escriba algunas declaraciones para verificar e informar sobre algunos de los valores que se han
+    leído. Si x es menor que y, escriba la palabra INCORRECTA. De manera similar, si a es mayor o igual que b, también
+    se imprime INCORRECTO. En otros casos, imprima DERECHA. Nota: El operador || significa OR lógico, es posible que
+    deba usarlo.</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">12. Un año divisible por 4 es un año bisiesto,
+    pero el año divisible por 100 no es un año bisiesto, a menos que también sea divisible por 400. Escriba algunas
+    declaraciones para determinar si el año es bisiesto. Si es un año bisiesto, establezca la variable leap_year en 1,
+    si no, establezca leap_year en 0.</p>
+
+  <p class="zw">13. Los reporteros de noticias están capacitados, ¿quién es bueno para hacer preguntas? ¿Qué? ¿Cuándo?
+    ¿dónde? ¿Por qué? Escriba algunas declaraciones, si el valor de which_word es 1, escriba quién; si el valor es 2,
+    escriba qué, y así sucesivamente. Si el valor de la variable no está dentro del rango de 1 a 5, print no lo sé.</p>
+
+  <p class="zw">14. Suponga que está controlado por un "programa", y este programa contiene dos funciones: eat_hamberger
+    () se usa para permitirle comer una hamburguesa, y la función hungry () devuelve un valor verdadero o un valor falso
+    según tenga hambre. Por favor, escriba algunas frases que le permitan comer tantas hamburguesas como desee antes de
+    que se satisfaga su hambre.</p>
+
+  <p class="zw">15. Modifique su respuesta a la pregunta 14 para que satisfaga a su abuela: ya ha comido algo. En otras
+    palabras, debes comer al menos una hamburguesa.</p>
+
+  <p class="zw">dieciséis. Escribe algunos enunciados para imprimir un resumen simple del clima actual basado en los
+    valores de las variables precipitando y temperatura.</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <thead class="calibre17">
+      <tr class="calibre18">
+        <th class="calibre19">
+          <p class="calibre2">Si <code class="calibre26">precipitating</code>es ...</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">Y <code class="calibre26">temperature</code>es ...</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">Entonces imprime ...</p>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">cierto</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">&lt;32 <br class="calibre1">
+            &gt; = 32</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">snowing</code><br class="calibre1">
+            <code class="calibre26">raining</code>
+          </p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">falso</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">&lt;60 <br class="calibre1">
+            &gt; = 60</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">cold</code><br class="calibre1">
+            <code class="calibre26">warm</code>
+          </p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="nav_point_86" class="calibre24">4.14 Ejercicios de programación</h2>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★ 1. La raíz cuadrada de un número positivo n
+    se puede obtener calculando una serie de valores aproximados, cada uno de los cuales está más cerca del valor exacto
+    que el anterior. La primera aproximación es 1 y la siguiente aproximación se obtiene mediante la siguiente fórmula.
+  </p>
+
+  <p class="tu"><img alt="" src="../images/00037.gif" class="calibre14"></p>
+
+  <p class="zw">Escribe un programa que lea un valor, calcule e imprima su raíz cuadrada. Si imprime todos los valores
+    aproximados, encontrará la rapidez con la que este método puede obtener resultados precisos. En principio, este
+    cálculo puede continuar para siempre y seguirá produciendo resultados más precisos. Pero en la práctica, el programa
+    no puede seguir calculando debido a la limitación de precisión de las variables de coma flotante. Cuando una
+    aproximación es igual a la aproximación anterior, puede detener el programa para que no continúe calculando.</p>
+
+  <p class="zw">★ 2. Si un número entero solo puede ser divisible por sí mismo y 1, se llama primo. Escriba un programa
+    para imprimir todos los números primos entre 1 y 100.</p>
+
+  <p class="zw">★★ 3. Los tres lados de un triángulo equilátero son todos iguales en longitud, pero solo dos lados de un
+    triángulo isósceles tienen la misma longitud. Si los tres lados de un triángulo no tienen la misma longitud, se
+    llama triángulo desigual. Escriba un programa que le pida al usuario que ingrese tres números, cada uno de los
+    cuales representa la longitud de los tres lados del triángulo, y luego el programa determinará qué tipo de triángulo
+    es. <strong class="calibre3">Sugerencia</strong> : Además de si los lados tienen la misma longitud, ¿el programa
+    debería considerar otra cosa?</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★ 4. Escribe la función copy_n, su prototipo
+    es el siguiente:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　　void copy_n( char dst[], char src[], int n );</code></pre>
+
+  <p class="zw">Esta función se usa para copiar una cadena del arreglo src al arreglo dst, pero tiene los siguientes
+    requisitos: exactamente n caracteres deben copiarse al arreglo dst, ni más ni menos. Si la longitud de la cadena src
+    es menor que n, debe agregar suficientes caracteres NUL al final de la cadena copiada para que su longitud sea
+    exactamente n. Si la longitud de src es mayor o igual que n, puede detenerse después de almacenar n caracteres en
+    dst. En este momento, la matriz dst no terminará con un carácter NUL. Tenga en cuenta que cuando se llama a copy_n,
+    debería almacenar algo en el espacio de dst [0] a dst [n-1], pero también está limitado a esas ubicaciones, lo que
+    no tiene nada que ver con la longitud de src.</p>
+
+  <p class="zw">Si planea utilizar la función de biblioteca strncpy para implementar su programa, felicidades por
+    aprender este conocimiento con anticipación. Pero aquí, mi propósito es permitirle planificar la lógica del programa
+    usted mismo, por lo que es mejor que no use funciones de biblioteca que manejan cadenas.</p>
+
+  <p class="zw">★★ 5. Escriba un programa para leer el texto línea por línea desde la entrada estándar y complete la
+    siguiente tarea: Si hay dos o más líneas de texto adyacentes en el archivo con el mismo contenido, imprima una línea
+    y el resto no se imprimirá. Puede asumir que la línea de texto en el archivo no excederá los 128 caracteres de
+    longitud (127 caracteres más el carácter de nueva línea utilizado para terminar la línea de texto).</p>
+
+  <p class="zw">Considere el siguiente archivo de entrada.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00038.gif" class="calibre14"></p>
+
+  <p class="zw">Suponiendo que todas las líneas no tienen ningún espacio en blanco al final (no son visualmente
+    visibles, pero pueden hacer que el contenido de dos líneas adyacentes sea diferente), de acuerdo con este archivo de
+    entrada, el programa debería producir la siguiente salida:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　　 And another.
+　　　　 Almost done now --</code></pre>
+
+  <p class="zw">Se imprimen todas las líneas de texto adyacentes con el mismo contenido. Tenga en cuenta que "Otra
+    línea" y "Aún más" no se imprimen, porque aunque ocupan dos líneas en el archivo, las posiciones de las mismas
+    líneas de texto no son adyacentes.</p>
+
+  <p class="zw"><strong class="calibre3">Consejo:</strong> use la función gets para leer las líneas de entrada y use la
+    función strcpy para copiarlas. Existe una función llamada strcmp que acepta dos parámetros de cadena y los compara.
+    Si los dos son iguales, la función devuelve 0, si no son iguales, la función devuelve un valor distinto de cero.</p>
+
+  <p class="zw">★★★ 6. Escriba una función que extraiga una subcadena de una cadena. El prototipo de la función debería
+    ser el siguiente:</p>
+  <pre
+    class="dai_ma_wu_xing_hao"><code class="calibre8">　　　int substr( char dst[], char src[], int start, int  len );</code></pre>
+
+  <p class="zw">La tarea de la función es comenzar en una posición desplazada desde el inicio de la matriz src por
+    caracteres de inicio y copiar hasta len caracteres que no sean NUL en la matriz dst. Después de copiar, la matriz
+    dst debe terminar con bytes NUL. El valor de retorno de la función es la longitud de la cadena almacenada en la
+    matriz dst.</p>
+
+  <p class="zw">Si la posición especificada por inicio es más allá del final de la matriz src, o el valor de inicio o
+    len es negativo, entonces se copia una cadena vacía en la matriz dst.</p>
+
+  <p class="zw">★★★ 7. Escribe una función para eliminar espacios adicionales de una cadena. El prototipo de la función
+    debería ser el siguiente:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　 void deblank( char string[] );</code></pre>
+
+  <p class="zw">Cuando la función encuentra que hay uno o más espacios consecutivos en la cadena, los cambia a un
+    carácter de un solo espacio. Tenga en cuenta que cuando recorra toda la cadena, asegúrese de que termine con un
+    carácter NUL.</p>
+  <hr class="calibre4">
+
+  <p class="calibre2"><a id="anchor41" href="#ac41" class="calibre5">[1]</a> De hecho, puede afectar los resultados del
+    programa, pero como es demasiado sutil, tengo
+    que esperar hasta el Capítulo 18 para discutir el entorno de ejecución antes de explicarlo.</p>
+
+  <p class="calibre2"><a id="anchor42" href="#ac42" class="calibre5">[2]</a> Anotación: C no tiene la palabra clave
+    then. La cláusula then mencionada aquí es la
+    declaración que sigue inmediatamente a la expresión if. Es equivalente a la parte de la cláusula then de otros
+    lenguajes.</p>
+</body>
+
+</html>

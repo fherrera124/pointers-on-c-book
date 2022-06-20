@@ -1,0 +1,1418 @@
+<html xmlns="http://www.w3.org/1999/xhtml" class="translated-ltr">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Desconocido</title>
+
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css">
+  <link href="../page_styles.css" rel="stylesheet" type="text/css">
+
+<body id="DB7S0-e167752e5b154d43a225b5f350ab7738" class="calibre">
+  <h1 id="nav_point_203" class="not-in-toc">Capítulo 10 Estructura y Unión</h1>
+
+  <p class="zw">Los datos a menudo existen en grupos. Por ejemplo, el empleador debe conocer el nombre, la edad y el
+    salario de cada empleado. Si estos valores se pueden almacenar juntos, será más fácil acceder a ellos. Sin embargo,
+    si estos valores son de diferentes tipos (como es el caso ahora), no se pueden almacenar en la misma matriz. En C,
+    diferentes tipos de valores se pueden almacenar juntos usando estructuras.</p>
+
+  <h2 id="nav_point_204" class="calibre24">10.1 Conocimientos básicos de estructura</h2>
+
+  <p class="zw">El tipo de datos agregados puede almacenar más de un dato individual al mismo tiempo. C proporciona dos
+    tipos de tipos de datos agregados, matrices y estructuras. Una matriz es una colección de elementos del mismo tipo,
+    y cada elemento de ella se selecciona por referencia de subíndice o acceso indirecto por puntero.</p>
+
+  <p class="zw">Una estructura también es una colección de valores, estos valores se denominan sus <strong
+      class="calibre3">miembros</strong> (miembro), pero cada miembro de una estructura puede tener diferentes tipos. La
+    estructura es muy similar al disco en Pascal o Modula.</p>
+
+  <p class="zw">Se puede acceder a los elementos de la matriz a través de subíndices, solo porque los elementos de la
+    matriz tienen la misma longitud. Sin embargo, este no es el caso de la estructura. Dado que los miembros de una
+    estructura pueden tener diferentes longitudes, no puede utilizar subíndices para acceder a ellos. En cambio, cada
+    miembro de la estructura tiene su propio nombre y se accede a ellos por su nombre.</p>
+
+  <p class="zw">Esta distinción es muy importante. La estructura no es una matriz de sus propios miembros. A diferencia
+    de un nombre de matriz, cuando se usa una variable de estructura en una expresión, no se reemplaza con un puntero.
+    Las variables de estructura tampoco pueden usar subíndices para seleccionar miembros específicos.</p>
+
+  <p class="zw">Las variables de estructura son de tipo escalar, por lo que puede realizar los mismos tipos de
+    operaciones que otros tipos escalares. Las estructuras también se pueden usar como parámetros pasados ​​a funciones,
+    y también se pueden devolver desde funciones como valores de retorno.Las variables estructurales del mismo tipo se
+    pueden asignar entre sí. Puede declarar un puntero a una estructura, tomar la dirección de una variable de
+    estructura o declarar una matriz de estructuras. Sin embargo, antes de discutir estos temas, debemos conocer algunas
+    cosas más básicas.</p>
+
+  <h3 id="nav_point_205" class="calibre7">10.1.1 Declaración de estructura</h3>
+
+  <p class="zw">Al declarar una estructura, debe enumerar todos los miembros que contiene. Esta lista incluye el tipo y
+    nombre de cada miembro.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">struct <strong class="calibre3">tag { <em class="calibre9">member-list</em> } <em class="calibre9">variable-list</em> ;</strong>
+</code></pre>
+
+  <p class="zw">La sintaxis de la declaración de estructura requiere alguna explicación. No se pueden omitir todas las
+    partes opcionales; deben aparecer al menos dos <a id="ac101"
+      href="#anchor101"
+      class="calibre5"><sup class="calibre15">[1]</sup></a> .</p>
+
+  <p class="zw">Aquí están algunos ejemplos.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00175.gif" class="calibre14"></p>
+
+  <p class="zw">Esta declaración crea una variable llamada x, que contiene tres miembros: un número entero, un carácter
+    y un número de coma flotante.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00176.gif" class="calibre14"></p>
+
+  <p class="zw">Esta declaración crea yy z. y es una matriz que contiene 20 estructuras. z es un puntero, que apunta a
+    este tipo de estructura.</p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">El compilador trata estas dos declaraciones como dos tipos distintos, incluso si sus listas de
+      miembros son exactamente iguales. Por lo tanto, los tipos de variables y y z son diferentes del tipo de x, por lo
+      que la siguiente declaración</p>
+  </blockquote>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">z = &amp;x;</code></pre>
+
+  <blockquote class="ti_shi">
+    <p class="calibre2">Es ilegal.</p>
+  </blockquote>
+
+  <p class="zw">Pero, ¿significa esto que todas las estructuras de un cierto tipo deben crearse con una sola
+    declaración?</p>
+
+  <p class="zw">Afortunadamente, este no es el caso. El campo de etiqueta le permite proporcionar un nombre para la
+    lista de miembros para que pueda usarse en declaraciones posteriores. Las etiquetas permiten que varias
+    declaraciones utilicen la misma lista de miembros y creen el mismo tipo de estructura. Aquí hay un ejemplo.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00177.gif" class="calibre14"></p>
+
+  <p class="zw">Esta declaración asocia la etiqueta SIMPLE con esta lista de miembros. La declaración no proporciona una
+    lista de variables, por lo que no crea ninguna variable.</p>
+
+  <p class="zw">Esta declaración es similar a hacer un cortador de galletas. El cortador de galletas determina la forma
+    de la galleta producida, pero el cortador de galletas en sí no es una galleta. La etiqueta identifica un patrón para
+    declarar variables futuras, pero ni la etiqueta ni el patrón en sí son variables.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">struct　SIMPLE　x;
+struct　SIMPLE　y[20], *z;</code></pre>
+
+  <p class="zw">Estas declaraciones usan etiquetas para crear variables. Crean las mismas variables que los dos primeros
+    ejemplos, pero hay una diferencia importante: ahora x, y y z son todas variables estructurales del mismo tipo.</p>
+
+  <p class="zw">Otra buena técnica que se puede utilizar al declarar una estructura es crear un nuevo tipo con typedef,
+    como se muestra en el siguiente ejemplo.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00178.gif" class="calibre14"></p>
+
+  <p class="zw">Esta técnica tiene casi el mismo efecto que declarar una etiqueta de estructura. La diferencia es que
+    Simple ahora es un nombre de tipo en lugar de una etiqueta de estructura, por lo que la declaración posterior puede
+    verse así:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">Simple　x;
+Simple　y[20], *z;</code></pre>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Si desea utilizar el mismo tipo de estructura en varios archivos fuente, debe colocar
+      declaraciones de etiquetas o declaraciones typedef en un archivo de encabezado. Cuando el archivo fuente necesita
+      esta declaración, puede usar la directiva #include para incluir ese archivo de encabezado.</p>
+  </blockquote>
+
+  <h3 id="nav_point_206" class="calibre7">10.1.2 Miembros de estructura</h3>
+
+  <p class="zw">En los ejemplos hasta ahora, solo he usado tipos simples de miembros de estructura. Pero cualquier
+    variable que pueda declararse fuera de una estructura puede ser miembro de la estructura. En particular, los
+    miembros de la estructura pueden ser escalares, matrices, punteros e incluso otras estructuras.</p>
+
+  <p class="zw">Aquí hay un ejemplo más complicado:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00179.gif" class="calibre14"></p>
+
+  <p class="zw">Los nombres de los miembros de una estructura pueden ser los mismos que los nombres de los miembros de
+    otras estructuras, por lo que el miembro a de esta estructura no entrará en conflicto con el miembro a de la
+    estructura SIMPLE s. Como verá a continuación, el método de acceso a miembros le permite especificar cualquier
+    miembro sin ambigüedad.</p>
+
+  <h3 id="nav_point_207" class="calibre7">10.1.3 Acceso directo a los miembros de la estructura</h3>
+
+  <p class="zw">Se accede a los miembros de las variables de estructura mediante el operador de punto (.). El operador
+    de punto acepta dos operandos, el operando izquierdo es el nombre de la variable de estructura y el operando derecho
+    es el nombre del miembro al que se accede. El resultado de esta expresión es el miembro especificado. Por ejemplo,
+    considere la siguiente declaración</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">struct COMPLEX comp;</code></pre>
+
+  <p class="zw">El miembro llamado a es una matriz, por lo que la expresión comp.a selecciona este miembro. El resultado
+    de esta expresión es un nombre de matriz, por lo que puede usarlo siempre que se pueda usar un nombre de matriz. De
+    manera similar, el miembro s es una estructura, por lo que el resultado de la expresión comp.s es un nombre de
+    estructura, que se puede usar siempre que se puedan usar variables de estructura ordinarias. En particular, podemos
+    usar esta expresión como el operador izquierdo de otro operador de punto, como (comp.s) .a, para seleccionar el
+    miembro s de la estructura comp (que también es el miembro a de una estructura). La asociatividad del operador de
+    punto es de izquierda a derecha, por lo que podemos omitir el paréntesis, y la expresión comp.sa significa lo mismo.
+  </p>
+
+  <p class="zw">Aquí hay un ejemplo más complicado. El miembro sa es una matriz de estructura, por lo que comp.sa es un
+    nombre de matriz y su valor es una constante de puntero. Utilice la operación de referencia de subíndice en esta
+    expresión, como (comp.sa) [4] seleccionará un elemento de matriz. Pero este elemento en sí es una estructura, por lo
+    que podemos usar otro operador de punto para obtener uno de sus miembros. Aquí hay una de esas expresiones:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">( (comp.sa)[4] ).c</code></pre>
+
+  <p class="zw">Las referencias de subíndice y los operadores de puntos tienen la misma precedencia, y su asociatividad
+    es de izquierda a derecha, por lo que podemos omitir todos los paréntesis. La siguiente expresión</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">comp.sa[4].c</code></pre>
+
+  <p class="zw">Es equivalente a la expresión anterior.</p>
+
+  <h3 id="nav_point_208" class="calibre7">10.1.4 Acceso indirecto a los miembros de la estructura</h3>
+
+  <p class="zw">Si tiene un puntero a una estructura, ¿cómo accede a los miembros de esta estructura? La primera es
+    realizar operaciones de acceso indirecto sobre el puntero, lo que le permite obtener esta estructura. Luego, usa el
+    operador de puntos para acceder a sus miembros. Sin embargo, el operador de punto tiene mayor precedencia que el
+    operador de acceso indirecto, por lo que debe usar paréntesis en la expresión para asegurarse de que el acceso
+    indirecto se ejecute primero. Por ejemplo, suponga que el parámetro de una función es un puntero a una estructura,
+    como se muestra en el siguiente prototipo:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">void　　func( struct COMPLEX *cp );</code></pre>
+
+  <p class="zw">La función puede usar la siguiente expresión para acceder al miembro f de la estructura apuntada por
+    esta variable:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">(*cp).f</code></pre>
+
+  <p class="zw">Al realizar un acceso indirecto al puntero, se accederá a la estructura, y luego el operador de punto
+    accederá a un miembro.</p>
+
+  <p class="zw">Debido a que este concepto es un poco molesto, el lenguaje C proporciona un operador más conveniente
+    para realizar esta tarea ---&gt; operador (también conocido como operador de flecha). Y el operador punto, el
+    operador de flecha acepta dos operandos, el operando se debe dejar un puntero a la estructura <strong
+      class="calibre3">del puntero</strong> . El operador de flecha realiza un acceso indirecto al operando izquierdo
+    para obtener la estructura a la que apunta el puntero y luego, como el operador de punto, selecciona un miembro de
+    estructura especificado basándose en el operando derecho. Sin embargo, las operaciones de acceso indirecto están
+    integradas en el operador de flecha, por lo que no es necesario realizar explícitamente el acceso indirecto o usar
+    paréntesis. A continuación, se muestran algunos ejemplos que utilizan el mismo puntero que antes.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">cp-&gt;f
+cp-&gt;a
+cp-&gt;s</code></pre>
+
+  <p class="zw">La primera expresión accede a los miembros numéricos de punto flotante de la estructura, la segunda
+    expresión accede a un nombre de matriz y la tercera expresión accede a una estructura. Pronto verá numerosos
+    ejemplos que pueden ayudarlo a descubrir cómo acceder a los miembros de la estructura.</p>
+
+  <h3 id="nav_point_209" class="calibre7">10.1.5 Autorreferenciación de estructuras</h3>
+
+  <p class="zw">¿Es legal incluir un miembro cuyo tipo sea la estructura misma? Aquí hay un ejemplo para ilustrar esta
+    idea.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00180.gif" class="calibre14"></p>
+
+  <p class="zw">Este tipo de autorreferenciación es ilegal, porque el miembro b es otra estructura completa, que también
+    contendrá su propio miembro b. Este segundo miembro es otra estructura completa, que también incluirá su propio
+    miembro b. Repite esto para siempre. Esto es un poco como un programa recursivo que nunca termina. Pero la siguiente
+    declaración es legal. ¿Puedes ver la diferencia?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00181.gif" class="calibre14"></p>
+
+  <p class="zw">La diferencia entre esta declaración y la anterior es que b ahora es un puntero en lugar de una
+    estructura. El compilador ya conoce la longitud del puntero antes de que se determine la longitud de la estructura,
+    por lo que este tipo de autorreferencia es legal.</p>
+
+  <p class="zw">Si le parece extraño que una estructura contenga un puntero a la estructura en sí, recuerde que en
+    realidad apunta a una estructura <strong class="calibre3">diferente</strong> del mismo tipo . Con esta técnica se
+    implementan estructuras de datos más avanzadas, como listas y árboles vinculados. Cada estructura apunta al
+    siguiente elemento de la lista vinculada o la siguiente rama del árbol.</p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Tenga cuidado con la siguiente trampa:</p>
+  </blockquote>
+
+  <p class="calibre13"><img alt="" src="../images/00182.gif" class="calibre14"></p>
+
+  <blockquote class="ti_shi">
+    <p class="calibre2">El propósito de esta declaración es crear el nombre de tipo SELF_REF3 para esta estructura. Sin
+      embargo, falló. El nombre del tipo no se define hasta el final de la declaración, por lo que no se ha definido
+      dentro de la declaración de estructura.</p>
+
+    <p class="calibre2">La solución es definir una etiqueta de estructura para declarar b, como se muestra a
+      continuación:</p>
+  </blockquote>
+
+  <p class="calibre13"><img alt="" src="../images/00183.gif" class="calibre14"></p>
+
+  <h3 id="nav_point_210" class="calibre7">10.1.6 Declaración incompleta</h3>
+
+  <p class="zw">Ocasionalmente, debe declarar algunas estructuras que dependen unas de otras. En otras palabras, una
+    estructura contiene uno o más miembros de la otra estructura. Al igual que las estructuras de autorreferencia, al
+    menos una estructura debe existir como puntero dentro de otra estructura. El problema radica en la parte de la
+    declaración: si cada estructura hace referencia a las etiquetas de otras estructuras, ¿qué estructura debe
+    declararse primero?</p>
+
+  <p class="zw">La solución a este problema es utilizar una declaración incompleta, que declara un identificador como
+    etiqueta estructural. Luego, podemos usar esta etiqueta en declaraciones que no necesitan conocer la longitud de
+    esta estructura, como declarar un puntero a esta estructura. La siguiente declaración asocia esta etiqueta con la
+    lista de miembros.</p>
+
+  <p class="zw">Considere el siguiente ejemplo: dos tipos diferentes de estructuras tienen un puntero a otra estructura
+    en su interior.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00184.gif" class="calibre14"></p>
+
+  <p class="zw">Se requiere una declaración incompleta de la etiqueta B en la lista de miembros de A. Una vez que se
+    declara A, también se puede declarar la lista de miembros de B.</p>
+
+  <h3 id="nav_point_211" class="calibre7">10.1.7 Inicialización de la estructura</h3>
+
+  <p class="zw">El método de inicialización de la estructura es muy similar a la inicialización de la matriz. Se puede
+    usar una lista de valores iniciales separados por comas dentro de un par de llaves para inicializar cada miembro de
+    la estructura. Estos valores se escriben según el orden de la lista de miembros de la estructura. Si la lista
+    inicial tiene valores insuficientes, los miembros restantes de la estructura se inicializarán con valores
+    predeterminados.</p>
+
+  <p class="zw">Si la estructura contiene matrices o miembros de estructura, el método de inicialización es similar a la
+    inicialización de matrices multidimensionales. La lista de valores iniciales de un miembro de tipo agregado completo
+    se puede anidar dentro de la lista de valores iniciales de la estructura. Aquí hay un ejemplo:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00185.gif" class="calibre14"></p>
+
+  <h2 id="nav_point_212" class="calibre24">10.2 Estructuras, punteros y miembros</h2>
+
+  <p class="zw">Los operadores que acceden a las estructuras y sus miembros directamente o mediante punteros son
+    bastante simples, pero pueden causar confusión cuando se aplican a situaciones complejas. A continuación, se
+    muestran algunos ejemplos que le ayudarán a comprender mejor el proceso de trabajo de estos dos operadores. Estos
+    ejemplos utilizan la siguiente declaración.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00186.gif" class="calibre14"></p>
+
+  <p class="zw">La estructura del tipo EX se puede representar mediante el siguiente diagrama:</p>
+
+  <p class="tu"><img alt="" src="../images/00187.jpeg" class="calibre14"></p>
+
+  <p class="zw">Utilizo la forma de diagramas para representar la estructura y hacer que estos ejemplos parezcan más
+    claros. De hecho, esta imagen no es del todo precisa, porque el compilador intentará evitar el desperdicio de
+    espacio entre los miembros siempre que sea posible.</p>
+
+  <p class="zw">El primer ejemplo utilizará estas declaraciones:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">Ex　　x = { 10, "Hi", { 5, { -1, 25 } }, 0 };
+Ex　　*px = &amp;x;</code></pre>
+
+  <p class="zw">Generará las siguientes variables:</p>
+
+  <p class="tu"><img alt="" src="../images/00188.jpeg" class="calibre14"></p>
+
+  <p class="zw">Ahora usaremos la notación en el Capítulo 6 para estudiar e ilustrar varias expresiones.</p>
+
+  <h3 id="nav_point_213" class="calibre7">10.2.1 Puntero de acceso</h3>
+
+  <p class="zw">Comencemos con las variables de puntero. El valor correcto de la expresión px es:</p>
+
+  <p class="tu"><img alt="" src="../images/00189.jpeg" class="calibre14"></p>
+
+  <p class="zw">px es una variable de puntero, pero aquí no hay un operador de acceso indirecto, por lo que el valor de
+    esta expresión es el contenido de px. El lvalor de esta expresión es:</p>
+
+  <p class="tu"><img alt="" src="../images/00190.jpeg" class="calibre14"></p>
+
+  <p class="zw">Muestra que el antiguo valor de px será reemplazado por un nuevo valor.</p>
+
+  <p class="zw">Ahora considere la expresión px + 1. Esta expresión no es un valor legal, porque su valor no se almacena
+    en ninguna ubicación de memoria identificable. El valor r de esta expresión es más interesante. Si px apunta a un
+    elemento de una matriz de estructura, esta expresión apuntará a la siguiente estructura de la matriz. Pero aun así,
+    esta expresión sigue siendo ilegal, porque no podemos decir si la siguiente ubicación en la memoria almacena uno de
+    estos elementos estructurales o algo más. El compilador no puede detectar este tipo de error, por lo que debe juzgar
+    por sí mismo si la aritmética de punteros tiene sentido.</p>
+
+  <h3 id="nav_point_214" class="calibre7">10.2.2 Estructura de acceso</h3>
+
+  <p class="zw">Podemos usar el operador * para realizar un acceso indirecto al puntero. El valor correcto de la
+    expresión * px es la estructura completa a la que apunta px.</p>
+
+  <p class="tu"><img alt="" src="../images/00191.jpeg" class="calibre14"></p>
+
+  <p class="zw">Las operaciones de acceso indirecto siguen la flecha para acceder a la estructura, por lo que se utiliza
+    la pantalla de línea continua y el resultado es la estructura completa. Puede asignar esta expresión a otra
+    estructura del mismo tipo, o puede usarla como el operando izquierdo del operador de punto para acceder a un miembro
+    especificado. También puede pasarlo como un parámetro a la función, o devolverlo como el valor de retorno de la
+    función (sin embargo, con respecto a las dos últimas operaciones, debe considerar los problemas de eficiencia, que
+    se detallarán más adelante). El valor de la izquierda de la expresión * px es:</p>
+
+  <p class="tu"><img alt="" src="../images/00192.jpeg" class="calibre14"></p>
+
+  <p class="zw">Aquí, la estructura aceptará un nuevo valor, o más precisamente, aceptará los nuevos valores de todos
+    sus miembros. Como valor de l, lo importante es la posición, no el valor almacenado en esta posición.</p>
+
+  <p class="zw">La expresión * px + 1 es ilegal, porque el resultado de * px es una estructura. El lenguaje C no define
+    operaciones de suma entre estructuras y valores enteros. Pero, ¿qué pasa con la expresión * (px + 1)? Si x es un
+    elemento de una matriz, esta expresión representa la estructura detrás de ella. Sin embargo, x es un escalar, por lo
+    que esta expresión es ilegal.</p>
+
+  <h3 id="nav_point_215" class="calibre7">10.2.3 Miembros de la estructura de acceso</h3>
+
+  <p class="zw">Ahora veamos el operador de flecha. El valor correcto de la expresión px-&gt; a es:</p>
+
+  <p class="tu"><img alt="" src="../images/00193.jpeg" class="calibre14"></p>
+
+  <p class="zw">El operador -&gt; realiza un acceso indirecto a px (indicado por la flecha sólida), primero obtiene la
+    estructura a la que apunta y luego accede al miembro a. Cuando tiene un puntero a una estructura pero no sabe el
+    nombre de la estructura, puede usar la expresión px-&gt; a. Si conoce el nombre de esta estructura, también puede
+    usar la expresión equivalente xa.</p>
+
+  <p class="zw">Aquí, hacemos una pausa por un momento y comparamos las expresiones * px y px-&gt; a entre sí. En estas
+    dos expresiones, la dirección guardada por px se usa para encontrar esta estructura. Pero el primer miembro de la
+    estructura es a, por lo que la dirección de a es la misma que la dirección de la estructura. De esta forma, px
+    parece apuntar a toda la estructura, así como al primer miembro de la estructura: después de todo, tienen la misma
+    dirección. Sin embargo, este análisis solo es correcto a medias. Aunque los valores de las dos direcciones son
+    iguales, sus tipos son diferentes. La variable px se declara como un puntero a una estructura, por lo que el
+    resultado de la expresión * px es la estructura completa, no su primer miembro.</p>
+
+  <p class="zw">Creemos un puntero a un número entero.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　*pi;</code></pre>
+
+  <p class="zw">¿Podemos hacer que pi apunte al miembro entero a? Si el valor de pi es el mismo que px, entonces el
+    resultado de la expresión * pi será el miembro a. Sin embargo, la expresin</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">pi = px;</code></pre>
+
+  <p class="calibre2">Es ilegal porque sus tipos no coinciden. Usa la coerción para trabajar:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">pi = (int *)px;</code></pre>
+
+  <p class="zw">Pero este método es muy peligroso porque evita la verificación de tipos del compilador. La expresión
+    correcta es más simple: use el operador &amp; para obtener un puntero a px-&gt; a:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">pi = &amp;px-&gt;a;</code></pre>
+
+  <p class="zw">La precedencia del operador -&gt; es mayor que la precedencia del operador &amp;, por lo que esta
+    expresión no necesita usar paréntesis. Veamos la imagen de &amp; px-&gt; a:</p>
+
+  <p class="tu"><img alt="" src="../images/00194.jpeg" class="calibre14"></p>
+
+  <p class="zw">Observe cómo el valor en la elipse apunta directamente al miembro a de la estructura, a diferencia de
+    px, que apunta a toda la estructura. Después de la operación de asignación anterior, pi y px tienen el mismo valor.
+    Pero sus tipos son diferentes, por lo que los resultados de usar operaciones de acceso indirecto en ellos son
+    diferentes: el resultado de * px es la estructura completa y el resultado de * pi es un valor entero único.</p>
+
+  <p class="zw">Aquí hay otro ejemplo del uso del operador de flecha. El valor de la expresión px-&gt; b es una
+    constante de puntero, porque b es una matriz. Esta expresión no es un valor legal. El siguiente es su valor
+    correcto:</p>
+
+  <p class="tu"><img alt="" src="../images/00195.jpeg" class="calibre14"></p>
+
+  <p class="zw">Si realizamos un acceso indirecto a esta expresión, accederá al primer elemento del arreglo. Usando
+    referencias de subíndices o aritmética de punteros, también podemos acceder a otros elementos de la matriz. La
+    expresión px-&gt; b [1] accede al segundo elemento de la matriz, como se muestra a continuación:</p>
+
+  <p class="tu"><img alt="" src="../images/00196.jpeg" class="calibre14"></p>
+
+  <h3 id="nav_point_216" class="calibre7">10.2.4 Acceso a estructuras anidadas</h3>
+
+  <p class="zw">Para acceder al miembro c, que también es una estructura, podemos usar la expresión px-&gt; c. Su valor
+    es la estructura completa.</p>
+
+  <p class="tu"><img alt="" src="../images/00197.jpeg" class="calibre14"></p>
+
+  <p class="zw">Esta expresión puede usar el operador de punto para acceder a miembros específicos de c. Por ejemplo, la
+    expresión px-&gt; ca tiene el siguiente valor correcto:</p>
+
+  <p class="tu"><img alt="" src="../images/00198.jpeg" class="calibre14"></p>
+
+  <p class="zw">Esta expresión contiene tanto el operador de punto como el operador de flecha. El operador de flecha se
+    usa porque px no es una estructura, sino un puntero a una estructura. La razón para usar el operador de punto a
+    continuación es porque el resultado de px-&gt; c no es un puntero, sino una estructura.</p>
+
+  <p class="zw">Aquí hay una expresión más complicada:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">*px-&gt;c.b</code></pre>
+
+  <p class="zw">Si lo analiza paso a paso, esta expresión es relativamente fácil de entender. Tiene tres operadores, el
+    primero en ejecutarse es el operador de flecha. El resultado de px-&gt; c es la estructura c. Agregue .b a la
+    expresión para acceder al miembro b de la estructura c. b es una matriz, por lo que el resultado de px-&gt; bc es un
+    puntero (constante) que apunta al primer elemento de la matriz. Finalmente, el acceso indirecto se realiza en este
+    puntero, por lo que el resultado final de la expresión es el primer elemento de la matriz. Esta expresión se puede
+    ilustrar de la siguiente manera:</p>
+
+  <p class="tu"><img alt="" src="../images/00199.jpeg" class="calibre14"></p>
+
+  <h3 id="nav_point_217" class="calibre7">10.2.5 Miembros de puntero de acceso</h3>
+
+  <p class="zw">El resultado de la expresión px-&gt; d es como cabría esperar: su valor r es 0 y su valor l es su propia
+    ubicación de memoria. La expresión * px-&gt; d es más interesante. Aquí, el operador de acceso indirecto actúa sobre
+    el valor del puntero almacenado en el miembro d. Pero d contiene un puntero NULL, por lo que no apunta a nada.
+    Desreferenciar un puntero NULL es un error, pero como discutimos antes, algunos entornos no detectarán este error en
+    tiempo de ejecución. En estas máquinas, el programa accederá al contenido de la ubicación de memoria cero y lo
+    tratará como un miembro de la estructura.Si el sistema no encuentra errores, continuará felizmente. Este ejemplo
+    ilustra lo importante que es comprobar si un puntero es válido antes de desreferenciarlo.</p>
+
+  <p class="zw">Creemos otra estructura y establezcamos xd para que apunte a ella.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">Ex　　y;
+x.d = &amp;y;</code></pre>
+
+  <p class="zw">Ahora podemos evaluar la expresión * px-&gt; d.</p>
+
+  <p class="zw">El miembro d apunta a una estructura, por lo que el resultado de realizar operaciones de acceso
+    indirecto en ella es la estructura completa. Esta nueva estructura no se inicializa explícitamente, por lo que los
+    valores de sus miembros no se muestran en la figura.</p>
+
+  <p class="zw">Como era de esperar, se puede acceder a los miembros de esta nueva estructura agregando más operadores a
+    la expresión. Usamos el operador de flecha porque d es un puntero a una estructura. ¿Qué tareas realizan las
+    siguientes expresiones?</p>
+
+  <p class="tu"><img alt="" src="../images/00200.jpeg" class="calibre14"></p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">px-&gt;d-&gt;a
+px-&gt;d-&gt;b
+px-&gt;d-&gt;c
+px-&gt;d-&gt;c.a
+px-&gt;d-&gt;c.b[1]</code></pre>
+
+  <p class="zw">El valor r de la última expresión se puede ilustrar de la siguiente manera:</p>
+
+  <p class="tu"><img alt="" src="../images/00201.jpeg" class="calibre14"></p>
+
+  <h2 id="nav_point_218" class="calibre24">10.3 Asignación de almacenamiento de estructura</h2>
+
+  <p class="zw">¿Cómo se almacena realmente la estructura en la memoria? Esta imagen del ejemplo anterior parece indicar
+    que la estructura contiene una gran cantidad de espacio no utilizado. Pero esta imagen no es del todo exacta, el
+    compilador asigna memoria a cada miembro uno por uno en el orden de la lista de miembros. Solo cuando los miembros
+    necesitan cumplir con los requisitos de alineación de límites correctos al almacenar miembros, puede haber espacio
+    de memoria adicional para llenar entre los miembros.</p>
+
+  <p class="zw">Para ilustrar este punto, considere la siguiente estructura:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">struct　ALIGN　 {
+　　　　 char　 a;
+　　　　 int　 b;
+　　　　 char　 c;
+};</code></pre>
+
+  <p class="zw">Si la longitud del valor entero de una máquina es de 4 bytes y su ubicación de almacenamiento inicial
+    debe ser divisible por 4, entonces el almacenamiento de esta estructura en la memoria será el siguiente:</p>
+
+  <p class="tu"><img alt="" src="../images/00202.jpeg" class="calibre14"></p>
+
+  <p class="zw">El sistema prohíbe al compilador omitir varios bytes al comienzo de una estructura para cumplir con los
+    requisitos de alineación de límites. Por lo tanto, la ubicación de almacenamiento inicial de todas las estructuras
+    debe ser la ubicación requerida por el tipo de datos con los requisitos de límites más estrictos en la estructura.
+    Por lo tanto, el miembro a (el cuadro más a la izquierda) debe almacenarse en una dirección que sea divisible por 4.
+    El siguiente miembro de la estructura es un valor entero, por lo que debe omitir 3 bytes (que se muestran en gris)
+    para alcanzar el límite apropiado antes de que pueda almacenarse. Después del valor entero está el último carácter.
+  </p>
+
+  <p class="zw">Si se declara la segunda variable del mismo tipo, su ubicación de almacenamiento inicial también debe
+    cumplir con el límite de 4, por lo que se omitirán 3 bytes después de la primera estructura para almacenar la
+    segunda estructura. Por lo tanto, cada estructura ocupará 12 bytes de espacio de memoria, pero solo se utilizan 6.
+    Esta tasa de utilización no es muy buena.</p>
+
+  <p class="zw">Puede reorganizar la lista de miembros de la estructura en la declaración para que los miembros con los
+    requisitos de límites más estrictos aparezcan primero y los miembros con los requisitos de límites más débiles
+    aparezcan en último lugar. Este enfoque puede minimizar la pérdida de espacio causada por la alineación de los
+    límites. Por ejemplo, la siguiente estructura</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">struct ALIGN2 {
+int　　　　　b;
+char　　　　 a;
+char　　　　 c;
+};</code></pre>
+
+  <p class="zw">Los miembros incluidos son los mismos que la estructura anterior, pero solo ocupa 8 bytes de espacio,
+    ahorrando un 33%. Se pueden almacenar dos caracteres uno al lado del otro, por lo que solo se desperdician los dos
+    bytes que deben omitirse al final de la estructura.</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">A veces, tenemos buenas razones para decidir no reorganizar los miembros de la estructura para
+      reducir la pérdida de espacio causada por la alineación. Por ejemplo, es posible que deseemos almacenar los
+      miembros de la estructura relacionados juntos para mejorar la facilidad de mantenimiento y la legibilidad del
+      programa. Sin embargo, si no existe tal razón, los miembros de la estructura deben reorganizarse de acuerdo con
+      sus necesidades de límites para reducir la pérdida de memoria causada por la alineación de límites.</p>
+  </blockquote>
+
+  <p class="zw">Cuando el programa creará cientos o incluso miles de estructuras, el requisito de reducir el desperdicio
+    de memoria es más urgente que la legibilidad del programa. En este caso, agregar comentarios a la declaración puede
+    evitar la pérdida de legibilidad.</p>
+
+  <p class="zw">El operador sizeof puede obtener la longitud total de una estructura, incluidos los bytes omitidos
+    debido a la alineación de los límites. Si debe determinar la posición real de un miembro de la estructura, debe
+    considerar el factor de alineación del límite, puede usar la macro offsetof (definida en stddef.h).</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">offsetof( type, member )</code></pre>
+
+  <p class="zw">Tipo es el tipo de estructura y miembro es el nombre del miembro que necesita. El resultado de la
+    expresión es un valor size_t, lo que significa que la ubicación donde comienza a almacenarse el miembro especificado
+    está a unos pocos bytes de la ubicación donde comienza a almacenarse la estructura. Por ejemplo, para la declaración
+    anterior,</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">offsetof( struct ALIGN, b )</code></pre>
+
+  <p class="zw">El valor de retorno es 4.</p>
+
+  <h2 id="nav_point_219" class="calibre24">10.4 Estructura como parámetro de función</h2>
+
+  <p class="zw">La variable de estructura es un escalar y se puede utilizar en cualquier ocasión en la que se puedan
+    utilizar otros escalares. Por lo tanto, es legal pasar una estructura como parámetro a una función, pero este
+    enfoque a menudo es inapropiado.</p>
+
+  <p class="zw">El siguiente fragmento de código se toma de un programa que se utiliza para operar un registrador
+    electrónico de recibos de efectivo. A continuación se muestra una declaración estructurada que contiene información
+    sobre una sola transacción.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00203.gif" class="calibre14"></p>
+
+  <p class="zw">Cuando ocurre una transacción, hay muchos pasos involucrados, uno de los cuales es imprimir un recibo.
+    Veamos cómo realizar esta tarea de varias formas diferentes.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00204.gif" class="calibre14"></p>
+
+  <p class="zw">Si current_trans es una estructura de transacción, podemos llamar a la función de la siguiente manera:
+  </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">print_receipt( current_trans );</code></pre>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Este método puede producir resultados correctos, pero su eficiencia es muy baja, porque el
+      método de llamada parámetro por valor del lenguaje C requiere que se pase una copia del parámetro a la función. Si
+      PRODUCT_SIZE es 20, y tanto el tipo entero como el de punto flotante ocupan 4 bytes en la máquina que estamos
+      usando, entonces esta estructura ocupará 32 bytes de espacio. Para pasarlo como parámetro, debemos copiar 32 bytes
+      a la pila y luego descartarlo.</p>
+  </blockquote>
+
+  <p class="zw">Compare la función anterior con la siguiente:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00205.gif" class="calibre14"></p>
+
+  <p class="zw">Esta función se puede llamar de la siguiente manera:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">print_receipt( &amp;current_trans );</code></pre>
+
+  <p class="zw">Lo que se pasa a la función esta vez es un puntero a la estructura. El puntero es mucho más pequeño que
+    toda la estructura, por lo que puede ser mucho más eficiente empujarlo hacia la pila. El costo adicional de pasar
+    punteros es que debemos usar el acceso indirecto en la función para acceder a los miembros de la estructura. Cuanto
+    más grande sea la estructura, más eficiente será pasar el puntero a la función.</p>
+
+  <p class="zw">En muchas máquinas, puede declarar parámetros como variables de registro para mejorar aún más la
+    eficiencia del esquema de paso de punteros. En algunas máquinas, esta declaración requiere una instrucción adicional
+    al comienzo de la función para copiar los parámetros de la pila (los parámetros se pasan primero a la pila) al
+    registro para que los utilice la función. Sin embargo, si la función tiene más de dos o tres accesos indirectos a
+    este puntero, el tiempo ahorrado al usar este método será mucho mayor que el tiempo invertido por una instrucción
+    adicional.</p>
+
+  <p class="zw">La desventaja de pasar un puntero a una función es que la función ahora puede modificar las variables de
+    estructura del programa que realiza la llamada. Si no queremos esto, podemos usar la palabra clave const en la
+    función para evitar este tipo de modificación. Después de estas dos modificaciones, el prototipo de la función ahora
+    se verá así:</p>
+  <pre
+    class="dai_ma_wu_xing_hao"><code class="calibre8">void print_receipt( register Transaction const *trans );</code></pre>
+
+  <p class="zw">Demos un paso adelante y procesemos la transacción: calculemos el monto total que se debe pagar. Desea
+    que la función comput_total_amount pueda modificar el miembro total_amount de la estructura. Hay tres formas de
+    realizar esta tarea. Primero, veamos la menos eficiente. La siguiente función</p>
+
+  <p class="calibre13"><img alt="" src="../images/00206.gif" class="calibre14"></p>
+
+  <p class="zw">Se puede llamar de la siguiente forma:</p>
+  <pre
+    class="dai_ma_wu_xing_hao"><code class="calibre8">current_trans = compute_total_amount( current_trans );</code></pre>
+
+  <p class="zw">Se pasa una copia de la estructura a la función como parámetro y se modifica. Luego, la función devuelve
+    una copia de la estructura modificada, por lo que esta estructura se copia dos veces.</p>
+
+  <p class="zw">Un método ligeramente mejor es devolver solo el valor modificado en lugar de la estructura completa. La
+    segunda función usa este método.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00207.gif" class="calibre14"></p>
+
+  <p class="zw">Sin embargo, esta función debe llamarse de la siguiente manera:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">current_trans.total_amount =
+　　compute_total_amount( current_trans );</code></pre>
+
+  <p class="zw">Este esquema es mejor que el esquema que devuelve la estructura completa, pero esta técnica solo se
+    aplica al caso de calcular un solo valor. Si le pedimos a la función que modifique dos o más miembros de la
+    estructura, este método es impotente. Además, todavía tiene la sobrecarga de pasar toda la estructura como
+    parámetro. Peor aún, requiere que el programa que realiza la llamada conozca el contenido de la estructura,
+    especialmente el nombre del campo de cantidad total.</p>
+
+  <p class="zw">El tercer método es pasar un puntero, esta solución obviamente es mucho mejor:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00208.gif" class="calibre14"></p>
+
+  <p class="zw">Esta función se llama de la siguiente manera:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">compute_total_amount( &amp;current_trans );</code></pre>
+
+  <p class="zw">Ahora, el campo total_amount de la estructura del programa que realiza la llamada se modifica
+    directamente, no necesita pasar la estructura completa como parámetro a la función ni devolver la estructura
+    modificada completa como valor de retorno. Esta versión es mucho más eficiente que las dos versiones anteriores.
+    Además, el programa de llamada no necesita conocer el contenido de la estructura, por lo que también se mejora la
+    modularidad del programa.</p>
+
+  <p class="zw">¿Cuándo debería pasar una estructura a una función en lugar de un puntero a una estructura? Esto es
+    raramente el caso. Solo cuando una estructura es extremadamente pequeña (la longitud y el puntero son iguales o más
+    pequeños), la eficiencia del esquema de transferencia de estructura no perderá frente al esquema de transferencia de
+    puntero. Pero para la mayoría de las estructuras, pasar punteros es obviamente más eficiente. Si desea que la
+    función modifique cualquier miembro de la estructura, también debe usar el esquema de paso de puntero.</p>
+
+  <p class="editing-tag">K&amp;R C:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">En los primeros compiladores de K&amp;R C, no se podían pasar estructuras como parámetros a
+      funciones; el compilador simplemente no lo permitía. Los compiladores posteriores de K&amp;R C permitieron pasar
+      parámetros de estructura. Sin embargo, estos compiladores no admiten const, por lo que la única forma de evitar
+      que el programa modifique los parámetros de la estructura es pasar una copia de la estructura a la función.</p>
+  </blockquote>
+
+  <h2 id="nav_point_220" class="calibre24">Segmento de 10,5 bits</h2>
+
+  <p class="zw">En cuanto a la estructura, finalmente debemos mencionar su capacidad para implementar campos de bits. La
+    declaración del campo de bits es similar a la estructura, pero sus miembros son campos de uno o más bits. Estos
+    campos de diferentes longitudes se almacenan realmente en una o más variables enteras.</p>
+
+  <p class="zw">La declaración de segmentos de bits es la misma que cualquier declaración de miembro de estructura
+    ordinaria, con dos excepciones. En primer lugar, los miembros del segmento de bits deben declararse como tipo int,
+    con signo int o unsigned int. En segundo lugar, después de que el nombre del miembro sea dos puntos y un entero,
+    este entero especifica el número de bits ocupados por el segmento de bits.</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Es una buena idea declarar explícitamente segmentos de bits con enteros con o sin signo. Si el
+      segmento de bits se declara como un tipo int, el compilador determina si se interpreta como un número con signo o
+      como un número sin signo.</p>
+  </blockquote>
+
+  <p class="zw"><br class="calibre1"></p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Los programas que se centran en la portabilidad deben evitar el uso de segmentos de bits. Debido
+      a las siguientes dependencias relacionadas con la implementación, los segmentos de bits pueden tener resultados
+      diferentes en diferentes sistemas.</p>
+
+    <p class="calibre2">1. Si el campo de bits int se trata como un número con signo o como un número sin signo.</p>
+
+    <p class="calibre2">2. El número máximo de bits en el segmento de bits. Muchos compiladores limitan la longitud de
+      los miembros del campo de bits a la longitud de un valor entero, por lo que una declaración de campo de bits que
+      se puede ejecutar en una máquina de enteros de 32 bits puede no funcionar en una máquina de enteros de 16 bits.
+    </p>
+
+    <p class="calibre2">3. Si los miembros del segmento de bits se asignan de izquierda a derecha o de derecha a
+      izquierda en la memoria.</p>
+
+    <p class="calibre2">4. Cuando una declaración especifica dos segmentos de bits, y el segundo segmento de bits es
+      relativamente grande y no se puede acomodar en los bits restantes del primer segmento de bits, el compilador puede
+      colocar el segundo segmento de bits en la siguiente palabra de la memoria. directamente después del primer
+      segmento de bits, formando así una superposición en el límite de las dos ubicaciones de memoria.</p>
+  </blockquote>
+
+  <p class="zw">El siguiente es un ejemplo de una declaración de segmento de bit:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00209.gif" class="calibre14"></p>
+
+  <p class="zw">Esta declaración se toma de un formateador de texto que puede manejar hasta 128 valores de caracteres
+    diferentes (se requieren 7 bits), 64 fuentes diferentes (se requieren 6 bits) y longitudes de 0 a 524 287 unidades.
+    Este campo de bits de tamaño es demasiado grande para caber en un entero corto, pero los campos de bits restantes
+    son más cortos que un carácter. El segmento de bits permite a los programadores aumentar el número de bits de tamaño
+    almacenando los bits restantes de ch y font, evitando así la necesidad de declarar un entero de 32 bits para
+    almacenar el segmento de bits de tamaño.</p>
+
+  <p class="zw">Muchos compiladores para máquinas de enteros de 16 bits marcarán esta declaración como ilegal, porque la
+    longitud del último segmento de bit excede la longitud del tipo de entero. Pero en una máquina de 32 bits, esta
+    declaración creará ch1 de acuerdo con los siguientes dos métodos posibles.</p>
+
+  <p class="tu"><img alt="" src="../images/00210.gif" class="calibre14"></p>
+
+  <p class="zw">Este ejemplo ilustra una buena razón para usar segmentos de bits: puede empaquetar datos con longitudes
+    impares, ahorrando espacio de almacenamiento. Cuando el programa necesita utilizar miles de estas estructuras, este
+    método de ahorro se vuelve muy importante.</p>
+
+  <p class="zw">Otra razón para utilizar segmentos de bits es que pueden acceder fácilmente a partes de un valor entero.
+    Estudiemos un ejemplo, puede aparecer en el sistema operativo. El código utilizado para manipular el disquete debe
+    comunicarse con el controlador de disco. Estos controladores de dispositivos a menudo contienen varios registros y
+    cada registro contiene muchos valores diferentes empaquetados en un valor entero. Los segmentos de bits son una
+    forma conveniente de acceder a estos valores individuales. Suponga que uno de los registros del controlador de disco
+    se define de la siguiente manera:</p>
+
+  <p class="tu"><img alt="" src="../images/00211.gif" class="calibre14"></p>
+
+  <p class="zw">Cada uno de los primeros 5 segmentos de bits ocupa un bit y los varios segmentos de bits restantes son
+    más largos. En una máquina que asigna segmentos de bits de derecha a izquierda, la siguiente declaración permite que
+    el programa acceda convenientemente a diferentes segmentos de bits de este registro.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00212.gif" class="calibre14"></p>
+
+  <p class="zw">Si se accede al registro de disco en la dirección de memoria 0xc0200142, podemos declarar las siguientes
+    constantes de puntero:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">#define DISK_REGISTER　 \
+　　　 ((struct DISK_REGISTER_FORMAT *)0xc0200142)</code></pre>
+
+  <p class="zw">Después de hacer esta preparación, el código que realmente necesita acceder a los registros del disco se
+    vuelve mucho más simple, como se muestra en el siguiente segmento de código.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 告诉控制器从哪个扇区哪个磁道开始读取。
+*/
+DISK_REGISTER-&gt;sector = new_sector;
+DISK_REGISTER-&gt;track = new_track;
+DISK_REGISTER-&gt;command = READ;
+
+/* 
+** 等待，直到操作完成（ready变量变成真）。
+*/
+while(　! DISK_REGISTER-&gt;ready )
+　　　;
+
+/* 
+** 检查错误。
+*/
+if( DISK_REGISTER-&gt;error_occurred ) {
+switch( DISK_REGISTER-&gt;error_code ) {
+...</code></pre>
+
+  <p class="zw">El uso de segmentos de bits es solo para fines de conveniencia. Cualquier tarea que se pueda implementar
+    con segmentos de bits se puede implementar con desplazamiento y enmascaramiento. Por ejemplo, la función del
+    siguiente segmento de código es exactamente la misma que la función de la primera asignación en el ejemplo anterior.
+  </p>
+
+  <p class="calibre13"><img alt="" src="../images/00213.gif" class="calibre14"></p>
+
+  <p class="zw">La primera instrucción de asignación utiliza la operación Y de bits para borrar el campo del sector,
+    pero no afecta a otros segmentos de bits. La segunda instrucción de asignación se usa para aceptar el valor de
+    new_sector, y la operación AND puede garantizar que este valor no exceda el ancho de este segmento de bits. Luego,
+    muévalo hacia la izquierda a la posición apropiada, y luego use una operación OR bit a bit para establecer este
+    campo en el valor deseado.</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">En el código fuente, es más fácil expresar este proceso con segmentos de bits, pero en el código
+      de destino, no hay diferencia entre los dos métodos. Independientemente de si se utilizan segmentos de bits, se
+      requieren las mismas operaciones de desplazamiento y máscara. La única ventaja que ofrecen los segmentos de bits
+      es la simplificación del código fuente. Esta ventaja debe sopesarse con la desventaja de la portabilidad del
+      segmento de posición más débil.</p>
+  </blockquote>
+
+  <h2 id="nav_point_221" class="calibre24">10.6 Unión</h2>
+
+  <p class="zw">En comparación con la estructura, se puede decir que la unión es otro animal. La declaración de la unión
+    es similar a la estructura, pero se comporta de manera diferente a la estructura. Todos los miembros del sindicato
+    se refieren <strong class="calibre3">al mismo lugar</strong> en la <strong class="calibre3">memoria</strong> .
+    Cuando desee almacenar diferentes cosas en la misma ubicación en diferentes momentos, puede usar union.</p>
+
+  <p class="zw">Primero, veamos un ejemplo simple.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00214.gif" class="calibre14"></p>
+
+  <p class="zw">En una máquina donde los tipos de punto flotante y entero son de 32 bits, la variable fi solo ocupa una
+    palabra de 32 bits en la memoria. Si se usa el miembro f, se accede a la palabra como un valor de punto flotante; si
+    se usa el miembro i, se accede a la palabra como un valor entero. Entonces, el siguiente código</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">fi.f = 3.14159;
+printf("%d\n", fi.i );</code></pre>
+
+  <p class="calibre2">Primero almacene la representación de punto flotante de π en fi, y luego imprima estos <strong
+      class="calibre3">mismos bits</strong> como un valor entero. Tenga en cuenta que los bits a los que hacen
+    referencia estos dos miembros son los mismos, la única diferencia es que el tipo de cada miembro determina cómo se
+    interpretan estos bits.</p>
+
+  <p class="zw">¿Por qué la gente a veces quiere usar un formulario similar a este ejemplo? Si desea ver cómo se
+    almacenan los números de punto flotante en una máquina en particular, pero no está interesado en otras cosas, union
+    podría ayudarlo. Aquí hay un ejemplo más realista. Una de las tareas del intérprete BASIC es recordar los valores de
+    las variables utilizadas por el programa. BASIC proporciona varios tipos diferentes de variables, por lo que el tipo
+    de cada variable debe almacenarse con su valor. Existe una estructura para almacenar esta información, pero no es
+    eficiente.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00215.gif" class="calibre14"></p>
+
+  <p class="zw">Cuando se crea una variable en un programa BASIC, el intérprete crea dicha estructura y registra el tipo
+    de variable. Luego, según el tipo de variable, el valor de la variable se almacena en uno de los tres campos de
+    valor.</p>
+
+  <p class="zw">La ineficiencia de esta estructura es la memoria que ocupa: cada estructura VARIABLE tiene dos campos de
+    valor no utilizados. Union puede reducir este desperdicio, almacena cada uno de estos tres campos de valor en la
+    misma ubicación de memoria. Estos tres campos no entrarán en conflicto, porque cada variable solo puede tener un
+    tipo, por lo que en un momento determinado, solo se usa uno de los campos combinados.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00216.gif" class="calibre14"></p>
+
+  <p class="zw">Ahora, para las variables enteras, establecerá el campo de tipo en INT y almacenará el valor entero en
+    el campo value.i. Para valores de coma flotante, utilizará el campo value.f. Cuando el valor de esta variable se
+    obtiene más tarde, se comprueba el campo de tipo para determinar qué campo de valor utilizar. Esta elección
+    determina cómo se accede a la ubicación de la memoria, por lo que la misma ubicación se puede utilizar para
+    almacenar estos tres tipos diferentes de valores. Tenga en cuenta que el compilador no comprueba el campo de tipo
+    para verificar que el programa utiliza el miembro de unión correcto. Es responsabilidad del programador mantener y
+    verificar el campo de tipo.</p>
+
+  <p class="zw">Si los miembros de la unión tienen diferentes longitudes, la longitud de la unión es la longitud de su
+    miembro más largo. Esta situación se discutirá en la siguiente sección.</p>
+
+  <h3 id="nav_point_222" class="calibre7">10.6.1 Registro de variantes</h3>
+
+  <p class="zw">Analicemos un ejemplo de implementación de lo que se llama un registro variante en Pascal y Modula.
+    Conceptualmente, esta es la situación que acabamos de discutir: una determinada área de la memoria almacenará
+    diferentes tipos de valores en diferentes momentos. Sin embargo, en este caso, estos valores son más complicados que
+    los tipos simples enteros o de coma flotante. Cada uno de ellos es una estructura completa.</p>
+
+  <p class="zw">El siguiente ejemplo se toma de un sistema de inventario, que registra dos entidades diferentes: piezas
+    y subensamblaje. Una pieza es un pequeño accesorio que se compra a otros fabricantes. Tiene varios atributos como
+    fuente de compra, precio de compra, etc. Las piezas de ensamblaje son lo que hacemos, que se componen de algunas
+    piezas y otros ensamblajes.</p>
+
+  <p class="zw">Las dos primeras estructuras especifican qué se debe almacenar para cada pieza y ensamblaje.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00217.gif" class="calibre14"></p>
+
+  <p class="zw">Los siguientes registros de inventario (inventario) contienen información general para cada artículo e
+    incluyen una unión, ya sea para almacenar información de piezas o para almacenar información de ensamblaje.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00218.gif" class="calibre14"></p>
+
+  <p class="zw">Aquí hay algunas declaraciones que se utilizan para manipular la variable de estructura INVREC
+    denominada rec.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00219.gif" class="calibre14"></p>
+
+  <p class="zw">Aunque no es muy cierto, este código muestra cómo acceder a cada miembro de la federación. La primera
+    parte del estado obtiene el valor de costo y el proveedor de la pieza, y la segunda parte del estado obtiene el
+    número de piezas diferentes en un conjunto y la cantidad de la primera pieza.</p>
+
+  <p class="zw">En una unión con diferentes longitudes de miembro, la cantidad de memoria asignada a la unión depende de
+    la longitud de su miembro más largo. De esta manera, la longitud de la unión siempre es suficiente para acomodar a
+    su miembro más grande. Si las longitudes de estos miembros son muy diferentes, el espacio desperdiciado es
+    considerable cuando se almacenan miembros con longitudes más cortas. En este caso, una mejor manera es almacenar
+    punteros a diferentes miembros de la unión en lugar de almacenar los miembros en sí. La longitud de todos los
+    punteros es la misma, lo que resuelve el problema del desperdicio de memoria. Cuando decide qué miembro usar, asigna
+    la cantidad correcta de memoria para almacenarlo. El capítulo 11 hablará sobre la asignación de memoria dinámica y
+    contiene un ejemplo para ilustrar esta técnica.</p>
+
+  <h3 id="nav_point_223" class="calibre7">10.6.2 Inicialización de la unión</h3>
+
+  <p class="zw">La variable de unión se puede inicializar, pero el valor inicial debe ser el tipo del primer miembro de
+    la unión y debe estar dentro de un par de llaves. P.ej,</p>
+
+  <p class="calibre13"><img alt="" src="../images/00220.gif" class="calibre14"></p>
+
+  <p class="zw">Inicialice xa a 5.</p>
+
+  <p class="zw">No podemos inicializar esta clase a un valor de punto flotante o un valor de carácter. Si el valor
+    inicial dado es de cualquier otro tipo, se convertirá (si es posible) a un número entero y se asignará a xa.</p>
+
+  <h2 id="nav_point_224" class="calibre24">10.7 Resumen</h2>
+
+  <p class="zw">En la estructura, se pueden almacenar juntos diferentes tipos de valores. Los valores de la estructura
+    se denominan miembros y se accede a ellos por su nombre. La variable de estructura es un escalar y puede aparecer en
+    cualquier ocasión donde puedan aparecer variables escalares ordinarias.</p>
+
+  <p class="zw">La declaración de la estructura enumera la lista de miembros contenidos en la estructura. Las
+    declaraciones de estructura diferentes se consideran tipos diferentes incluso si sus listas de miembros son las
+    mismas. La etiqueta de estructura es un nombre, que está asociado con una lista de miembros. Puede utilizar
+    etiquetas de estructura para crear variables de estructura del mismo tipo en diferentes declaraciones, por lo que no
+    tiene que repetir la lista de miembros cada vez en la declaración. Typedef también se puede utilizar para lograr
+    este objetivo.</p>
+
+  <p class="zw">Los miembros de la estructura pueden ser escalares, matrices o punteros. Las estructuras también pueden
+    contener miembros que son estructuras en sí mismas. El mismo nombre de miembro en diferentes estructuras no causará
+    conflictos. Utiliza el operador de punto para acceder a los miembros de las variables de estructura. Si tiene un
+    puntero a una estructura, puede utilizar el operador de flecha para acceder a los miembros de esta estructura.</p>
+
+  <p class="zw">Una estructura no puede contener un tipo que también sea miembro de esta estructura, pero su miembro
+    puede ser un puntero a esta estructura. Esta técnica se utiliza a menudo en estructuras de datos encadenadas. Para
+    declarar dos estructuras, cada una de las cuales contiene un miembro de un puntero entre sí, necesitamos usar una
+    declaración incompleta para definir un nombre de etiqueta de estructura. Las variables de estructura se pueden
+    inicializar con una lista de valores rodeados por llaves. El tipo de estos valores debe ser apropiado para los
+    miembros que inicializa.</p>
+
+  <p class="zw">Cuando el compilador asigna memoria para los miembros de una variable de estructura, debe cumplir con
+    sus requisitos de alineación de límites. Al realizar la alineación de los límites del almacenamiento de la
+    estructura, una parte del espacio de la memoria puede desperdiciarse. La disposición de los miembros de la
+    estructura en orden descendente de acuerdo con los requisitos de alineación de límites puede minimizar el espacio de
+    memoria desperdiciado en el almacenamiento de la estructura. El valor devuelto por sizeof contiene espacio de
+    memoria desperdiciado en la estructura.</p>
+
+  <p class="zw">La estructura se puede pasar a una función como parámetro o se puede devolver desde una función como
+    valor de retorno. Sin embargo, a menudo es más eficiente pasar un puntero a una estructura a una función. La palabra
+    clave const se puede agregar a la declaración del parámetro de puntero de estructura para evitar que la función
+    modifique la estructura a la que apunta el puntero.</p>
+
+  <p class="zw">El segmento de bits es una especie de estructura, pero la longitud de su miembro se especifica en
+    unidades de bits. La declaración de segmento es inherentemente no portátil porque involucra muchos factores
+    relacionados con la implementación. Sin embargo, los segmentos de bits le permiten empaquetar valores de longitud
+    impar para ahorrar espacio de almacenamiento. Si el código fuente necesita acceder a bits arbitrarios dentro de un
+    valor, es más fácil usar segmentos de bits.</p>
+
+  <p class="zw">Todos los miembros de un sindicato se almacenan en la misma ubicación de memoria. Al acceder a
+    diferentes tipos de miembros del sindicato, la misma combinación de bits en la memoria se puede interpretar como
+    cosas diferentes. Los sindicatos son útiles cuando se implementan registros de variantes, pero el programador debe
+    ser responsable de confirmar qué variante está realmente almacenada y seleccionar los miembros del sindicato
+    correctos para acceder a los datos. Las variables de unión también se pueden inicializar, pero el valor inicial debe
+    coincidir con el tipo del primer miembro de la unión.</p>
+
+  <h2 id="nav_point_225" class="calibre24">10.8 Resumen de advertencias</h2>
+
+  <p class="zw">1. Las declaraciones de estructura con la misma lista de miembros producen diferentes tipos de
+    variables.</p>
+
+  <p class="zw">2. Se debe tener cuidado al usar typedefs para definir un nombre para una estructura de autorreferencia.
+  </p>
+
+  <p class="zw">3. Pasar parámetros de estructura a funciones es ineficaz.</p>
+
+  <h2 id="nav_point_226" class="calibre24">10.9 Resumen de consejos de programación</h2>
+
+  <p class="zw">1. Coloque la declaración de etiqueta de estructura y la declaración typedef de la estructura en el
+    archivo de encabezado. Cuando el archivo fuente necesite estas declaraciones, puede incluirlas a través de la
+    directiva #include.</p>
+
+  <p class="zw">2. La disposición óptima de los miembros de la estructura no es necesariamente la disposición que
+    considera la alineación de los límites y desperdicia el menor espacio de memoria.</p>
+
+  <p class="zw">3. Declare explícitamente los miembros del segmento de bits como tipo int firmado o int sin firmar.</p>
+
+  <p class="zw">4. Los segmentos de bits no son portátiles.</p>
+
+  <p class="zw">5. El segmento de bit hace que la operación del bit en el código fuente se exprese más claramente.</p>
+
+  <h2 id="nav_point_227" class="calibre24">10.10 Problema</h2>
+
+  <p class="zw">1. ¿Cuál es la diferencia entre un miembro y un elemento de matriz?</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">2. ¿Cuál es la diferencia entre el nombre de la
+    estructura y el nombre de la matriz?</p>
+
+  <p class="zw">3. La sintaxis de declaración de estructura tiene varias partes opcionales. Enumere todas las formas
+    legales de declaración de estructura y explique cómo se implementa cada una.</p>
+
+  <p class="zw">4. ¿Hay algún error en el siguiente segmento del programa? Si es así, ¿dónde está el error?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00221.gif" class="calibre14"></p>
+
+  <p class="calibre13"><img alt="" src="../images/00222.gif" class="calibre14"></p>
+
+  <p class="zw">5. ¿Hay algún error en el siguiente segmento del programa? Si es así, ¿dónde está el error?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00223.gif" class="calibre14"></p>
+
+  <p class="zw">6. Complete la inicialización de x en la siguiente declaración para que el miembro a sea 3, b sea la
+    cadena "hola" y c sea 0. Puede suponer que x está almacenado en la memoria estática.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00224.gif" class="calibre14"></p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">7. Considere estas declaraciones y datos a
+    continuación.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00225.gif" class="calibre14"></p>
+
+  <p class="zw">Evalúa cada expresión a continuación y escribe su valor. Al mismo tiempo, especifique los posibles
+    efectos secundarios durante la evaluación de la expresión. Debe evaluar cada expresión con el valor mostrado
+    originalmente (es decir, no use el resultado de una expresión para evaluar la siguiente expresión). Suponga que la
+    posición inicial de la matriz de nodos en la memoria es 200 y que la longitud de los números enteros y punteros en
+    esta máquina es de 4 bytes.</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <th class="calibre19">
+          <p class="calibre2">expresión</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">valor</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">　 expresión</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">valor</p>
+        </th>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes[3].c-a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes.a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes-a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes[3].a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">np</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes[3].c</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">np-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes[3].c-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">np-&gt;c-&gt;c-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*nodes</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">npp</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*nodes.a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">npp-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">(*nodes).a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*npp</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">**npp</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes[3].b-&gt;b</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*npp-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*nodes[3].b-&gt;b</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">(*npp)-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;np</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes[3].a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;np-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes[3].c</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;np-&gt;c-&gt;c-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><span class="calibre29">　　　</span></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="zw">8. En una máquina de 16 bits, ¿cuánto espacio desperdicia la siguiente estructura debido a la alineación
+    de límites? ¿Qué tal en una máquina de 32 bits?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00226.gif" class="calibre14"></p>
+
+  <p class="zw">9. Indique al menos dos razones por las que el segmento de bits no es portátil.</p>
+
+  <p class="zw">10. Escriba una declaración que permita un fácil acceso a partes individuales de un valor de punto
+    flotante de acuerdo con el siguiente formato.</p>
+
+  <p class="tu"><img alt="" src="../images/00227.jpeg" class="calibre14"></p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">11. Si no usa segmentos de bits, ¿cómo logra la
+    función del siguiente código? Suponga que está utilizando una máquina de 16 bits, que asigna memoria para segmentos
+    de bits de izquierda a derecha.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00228.gif" class="calibre14"></p>
+
+  <p class="zw">12. ¿Qué se imprimirá en el siguiente fragmento de código?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00229.gif" class="calibre14"></p>
+
+  <p class="zw">13. ¿Hay algún error en el siguiente fragmento de código? Si es así, ¿dónde está el error?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00230.gif" class="calibre14"></p>
+
+  <p class="zw">14. Suponiendo que se ha asignado alguna información a una variable conjunta, ¿cómo extraemos esta
+    información correctamente?</p>
+
+  <p class="zw">15. Un intérprete de BASIC puede utilizar la siguiente estructura para recordar el tipo y valor de las
+    variables.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　 struct　VARIABLE {</code></pre>
+
+  <p class="calibre13"><img alt="" src="../images/00231.gif" class="calibre14"></p>
+
+  <p class="zw">¿Qué sería diferente si la estructura se reescribiera en la siguiente forma?</p>
+
+  <p class="calibre13"><img alt="" src="../images/00232.gif" class="calibre14"></p>
+
+  <h2 id="nav_point_228" class="calibre24">10.11 Ejercicios de programación</h2>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★ 1. Cuando realiza una llamada de larga
+    distancia, la información almacenada por la compañía telefónica incluye la fecha y la hora en que realizó la
+    llamada. También incluye tres números de teléfono: el teléfono que usa, el teléfono al que llama y el teléfono por
+    el que paga. Cada uno de estos números de teléfono consta de tres partes: código de área, estación de intercambio y
+    número de estación. Escriba una declaración de estructura para esta información contable.</p>
+
+  <p class="zw">★★ 2. Escriba una declaración para un sistema de información, que se utiliza para registrar las ventas
+    de cada minorista de automóviles. Cada registro de ventas debe incluir los siguientes datos. La longitud máxima de
+    un valor de cadena no incluye el byte NUL al final.</p>
+
+  <p class="zw">　Cadena de nombre del cliente (20)</p>
+
+  <p class="zw">　Cadena de dirección del cliente (40)</p>
+
+  <p class="zw">　Modelo de cuerda (20)</p>
+
+  <p class="zw">Pueden ocurrir tres tipos diferentes de transacciones en las ventas: ventas en efectivo total, ventas de
+    préstamos y arrendamientos. Para ventas en efectivo completas, también debe guardar la siguiente información
+    adicional:</p>
+
+  <p class="zw">Precio de venta sugerido por el fabricante (precio de venta sugerido por el fabricante)</p>
+
+  <p class="zw">Flotante del precio de venta real (precio de venta real)</p>
+
+  <p class="zw">Flotación de impuestos sobre las ventas</p>
+
+  <p class="zw">Flotante de tarifa de licencia</p>
+
+  <p class="zw">Para arrendamientos, debe guardar la siguiente información adicional:</p>
+
+  <p class="zw">Precio de venta sugerido por el fabricante (precio de venta sugerido por el fabricante)</p>
+
+  <p class="zw">Flotante del precio de venta real (precio de venta real)</p>
+
+  <p class="zw">Flotante de anticipo</p>
+
+  <p class="zw">Flotador de depósito de seguridad</p>
+
+  <p class="zw">Flotación de pago mensual</p>
+
+  <p class="zw">Término de arrendamiento int</p>
+
+  <p class="zw">Para las ventas de préstamos, debe guardar la siguiente información adicional:</p>
+
+  <p class="zw">Precio de venta sugerido por el fabricante (precio de venta sugerido por el fabricante)</p>
+
+  <p class="zw">Flotante del precio de venta real (precio de venta real)</p>
+
+  <p class="zw">Flotación de impuestos sobre las ventas</p>
+
+  <p class="zw">Flotante de tarifa de licencia</p>
+
+  <p class="zw">Flotador de pago Doun</p>
+
+  <p class="zw">Duración del préstamo int</p>
+
+  <p class="zw">Flotación de la tasa de interés</p>
+
+  <p class="zw">Flotante de pago mensual</p>
+
+  <p class="zw">Cadena de nombre del banco (nombre del banco) (20)</p>
+
+  <p class="zw">3. Una de las tareas de la computadora es decodificar las instrucciones del programa y determinar qué
+    acción tomar. En muchas máquinas, debido a que diferentes instrucciones tienen diferentes formatos, el proceso de
+    decodificación es complicado. En una máquina en particular, la longitud de cada instrucción es de 16 bits y se
+    implementan los siguientes formatos de instrucción diferentes. Los bits están marcados de derecha a izquierda.</p>
+
+  <p class="tu"><img alt="" src="../images/00233.gif" class="calibre14"></p>
+
+  <p class="tu"><img alt="" src="../images/00234.gif" class="calibre14"></p>
+
+  <p class="zw">Su tarea es escribir una declaración que le permita al programa interpretar las instrucciones en
+    cualquiera de estos formatos. Su declaración también debe tener un campo de tipo corto sin firmar llamado addr, que
+    puede acceder a todos los valores de 16 bits. Use typedef en su declaración para crear un nuevo tipo llamado
+    machine_inst.</p>
+
+  <p class="zw">　Dada la siguiente declaración:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　machine_inst　x;</code></pre>
+
+  <p class="zw">La siguiente expresión debe acceder al bit especificado por ella.</p>
+
+  <p class="tu"><img alt="" src="../images/00235.gif" class="calibre14"></p>
+  <hr class="calibre4">
+
+  <p class="calibre2"><a id="anchor101" href="#ac101" class="calibre5">[1]</a> Una excepción a esta regla es la
+    declaración incompleta de etiquetas de estructura, que se describe más adelante en este capítulo.</p>
+
+</body>
+
+</html>

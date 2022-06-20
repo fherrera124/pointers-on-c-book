@@ -1,0 +1,1292 @@
+<html xmlns="http://www.w3.org/1999/xhtml" class="translated-ltr">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Desconocido</title>
+
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css">
+  <link href="../page_styles.css" rel="stylesheet" type="text/css">
+
+<body id="4OIQ0-e167752e5b154d43a225b5f350ab7738" class="calibre" data-new-gr-c-s-check-loaded="14.1040.0"
+  data-gr-ext-installed="">
+  <h1 id="nav_point_12" class="not-in-toc">Capítulo 1 Inicio rápido</h1>
+
+  <h2 id="nav_point_13" class="calibre12">1.1 Introducción</h2>
+
+  <p class="zw">Siempre es difícil introducir un lenguaje de programación desde el principio, porque hay muchos detalles
+    que no se han introducido y es difícil para los lectores formarse una imagen completa en sus mentes. En este
+    capítulo sus mentes. todos una impresión general del lenguaje C como un todo. Este programa de ejemplo también le
+    muestra cómo se implementa el proceso con el que está familiarizado en el len guaje ot rosto información guaje C.
+    del lenguaje C para que usted mismo pueda escribir programas C útiles.</p>
+
+  <p class="zw">El programa que queremos analizar lee el texto de la entrada estándar, lo modifica y lo escribe en la
+    salida estándar. El procedimiento 1.1 primero lea una serie de etiquetas. Estas etiquetas de columna aparecen en
+    pares para indicar el rango de columna entrada. de etiquetas termina con un valor negativo como signo final. El
+    programa lee e imprime las líneas de entrada restantes, y luego se extraen e imprimen las cadenas de caracteres en
+    el rango seleccionado en las líneas de en cuenta. la etiqueta de la columna en la primera columna de cada fila es
+    cero. Por ejemplo, si ingresa lo siguiente:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00002.gif" class="calibre14"></p>
+
+  <p class="zw">El resultado del programa es el siguiente:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00003.gif" class="calibre14"></p>
+
+  <p class="calibre13"><img alt="" src="../images/00004.gif" class="calibre14"></p>
+
+  <p class="zw">Lo importante de este programa es que muestra la mayoría de las habilidades básicas que necesita saber
+    cuando comienza a escribir un programa en C.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 这个程序从标准输入中读取输入行并在标准输出中打印这些输入行，
+** 每个输入行的后面一行是该行内容的一部分。
+**
+** 输入的第1行是一串列标号，串的最后以一个负数结尾。
+** 这些列标号成对出现，说明需要打印的输入行的列的范围。
+** 例如，0 3 10 12 –1表示第0列到第3列，第10列到第12列的内容将被打印。
+*/
+
+
+#include &lt; stdio.h&gt;
+#include &lt; stdlib.h&gt;
+#include &lt; string.h&gt;
+#define　　MAX_COLS　　20　　　　　　/* 所能处理的最大列号 */
+#define　　MAX_INPUT　　1000　　　　　　/* 每个输入行的最大长度 */
+
+int　　read_column_numbers( int columns[], int max );
+void　　rearrange( char *output, char const *input,
+　　　  int n_columns, int const columns[] );
+
+int main( void )
+{
+　　　int　　　n_columns;　　　　　　/* 进行处理的列标号 */
+　　　int　　　columns[MAX_COLS];　　/* 需要处理的列数 */
+　　　char　input[MAX_INPUT];　　　　/* 容纳输入行的数组 */
+　　　char　output[MAX_INPUT];　　　　/* 容纳输出行的数组 */
+　　　/*
+　　　** 读取该串列标号
+　　　*/
+　　　n_columns = read_column_numbers( columns, MAX_COLS );
+
+　　　/*
+　　　** 读取、处理和打印剩余的输入行。
+　　　*/
+　　　while( gets( input ) != NULL ){
+　　　　　　printf( "Original input : %s\n", input );
+　　　　　　rearrange( output, input, n_columns, columns );
+　　　　　　printf( "Rearranged line: %s\n", output );
+　　　}
+
+　　　return EXIT_SUCCESS;
+}
+
+/*
+** 读取列标号，如果超出规定范围则不予理会。
+*/
+int read_column_numbers( int columns[], int max )
+{
+　　　int　　num = 0;
+　　　int　　ch;
+
+　　　/*
+　　　** 取得列标号，如果所读取的数小于0则停止。
+　　　*/
+　　　while( num &lt; max &amp;&amp; scanf( "%d", &amp;columns[num] ) == 1
+　　　　　 &amp;&amp; columns[num] &gt;= 0 )
+　　　　　　　num += 1;
+
+　　　/*
+　　　** 确认已经读取的标号为偶数个，因为它们是以对的形式出现的。
+　　　*/
+　　　if( num % 2 != 0 ){
+　　　　　　puts( "Last column number is not paired." );
+　　　　　　exit( EXIT_FAILURE );
+　　　}
+
+　　　/*
+　　　** 丢弃该行中包含最后一个数字的那部分内容。
+　　　*/
+　　　while( (ch = getchar()) != EOF &amp;&amp; ch != '\n' )
+　　　　　　;
+
+　　　return num;
+}
+
+/*
+** 处理输入行，将指定列的字符连接在一起，输出行以NUL结尾。
+*/
+void rearrange( char *output, char const *input,
+　　　int n_columns, int const columns[] )
+{
+　　　int　　col;　　　　　　/* columns数组的下标 */
+　　　int　　output_col;　　/* 输出列计数器 */
+　　　int　　len;　　　　　　/* 输入行的长度 */
+
+　　　len = strlen( input );
+　　　output_col = 0;
+
+　　　/*
+　　　** 处理每对列标号。
+　　　*/
+　　　for( col = 0; col &lt; n_columns; col += 2 ){
+　　　　　　int　　nchars = columns[col + 1] - columns[col] + 1;
+
+　　　　　　/*
+　　　　　　** 如果输入行结束或输出行数组已满，就结束任务。
+　　　　　　*/
+　　　　　　if( columns[col] &gt;= len ||
+　　　　　　　　　output_col == MAX_INPUT - 1 )
+　　　　　　　　　　　break;
+
+　　　　　　/*
+　　　　　　** 如果输出行数据空间不够，只复制可以容纳的数据。
+　　　　　　*/
+　　　　　　if( output_col + nchars &gt; MAX_INPUT - 1 )
+　　　　　　　　　nchars = MAX_INPUT - output_col - 1;
+
+　　　　　　/*
+　　　　　　** 复制相关的数据。
+　　　　　　*/
+　　　　　　strncpy( output + output_col, input + columns[col],
+　　　　　　　　　nchars );
+　　　　　　output_col += nchars;
+　　　}
+
+　　　output[output_col] = ’\0’;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Procedimiento 1.1 Reorganizar caracteres</strong>　　　　　　　　</p>
+
+  <p class="calibre11">rearrang.c</p>
+
+  <h3 id="nav_point_14" class="calibre7">1.1.1 Espacios en blanco y comentarios</h3>
+
+  <p class="zw">Ahora, echemos un vistazo más de cerca a este programa. Lo primero a lo que hay que prestar atención es
+    el espacio en blanco del programa: las líneas en blanco separan las diferentes partes del programa; las pestañas
+    para programa; las pestañas se utilizanjor para cantó mostrarme la estructura del programa, etc. C es un lenguaje de
+    forma libre y no hay reglas sobre cómo escribir oraciones. Sin embargo, si puede seguir algunas convenciones al
+    escribir un programa, aún así vale vale la pena. có la pena. de leer y modificar. No lo subestime.</p>
+
+  <p class="zw">Es Importante Mostrar claramente la Estructura del Programa, Pero es Importante: Aún más decirle al
+    lector Qué PUEDE Hacer el Programa Y Como Hacerlo. <strong class="calibre3">El Comentario</strong> (comentario) se
+    utilizació para lograr v this función f.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 这个程序从标准输入中读取输入行并在标准输出中打印这些输入行，
+** 每个输入行的后面一行是该行内容的一部分。
+**
+** 输入的第一行是一串列标号，串的最后以一个负数结尾。
+** 这些列标号成对出现，说明需要被打印的输入行的列范围。
+** 例如，0 3 10 12 –1表示第0列到第3列，第10列到第12列的内容将被打印。
+*/</code></pre>
+
+  <p class="zw">Este texto es un <strong class="calibre3">comentario</strong> . El comentario <code
+      class="calibre8">/*</code>comienza con el símbolo y termina con el símbolo * /. En los programas C, los
+    comentarios se pueden insertar dondequiera que se puedan insertar espacios en blanco. decir, el contenido entre el
+    primer símbolo / * y el primer símbolo * / se considera un comentario, sin importar cuántos símbolos / * haya.</p>
+
+  <p class="zw">
+    En algunos lenguajes, los comentarios se utilizan a veces para "comentar" un fragmento de código, es decir, para
+    hacer que este fragmento de código no funcione en el programa, pero en realidad no lo elimina del archivo fuente. En
+    lenguaje C, esto no es una buena idea. Si intenta "comentar" el código agregando / * y * / al principio y al final
+    de un fragmento de código, es posible que no pueda hacerlo. Si hay comentarios dentro de este código, causará
+    problemas. Para eliminar lógicamente una parte del código C, una mejor manera es usar la directiva #if. Úselo así:
+  </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">#if　0
+　　　 statements
+#endif</code></pre>
+
+  <p class="zw">El bloque entre #if y #endif se puede eliminar de manera efectiva del programa, incluso si hay un
+    comentario entre este código, no importa, por lo que este es un método más seguro. El papel de las directivas de
+    preprocesamiento es mucho mayor de lo que cree. Discutiré este tema en detalle en el Capítulo 14.</p>
+
+  <h3 id="nav_point_15" class="calibre7">1.1.2 Instrucciones de preprocesamiento</h3>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#define　　MAX_COLS　　20　　　/* 能够处理的最大列号 */
+#define　　MAX_INPUT　　1000　　　/* 每个输入行的最大长度 */</code></pre>
+
+  <p class="zw">5 Esta línea se llama <strong class="calibre3">directivas de preprocesamiento</strong> ( <strong
+      class="calibre3">directivas de</strong> preprocesador), porque se hacen Diccionario de <strong
+      class="calibre3">preprocesador</strong> (Preprocesador) a. El preprocesador lee el código fuente, lo modifica de
+    acuerdo con las instrucciones de preprocesamiento y luego envía el código fuente modificado al compilador.</p>
+
+  <p class="zw">
+    En nuestro programa de ejemplo, el preprocesador reemplaza la primera instrucción #include con el contenido del
+    archivo de encabezado de la función de biblioteca llamado stdio.h. El resultado es como si el contenido de stdio.h
+    se escribiera textualmente en el archivo fuente. Las funciones de la segunda y tercera instrucciones son similares,
+    excepto que los archivos de encabezado que reemplazan son stdlib.hy string.h respectivamente.
+  </p>
+
+  <p class="zw">stdio.h archivo de encabezado para que podamos acceder a la función de biblioteca de <strong
+      class="calibre3">E / S</strong> estándar (biblioteca de <strong class="calibre3">E / S</strong> estándar), que
+    conjunto de funciones para realizar entrada y salida. stdlib.h define los símbolos EXIT_SUCCESS y EXIT_FAILURE.
+    Necesitamos las funciones proporcionadas por el archivo de encabezado string.h para manipular cadenas.</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      Si tiene algunas declaraciones que deben usarse en varios archivos fuente diferentes, esta técnica también es una
+      forma conveniente: escriba estas declaraciones en un archivo separado y luego use la directiva #include para
+      incluir este archivo hasta que necesite usarlas. declaraciones en el archivo fuente. De esta manera, solo necesita
+      una copia de estas declaraciones y no necesita ser copiada en muchos lugares diferentes, evitando la posibilidad
+      de errores en el mantenimiento de estos códigos.
+    </p>
+  </blockquote>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      Otra directiva de preprocesamiento es #define, que define el nombre MAX_COLS como 20 y el nombre MAX_INPUT como
+      1000. Cuando este nombre aparezca en cualquier lugar del archivo fuente en el futuro, será reemplazado por el
+      valor definido. Debido a que se definen como constantes literales, estos nombres no pueden aparecer en ocasiones
+      en las que pueden aparecer algunas variables ordinarias (como el lado izquierdo de un símbolo de asignación).
+      Estos nombres generalmente se escriben con mayúscula para recordarles que no son variables ordinarias. La función
+      de la directiva #define es similar a la de las constantes simbólicas en otros lenguajes, y su punto de partida
+      también es el mismo. Si cree que 20 columnas no son suficientes en el futuro, simplemente puede modificar la
+      definición de MAX_COLS, de modo que no tenga que buscar y modificar los 20 que representan el rango de columnas en
+      todo el programa. Puede perder una o no puede usarlo para El 20 que representa el rango de la columna también se
+      ha modificado.
+    </p>
+  </blockquote>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　read_column_numbers( int columns[], int max );
+void　　rearrange( char *output, char const *input,
+　　　　　int n_columns, int const columns[] );</code></pre>
+
+  <p class="zw">Estas declaraciones se denominan <strong class="calibre3">prototipos de funciones</strong> . Le dicen al
+    compilador las características de las funciones que se definirán más adelante en el archivo fuente. De esta forma,
+    cuando se llaman estas funciones, el compilador puede comprobar su precisión. Cada prototipo comienza con un nombre
+    de tipo, que indica el tipo de valor de retorno de la función. Después del nombre del tipo de retorno está el nombre
+    de la función, seguido de los parámetros que la función espera aceptar. Por lo tanto, la función read_column_numbers
+    devuelve un número entero y acepta dos parámetros cuyos tipos son matriz de enteros y escalar de enteros. Los
+    nombres de los parámetros en el prototipo de función no son necesarios, el propósito de dar los nombres de los
+    parámetros aquí es indicar su función.
+  </p>
+
+  <p class="zw">La función de reorganización acepta 4 parámetros. El primer y segundo parámetros son <strong
+      class="calibre3">punteros</strong> . El puntero especifica la dirección de un valor almacenado en la memoria de la
+    computadora, similar a un número de casa que especifica dónde se encuentra una casa en particular en la calle. Los
+    punteros le dan al lenguaje C un gran poder, y los explicaré en detalle en el Capítulo 6. El segundo y cuarto
+    parámetros se declaran como const, lo que significa que la función no modificará los dos parámetros pasados ​​por el
+    llamador de la función. La palabra clave void representa una función que no devuelve ningún valor, en otros
+    lenguajes, dicho valor de función de no devolución se denomina <strong class="calibre3">procedimiento</strong>
+    (procedimiento).</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">Si el código fuente de este programa está compuesto por varios archivos fuente, los archivos
+      fuente que utilizan la función deben especificar el prototipo de la función. Poner prototipos en el archivo de
+      encabezado y usar la directiva #include para incluirlos puede evitar problemas de mantenimiento causados ​​por
+      múltiples copias de la misma declaración.
+    </p>
+  </blockquote>
+
+  <h3 id="nav_point_16" class="calibre7">1.1.3 función principal</h3>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int main( void )
+{</code></pre>
+
+  <p class="zw">
+    Estas líneas forman la parte inicial de la definición de la función principal. Todo programa en C debe tener una
+    función principal, porque es el punto de partida de la ejecución del programa. La palabra clave int indica que la
+    función devuelve un valor entero y la palabra clave void indica que la función no acepta ningún parámetro. El cuerpo
+    de la función principal incluye cualquier cosa entre la llave izquierda y la llave derecha correspondiente.
+  </p>
+
+  <p class="zw">Observe cómo la sangría aclara la estructura del programa.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8"> 　int　　　n_columns;　　　　　　/* 进行处理的列标号 */
+ 　int　　　columns[MAX_COLS];　　/* 需要处理的列数 */
+ 　char　  input[MAX_INPUT];　　　　/* 容纳输入行的数组 */
+ 　char　  output[MAX_INPUT];　　/* 容纳输出行的数组 */</code></pre>
+
+  <p class="zw">Estas líneas declaran 4 variables: un escalar entero, una matriz de enteros y dos matrices de
+    caracteres. Las 4 variables son variables locales de la función principal y otras funciones no pueden acceder a
+    ellas basándose en sus nombres. Por supuesto, se pueden pasar como parámetros a otras funciones.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　/*
+　　** 读取该串列标号
+　　*/
+　　n_columns = read_column_numbers( columns, MAX_COLS );</code></pre>
+
+  <p class="zw">Esta declaración llama a la función read_column_numbers. Las constantes (20) representadas por las
+    columnas de la matriz y MAX_COLS se pasan a esta función como parámetros. En el lenguaje C, el parámetro es una
+    forma de transmisión de <strong class="calibre3">referencia de</strong> matriz (referencia), es decir, llamada a la
+    dirección de transmisión, y las constantes son escalares por parámetros y valores de <strong
+      class="calibre3">valor</strong> var (similar a Pascal y Modula (valor) en el parámetro de transferencia).
+    Cualquier modificación del parámetro escalar en la función se perderá cuando la función regrese, por lo tanto, la
+    función llamada no puede modificar el parámetro que la función que llama le pasa por valor. Sin embargo, cuando la
+    función llamada modifica uno de los elementos del parámetro de matriz, la matriz pasada por la función de llamada
+    será realmente modificada.
+  </p>
+
+  <p class="zw">De hecho, las reglas de paso de parámetros para funciones C se pueden expresar de la siguiente manera:
+  </p>
+
+  <p class="zw"><strong class="calibre3">Todos los parámetros pasados ​​a la función se pasan por valor.</strong></p>
+
+  <p class="zw">Sin embargo, cuando el nombre de la matriz se usa como parámetro, tendrá el efecto de pasar por
+    referencia, como se muestra arriba. Parece haber una contradicción obvia entre las reglas y el comportamiento real,
+    que se explica en detalle en el Capítulo 8.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8"> 　　　　/*
+　　　　　** 读取、处理和打印剩余的输入行。
+ 　　　　*/
+ 　　　　while( gets( input ) != NULL ){
+ 　　　　　　printf( "Original input : %s\n", input );
+ 　　　　　　rearrange( output, input, n_columns, columns );
+ 　　　　　　printf( "Rearranged line: %s\n", output );
+ 　　　　}
+
+
+ 　　　　return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="zw">
+    Los comentarios utilizados para describir este código parecen redundantes. Sin embargo, el mayor costo del software
+    en la actualidad no está en la escritura, sino en el mantenimiento. El primer problema que se encuentra al modificar
+    un fragmento de código es averiguar la función del código. Por lo tanto, si inserta algo en el código para que sea
+    más fácil para otros (¡quizás usted mismo!) Entenderlo en el futuro, vale la pena. Sin embargo, preste atención a
+    escribir comentarios correctos y preste atención a la actualización de los comentarios cuando modifique el código.
+    Si el comentario es incorrecto, ¡es mejor no tenerlo!
+  </p>
+
+  <p class="zw">
+    Este código contiene un bucle while. En el lenguaje C, la función del bucle while es la misma que en otros
+    lenguajes. Primero prueba el valor de la expresión y omite el cuerpo del bucle si es falso (0). Si el valor de la
+    expresión es verdadero (no 0), se ejecuta el código del ciclo y luego se vuelve a probar el valor de la expresión.
+  </p>
+
+  <p class="zw">Este bucle representa la lógica principal de este programa. En resumen, significa:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">while 我们还可以读取另一行输入时
+　　　打印输入行
+　　  对输入行进行重新整理，把它存储于output数组
+　　  打印输出结果</code></pre>
+
+  <p class="zw">La función gets lee una línea de texto de la entrada estándar y la almacena en la matriz que se le pasa
+    como parámetro. Una línea de entrada consta de una cadena de caracteres y termina con un carácter de nueva línea
+    (nueva línea). La función gets descarta el carácter de nueva línea y almacena un byte NUL <a id="ac11"
+      href="#anchor11" class="calibre5"><sup class="calibre15">[1]</sup></a> al final de la línea (un byte NUL se
+    refiere a un byte cuyo patrón de bytes es todo 0, como una constante de carácter como '\ 0'). Luego, la función gets
+    devuelve un valor no NULO, lo que indica que la fila se ha leído correctamente <a id="ac12" href="#anchor12"
+      class="calibre5"><sup class="calibre15">[2]</sup></a> . Cuando se llama a la función gets pero no hay una línea de
+    entrada, de hecho, devuelve un valor NULL, lo que indica que ha llegado al final de la entrada (final del archivo).
+  </p>
+
+  <p class="zw">
+    En los programas C, procesar cadenas es una de las tareas comunes. Aunque el tipo de datos "cadena" no existe en el
+    lenguaje C, existe una convención en todo el idioma: una cadena es una cadena de caracteres que termina en un byte
+    NUL. NUL se utiliza como terminador de cadena, no se considera parte de la cadena en sí. <strong
+      class="calibre3">Un</strong> literal de cadena es una cadena de caracteres entre comillas dobles en un programa
+    fuente. Por ejemplo, constantes de cadena:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">"Hello"</code></pre>
+
+  <p class="zw">Ocupa 6 bytes de espacio en la memoria, que son H, e, l, l, o y NUL en orden.</p>
+
+  <p class="zw">
+    La función printf realiza una salida formateada. La salida formateada del lenguaje C es relativamente simple, si
+    usted es un usuario de Modula o Pascal, definitivamente estará feliz por ello. La función printf acepta múltiples
+    parámetros. El primer parámetro es una cadena que describe el formato de salida, y los parámetros restantes son los
+    valores que deben imprimirse. El formato aparece a menudo en forma de una constante de cadena.
+  </p>
+
+  <p class="zw">
+    La cadena de formato contiene especificadores de formato (códigos de formato) y algunos caracteres ordinarios. Estos
+    caracteres ordinarios se imprimirán literalmente tal como están, pero cada especificador de formato hará que el
+    valor del parámetro subsiguiente se imprima en el formato especificado por él. La tabla 1.1 enumera algunos
+    especificadores de formato de uso común. Si la entrada de la matriz contiene la cadena ¡Hola amigo !, entonces la
+    siguiente declaración</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">printf( "Original input : %s\n", input);</code></pre>
+
+  <p class="calibre2">El resultado de la impresión es:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">Original input : Hi friends!</code></pre>
+
+  <p class="calibre2">Termina con un carácter de nueva línea.</p>
+
+  <p class="biao_ti">Tabla 1.1 Códigos de formato printf comúnmente usados</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <thead class="calibre17">
+      <tr class="calibre18">
+        <th class="calibre19">
+          <p class="calibre2">Formato</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">sentido</p>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">%D</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Imprime un valor entero en forma decimal</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">% o</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Imprime un valor entero en forma octal</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">%X</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Imprime un valor entero en forma hexadecimal</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">%gramo</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Imprimir un valor de punto flotante</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">%C</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Imprimir un personaje</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">%s</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Imprimir una cadena</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">\norte</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Envoltura</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="zw">
+    La siguiente declaración del programa de ejemplo llama a la función de reorganización. Los últimos tres parámetros
+    son los valores pasados ​​a la función, y el primer parámetro es la respuesta que creará la función y volverá a la
+    función principal. Recuerde, este parámetro es la única forma de devolver la respuesta, porque es una matriz. La
+    última función printf muestra el resultado de reorganizar la línea de entrada.
+  </p>
+
+  <p class="zw">Finalmente, cuando finaliza el ciclo, la función principal devuelve el valor EXIT_SUCCESS. Este valor
+    informa al sistema operativo que el programa se ha ejecutado correctamente. La llave derecha marca el final del
+    cuerpo de la función principal.</p>
+
+  <h3 id="nav_point_17" class="calibre7">1.1.4 función read_column_numbers</h3>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 读取列标号，如果超出规定范围则不予理会。
+*/
+int 
+read_column_numbers( int columns[], int max )
+{</code></pre>
+
+  <p class="zw">Estas líneas forman el comienzo de la función read_column_numbers. Tenga en cuenta que esta declaración
+    coincide exactamente con el número y los tipos de parámetros del prototipo de función que apareció en el programa
+    anteriormente y el valor de retorno de la función. Si hay una discrepancia, el compilador informará un error.</p>
+
+  <p class="zw">
+    En el parámetro de matriz de la declaración de función, no se especifica la longitud de la matriz. Este formato es
+    correcto, porque independientemente de la longitud del parámetro de matriz que le pase el programa que llama a la
+    función, la función lo aceptará correctamente. Esta es una gran característica, que permite que una sola función
+    manipule matrices unidimensionales de longitud arbitraria. La desventaja de esta característica es que la función no
+    puede conocer la longitud de la matriz. Si realmente necesita la longitud de la matriz, su valor debe pasarse a la
+    función como un parámetro separado.
+  </p>
+
+  <p class="zw">
+    Cuando se llama a la función read_column_numbers de este ejemplo, el nombre de uno de los parámetros pasados ​​a la
+    función resulta ser el mismo que el nombre del parámetro formal dado anteriormente. Sin embargo, los nombres de los
+    parámetros restantes no son los mismos que los nombres de los parámetros formales correspondientes. Como la mayoría
+    de los lenguajes, los nombres de los parámetros formales en el lenguaje C no tienen nada que ver con los nombres de
+    los parámetros reales. Puedes hacer que los dos sean iguales, pero no tiene por qué ser así.
+  </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">int　　num = 0;
+int　　ch;</code></pre>
+
+  <p class="zw">
+    Aquí se declaran dos variables, son variables locales de la función. La primera variable se inicializa a 0 cuando se
+    declara, pero la segunda variable no se inicializa. Más precisamente, su valor inicial será un valor inesperado, que
+    es basura. En esta función no importa si no tiene valor inicial, porque la primera operación que realiza la función
+    sobre esta variable es asignarle un valor.
+  </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　/*
+　　　** 取得列标号，如果所读取的数小于0则停止。
+　　　*/
+　　　while( num &lt; max &amp;&amp; scanf( "%d", &amp;columns[num] ) == 1
+　　　　　 &amp;&amp; columns[num] &gt;= 0 )
+　　　　　　　 num += 1;</code></pre>
+
+  <p class="zw">
+    Este es otro ciclo para leer la etiqueta de la columna. La función scanf lee caracteres de la entrada estándar y los
+    convierte de acuerdo con la cadena de formato, similar a la operación inversa de la función printf. La función scanf
+    acepta varios parámetros, el primer parámetro es una cadena de formato que se utiliza para describir el tipo de
+    entrada esperado. Los pocos parámetros restantes son variables, que se utilizan para almacenar los datos de entrada
+    leídos por la función. El valor de retorno de la función scanf es el número de valores que la función convirtió y
+    almacenó correctamente en los parámetros.
+  </p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      Debe tener cuidado con esta función por dos razones. En primer lugar, debido al principio de implementación de la
+      función scanf, todos los parámetros escalares deben estar precedidos por un símbolo "&amp;". Explicaré este punto
+      claramente en el Capítulo 8. No es necesario agregar el signo "&amp;" <a id="ac13" href="#anchor13"
+        class="calibre5"><sup class="calibre23">[3]</sup></a> delante de los parámetros de la matriz . Sin embargo, si
+      hay una referencia de subíndice en el parámetro de la matriz, es decir, el parámetro real es un elemento
+      específico de la matriz, entonces también debe estar precedido por el símbolo "&amp;". En el Capítulo 15,
+      explicaré la necesidad de agregar un ampersand delante de los parámetros escalares. Ahora, solo debes saber que
+      este símbolo debe agregarse, porque sin ellos, el programa no se ejecutará correctamente.
+    </p>
+  </blockquote>
+
+  <p class="zw"><br class="calibre1"></p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      El segundo lugar al que hay que prestar atención es el código de formato, que es bastante similar al código de
+      formato de la función printf pero no exactamente igual, por lo que es fácil causar confusión. La Tabla 1.2 enumera
+      a grandes rasgos algunos códigos de formato que puede utilizar en la función scanf. Tenga en cuenta que los
+      primeros 5 códigos de formato se utilizan para leer valores escalares, por lo que el símbolo "&amp;" debe
+      agregarse delante de los parámetros de la variable. Cuando se utilizan todos los códigos de formato (excepto% c),
+      el espacio en blanco (espacio, tabulación, nueva línea, etc.) antes del valor de entrada se omitirá y el espacio
+      en blanco después del valor indica el final del valor. Por lo tanto, al ingresar una cadena de caracteres con el
+      código de formato% s, no se pueden incluir espacios en blanco en el medio. Además de los que se enumeran en la
+      tabla, hay muchos códigos de formato, pero los códigos de formato en esta tabla son suficientes para satisfacer
+      nuestras necesidades actuales.
+    </p>
+  </blockquote>
+
+  <p class="zw">Ahora podemos explicar la expresión:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">scanf("%d", &amp;columns[num] )</code></pre>
+
+  <p class="zw">
+    El código de formato% d indica que es necesario leer un valor entero. Los caracteres se leen desde la entrada
+    estándar, los espacios en blanco iniciales se omitirán. Luego, estos números se convierten en un número entero y el
+    resultado se almacena en el elemento de matriz especificado. Necesitamos agregar un signo "&amp;" antes del
+    parámetro, porque el subíndice de la matriz selecciona un solo elemento de la matriz, que es un escalar.
+  </p>
+
+  <p class="zw">La condición de prueba del bucle while consta de 3 partes:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">num &lt; max</code></pre>
+
+  <p class="calibre2">Esta condición de prueba asegura que la función no leerá demasiados valores, causando que la
+    matriz se desborde. Si la función scanf convierte un número entero, devolverá un valor de 1. finalmente,</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">columns[num] &gt;= 0</code></pre>
+
+  <p class="calibre2">Esta expresión asegura que el valor leído por la función sea un número positivo. Si el valor de
+    una de las dos condiciones de prueba es falso, el bucle terminará.</p>
+
+  <p class="biao_ti">Tabla 1.2 Códigos de formato scanf comunes</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <thead class="calibre17">
+      <tr class="calibre18">
+        <th class="calibre19">
+          <p class="calibre2">Formato</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">sentido</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">Tipo variable</p>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">%D</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Leer un valor entero</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">En t</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">% ld</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Leer un valor entero largo</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">largo</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">%F</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Leer un valor real (número de coma flotante)</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">flotador</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">% lf</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Leer un valor real de doble precisión</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">doble</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">%C</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Leer un personaje</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">carbonizarse</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">%s</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Leer una cadena de la entrada</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">matriz de caracteres</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="zw"><br class="calibre1"></p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">El estándar no requiere que el compilador de C verifique la validez de los subíndices de matriz,
+      y la mayoría de los compiladores de C no lo hacen. Por lo tanto, si necesita verificar la validez de los
+      subíndices de la matriz, debe escribir su propio código. Si la prueba de num &lt;max no se realiza aquí, y el
+      archivo leído por el programa contiene más de 20 etiquetas de columna, el valor adicional se almacenará en la
+      ubicación de la memoria inmediatamente después de la matriz, lo que destruirá el almacenamiento original en este.
+      Los datos de ubicación pueden ser otras variables o la dirección de retorno de la función. Esto puede dar lugar a
+      varios resultados y lo más probable es que el programa no se comporte como esperaba.
+    </p>
+  </blockquote>
+
+  <p class="zw">
+    &amp;&amp; es el operador "Y lógico". Para que toda la expresión sea verdadera, las expresiones en ambos lados del
+    operador &amp;&amp; deben ser verdaderas. Sin embargo, si la expresión de la izquierda es falsa, la expresión de la
+    derecha ya no se evalúa, porque si es verdadera o falsa, toda la expresión siempre es falsa. En este ejemplo, si num
+    alcanza su valor máximo, el ciclo terminará <a id="ac14" href="#anchor14" class="calibre5"><sup
+        class="calibre15">[4]</sup></a> y la expresión</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">columns[num]</code></pre>
+
+  <p class="calibre2">Ya no se evalúa.</p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      Debes tener cuidado aquí. Cuando realmente desee utilizar el operador &amp;&amp;, no haga un mal uso del operador
+      &amp;. El operador &amp; realiza una operación "AND bit a bit". Aunque a veces el resultado de la operación es el
+      mismo que el del operador &amp;&amp;, en muchos casos es diferente. Hablaré de estos operadores en el Capítulo 5.
+    </p>
+  </blockquote>
+
+  <p class="zw">
+    La función scanf lee un entero decimal de la entrada estándar cada vez que se llama. Si la conversión falla, ya sea
+    porque el archivo se ha leído o porque el siguiente carácter de entrada no se puede convertir en un número entero,
+    la función devolverá 0, lo que terminará todo el ciclo. Si el carácter de entrada se puede convertir legalmente a un
+    número entero, entonces este valor se convertirá en un número binario y se almacenará en las columnas del elemento
+    de matriz [num]. Luego, la función scanf devuelve 1.
+  </p>
+
+  <p class="editing-tag">advertir:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      Nota: El operador utilizado para probar si dos expresiones son iguales es ==. Si hace un mal uso del operador =,
+      aunque también es una expresión legal, es casi seguro que el resultado será diferente de lo que pretendía:
+      ¡realizará una operación de asignación en lugar de una operación de comparación! Pero debido a que también es una
+      expresión legal, el compilador no puede encontrar este error por usted <a id="ac15" href="#anchor15"
+        class="calibre5"><sup class="calibre23">[5]</sup></a> . Al realizar operaciones de comparación, asegúrese de
+      tener en cuenta que está utilizando dos operadores de comparación con signos iguales. Si su programa no se puede
+      ejecutar, verifique todos los operadores de comparación para ver si hay algún problema en este lugar. Créame,
+      definitivamente cometerá este error, y quizás más de una vez, yo mismo cometí este error.
+    </p>
+  </blockquote>
+
+  <p class="zw">El siguiente operador &amp;&amp; asegura que el número se prueba para su asignación solo después de que
+    la función scanf lee correctamente un número. Declaración</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">num += 1;</code></pre>
+
+  <p class="calibre2">Incrementa el valor de la variable num en 1, que es equivalente a la siguiente expresión</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">num = num + 1;</code></pre>
+
+  <p class="zw">Más adelante explicaré por qué el lenguaje C proporciona dos formas diferentes de incrementar el valor
+    de una variable <a id="ac16" href="#anchor16" class="calibre5"><sup class="calibre15">[6]</sup></a> .</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 确认已经读取的标号为偶数个，因为它们是以成对的形式出现的。
+*/
+if( num % 2 != 0 ){
+　　　 puts( "Last column number is not paired." );
+　　　 exit( EXIT_FAILURE );
+}</code></pre>
+
+  <p class="zw">Esta prueba verifica si los enteros leídos por el programa son números pares, lo que el programa
+    especifica, ya que estos números deben aparecer en pares. El operador% realiza una división de enteros, pero el
+    resultado que da es el resto de la división en lugar del cociente. Si num no es un número par, el resto después de
+    dividirlo por 2 no será 0.</p>
+
+  <p class="zw">La función put es la versión de salida de la función gets, escribe la cadena especificada en la salida
+    estándar y agrega un carácter de nueva línea al final. Luego, el programa llama a la función de salida para terminar
+    la operación del programa, y ​​el valor de EXIT_FAILURE se devuelve al sistema operativo, lo que indica que se ha
+    producido un error.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+ ** 丢弃该行中包含最后一个数字的那部分内容。
+ */
+ while( (ch = getchar()) != EOF &amp;&amp; ch != '\n' )
+　　　　　　;</code></pre>
+
+  <p class="zw">
+    Cuando la función scanf convierte el valor de entrada, solo lee los caracteres que deben leerse. De esta forma, el
+    resto de la línea de entrada que contiene el último valor seguirá ahí, esperando ser leído. Solo puede contener un
+    carácter de nueva línea como terminador, o puede contener otros caracteres. En cualquier caso, el bucle while leerá
+    y descartará estos caracteres restantes para evitar que se interpreten como la primera línea de datos.
+  </p>
+
+  <p class="zw">La siguiente expresión</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">(ch = getchar() ) != EOF &amp;&amp; ch != '\n'</code></pre>
+
+  <p class="calibre2">Vale la pena tomarse un tiempo para discutirlo. Primero, la función getchar lee un carácter de la
+    entrada estándar y devuelve su valor. Si no hay más caracteres en la entrada, la función devuelve la constante EOF
+    (definida en stdio.h) para indicar el final del archivo.</p>
+
+  <p class="zw">
+    El valor devuelto por la función getchar se asigna a la variable ch, y luego se compara con EOF. La adición de
+    paréntesis en ambos extremos de la expresión de asignación se usa para asegurar que la operación de asignación
+    precede a la operación de comparación. Si ch es igual a EOF, el valor de toda la expresión es falso y el ciclo
+    terminará. Si este no es el caso, compare ch con el carácter de nueva línea. Si los dos son iguales, el ciclo
+    también terminará. Por lo tanto, solo cuando la entrada no ha llegado al final del archivo y el carácter de entrada
+    no es un carácter de nueva línea, el valor de la expresión es verdadero (el ciclo continuará ejecutándose). De esta
+    forma, este bucle puede eliminar los caracteres restantes al final de la línea de entrada actual.
+  </p>
+
+  <p class="zw">Ahora entremos en la parte interesante. En la mayoría de los otros lenguajes, escribiremos bucles como
+    este:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">ch = getchar();
+while( ch != EOF &amp;&amp; CH != '\n' )
+　　　　　ch = getchar();</code></pre>
+
+  <p class="zw">Leerá un carácter, y luego, si no hemos llegado al final del archivo o el carácter leído no es un
+    carácter de nueva línea, continuará leyendo el siguiente carácter. Tenga en cuenta que la siguiente declaración
+    aparece dos veces aquí</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　ch = getchar();</code></pre>
+
+  <p class="zw">C puede implicar operaciones de asignación dentro de la instrucción while, lo que permite al programador
+    eliminar declaraciones redundantes.</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      La función del ciclo en el programa de ejemplo es la misma que la del ciclo anterior, pero contiene menos
+      declaraciones. Indiscutiblemente, este formulario es un poco menos legible. Solo por esta razón, puede afirmar con
+      seguridad que debe evitarse esta técnica de codificación. Sin embargo, la razón por la que cree que esta forma de
+      código es menos legible es porque no está familiarizado con el lenguaje C y sus modismos de programación. Los
+      programadores experimentados en C no tendrán ninguna dificultad para leer (y escribir) tales declaraciones. Cuando
+      no hay un beneficio obvio, debe evitar el uso de métodos que afecten la legibilidad del código. Pero en este
+      lenguaje de programación, los beneficios de mantenimiento de escribir la misma oración menos una vez son mayores.
+    </p>
+  </blockquote>
+
+  <p class="zw">
+    Una pregunta frecuente es: ¿Por qué ch se declara como un número entero cuando en realidad lo necesitamos para leer
+    caracteres? La respuesta es que EOF es un valor entero, que tiene más dígitos que el tipo de carácter. Declarar ch
+    como un entero puede evitar que los caracteres leídos en la entrada se interpreten accidentalmente como EOF. Pero al
+    mismo tiempo, esto también significa que el ch que recibe el carácter debe ser lo suficientemente grande para
+    acomodar EOF, por lo que ch usa un valor entero. Como se discutió en el Capítulo 3, los caracteres son solo pequeños
+    números enteros, por lo que usar una variable entera para contener el valor del carácter no causa ningún problema.
+  </p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      Hay una nota más al final de este programa: no hay ninguna declaración en el cuerpo del ciclo while. Solo
+      completar la parte de prueba de la expresión while es suficiente para lograr nuestro propósito, por lo que el
+      cuerpo del bucle no tiene nada que hacer. Ocasionalmente encontrará este tipo de bucles y no debería ser un
+      problema tratar con ellos. El solo punto y coma después de la instrucción, mientras que se llama <strong
+        class="calibre3">una</strong> declaración vacía, que se utiliza en la situación actual, es decir, cuando la
+      gramática requiere una declaración para estar presente en este lugar, pero no hay necesidades de la tarea a
+      realizar. Este punto y coma ocupa solo una línea, lo que evita que los lectores piensen erróneamente que la
+      siguiente declaración también forma parte del cuerpo del bucle.</p>
+  </blockquote>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　 return num;
+}</code></pre>
+
+  <p class="zw">La declaración de retorno es una función que devuelve un valor a la expresión que la llamó. En este
+    ejemplo, el valor de la variable num se devuelve al programa que llamó a la función, y este último asigna el valor
+    de retorno a la variable n_columns del programa principal.</p>
+
+  <h3 id="nav_point_18" class="calibre7">1.1.5 función de reorganización</h3>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 处理输入行，将指定列的字符连接在一起，输出行以NUL结尾。
+*/
+void 
+rearrange( char *output, char const *input,
+　　　　int n_columns, int const columns[] )
+{
+　　　int　　col;　　　　　　/* columns数组的下标 */
+　　　int　　output_col;　　/* 输出列计数器 */
+　　　int　　len;　　　　　　/* 输入行的长度 */</code></pre>
+
+  <p class="zw">
+    Estas declaraciones definen la función de reorganización y declaran algunas variables locales. El punto más
+    interesante aquí es que los dos primeros parámetros se declaran como punteros, pero cuando se llama realmente a la
+    función, los parámetros que se les pasan son nombres de matriz. Cuando el nombre de la matriz se usa como un
+    parámetro real, lo que se pasa a la función es en realidad un puntero a la posición inicial de la matriz, que es la
+    dirección de la matriz en la memoria. Precisamente porque la transferencia real es un puntero en lugar de una copia
+    de la matriz, el nombre de la matriz como parámetro tiene la semántica de una llamada por dirección. Las funciones
+    pueden manipular los parámetros reales de la misma manera que los punteros, y también pueden usar subíndices para
+    referirse a los elementos de la matriz como el nombre de la matriz. El capítulo 8 explicará estas técnicas con más
+    detalle.
+  </p>
+
+  <p class="zw">
+    Sin embargo, debido a su semántica de llamada por dirección, si una función modifica un elemento de un grupo de
+    parámetros formal, en realidad modificará el elemento correspondiente de un grupo de parámetros real. Por lo tanto,
+    el programa de ejemplo que declara columnas como const tiene dos efectos. Primero, afirma que la intención del autor
+    de la función es que este parámetro no se pueda modificar. En segundo lugar, hace que el compilador verifique si se
+    viola la intención. Por lo tanto, la persona que llama a esta función no tiene que preocuparse por los elementos de
+    la matriz pasados ​​a la función, ya que se modificará el cuarto parámetro del programa de ejemplo.
+  </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">len = strlen( input );
+output_col = 0;
+
+/*
+** 处理每对列标号。
+*/
+for( col = 0; col &lt; n_columns; col += 2 ){</code></pre>
+
+  <p class="zw">
+    El verdadero trabajo de esta función comienza aquí. Primero obtenemos la longitud de la cadena de entrada de modo
+    que si las etiquetas de las columnas están fuera del rango de la fila de entrada, las ignoramos. La instrucción for
+    en lenguaje C no es muy similar a ella en otros lenguajes, es más como una abreviatura de un estilo común de
+    instrucción while. La instrucción for contiene 3 expresiones (por cierto, estas 3 expresiones son opcionales). La
+    primera expresión es la <strong class="calibre3">parte inicial</strong> , que se ejecuta solo una vez antes del
+    inicio del ciclo. La segunda expresión es la <strong class="calibre3">parte de prueba</strong> , que debe ejecutarse
+    cada vez que se ejecuta el bucle. La tercera expresión es la <strong class="calibre3">parte de ajuste</strong> ,
+    debe ejecutarse una vez cada vez que se ejecuta el ciclo, pero se ejecuta antes de la parte de prueba. Para mayor
+    claridad, el bucle for anterior se puede reescribir como un bucle while como se muestra a continuación:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">col = 0;
+while( col &lt; n_columns ) {
+　　　　　循环体
+　　　　　col += 2;
+}
+
+int　　nchars = columns[col + 1] - columns[col] + 1;
+
+　　　/*
+　　　** 如果输入行结束或输出行数组已满，就结束任务。
+　　　*/
+　　　if( columns[col] &gt;= len ||
+　　　　　　output_col == MAX_INPUT - 1 )
+　　　　　　　break;
+
+　　　/*
+　　　** 如果输出行数据空间不够，只复制可以容纳的数据。
+ 　　*/
+　　　if( output_col + nchars &gt; MAX_INPUT - 1 )
+　　　　　nchars = MAX_INPUT - output_col - 1;
+
+　　　/*
+　　　** 复制相关的数据。
+　　　*/
+　　　strncpy( output + output_col, input + columns[col],
+　　　　　　　nchars );
+　　　output_col += nchars;</code></pre>
+
+  <p class="zw">Este es el cuerpo del bucle for. Primero cuenta el número de caracteres en el rango de la columna actual
+    y luego decide si continuar el bucle. Si la línea de entrada es más corta que la columna inicial, o la línea de
+    salida está llena, ya no realizará la tarea y usará la instrucción break para salir inmediatamente del ciclo.</p>
+
+  <p class="zw">La siguiente prueba verifica si todos los caracteres en este rango se pueden colocar en la línea de
+    salida, si no, ajusta nchars al tamaño que la matriz puede contener.</p>
+
+  <p class="editing-tag">insinuación:</p>
+
+  <blockquote class="ti_shi">
+    <p class="zw"><br class="calibre1"></p>
+
+    <p class="calibre2">
+      Es común en este tipo de programa "único" que solo se use una vez, sin realizar tareas como la verificación de los
+      límites de la matriz, y simplemente hacer que la matriz sea "lo suficientemente grande" para que no se desborde.
+      Desafortunadamente, este método a veces se aplica al código de producto real. Este enfoque hará que la mayor parte
+      del espacio de la matriz se desperdicie en la mayoría de los casos, e incluso esto a veces se desborda, lo que
+      resulta en una falla del programa <a id="ac17" href="#anchor17" class="calibre5"><sup
+          class="calibre23">[7]</sup></a> .</p>
+  </blockquote>
+
+  <p class="zw">
+    Finalmente, la función strncpy copia el carácter seleccionado de la línea de entrada a la siguiente posición
+    disponible en la línea de salida. Los dos primeros parámetros de la función strncpy son la dirección de la cadena de
+    destino y la cadena de origen. En esta llamada, la posición de la cadena de destino es la dirección inicial de la
+    matriz de salida desplazada hacia atrás desde la dirección de la columna output_col, y la posición de la cadena de
+    origen es la dirección que desplaza la dirección inicial de la matriz de entrada hacia atrás por columnas [ col]. El
+    tercer parámetro especifica el número de caracteres a copiar <a id="ac18" href="#anchor18" class="calibre5"><sup
+        class="calibre15">[8]</sup></a> . El contador de la columna de salida luego retrocede n posiciones de
+    caracteres.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">}
+output[output_col] = '\0';
+}</code></pre>
+
+  <p class="zw">
+    Una vez finalizado el ciclo, la cadena de salida tendrá un carácter NUL como terminador. Tenga en cuenta que en el
+    cuerpo del bucle, la función se ha diseñado cuidadosamente para garantizar que todavía haya espacio para el
+    terminador en la matriz. Luego, el flujo de ejecución del programa llega al final de la función y se ejecuta una
+    declaración de retorno implícita. Dado que no hay una declaración de retorno explícita, no se devuelve ningún valor
+    a la expresión que llamó a esta función. Aquí, no hay problema si no hay valor de retorno, porque esta función se
+    declara como nula (es decir, no devuelve ningún valor), y cuando se llama, no compara su valor de retorno ni lo pone
+    Asignar valores A otras variables.
+  </p>
+
+  <h2 id="nav_point_19" class="calibre24">1.2 Explicación complementaria</h2>
+
+  <p class="zw">
+    Los programas de muestra de este capítulo describen muchos conocimientos básicos del lenguaje C. Pero antes de
+    escribir el programa usted mismo, hay algunas cosas que debe saber. La primera es la función putchar, que
+    corresponde a la función getchar, que acepta un parámetro de número entero e imprime el carácter en la salida
+    estándar (como se mencionó anteriormente, el carácter también es un número entero por naturaleza).
+  </p>
+
+  <p class="zw">Al mismo tiempo, hay muchas funciones para manipular cadenas en la biblioteca de funciones. Aquí
+    presentaré brevemente algunos de los más útiles. A menos que se especifique lo contrario, los parámetros de estas
+    funciones pueden ser constantes de cadena, nombres de matriz de caracteres o un puntero a un carácter.</p>
+
+  <p class="zw">
+    La función strcpy es similar a la función strncpy, pero no limita el número de caracteres que deben copiarse. Acepta
+    dos parámetros: el segundo parámetro de cadena se copiará al primer parámetro de cadena y los caracteres originales
+    de la primera cadena se sobrescribirán. La función strcat también acepta dos parámetros, pero agrega el segundo
+    parámetro de cadena al final del primer parámetro de cadena. En estas dos funciones, su primer parámetro de cadena
+    no puede ser una constante de cadena. Además, es responsabilidad del programador asegurarse de que la cadena de
+    destino tenga suficiente espacio y que la función no la verifique.
+  </p>
+
+  <p class="zw">
+    La función para buscar dentro de una cadena es strchr, que acepta dos parámetros, el primer parámetro es una cadena
+    y el segundo parámetro es un carácter. Esta función busca la posición de la primera aparición del parámetro de
+    carácter en el parámetro de cadena y devuelve un puntero a esta posición si la búsqueda tiene éxito, y devuelve un
+    puntero NULL si la búsqueda falla. La función de la función strstr es similar, pero su segundo parámetro también es
+    una cadena y busca la primera aparición de la segunda cadena en la primera cadena.
+  </p>
+
+  <h2 id="nav_point_20" class="calibre24">1.3 Compilar</h2>
+
+  <p class="zw">La forma en que compila y ejecuta programas en C depende del tipo de sistema que esté utilizando. En
+    sistemas UNIX, para compilar un programa almacenado en el archivo testing.c, use el siguiente comando:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">cc testing.c
+a.out</code></pre>
+
+  <p class="zw">En la PC, necesita saber qué compilador está utilizando. Si es Borland C ++, en la ventana de MS-DOS,
+    puede usar el siguiente comando:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">bcc testing.c
+testing</code></pre>
+
+  <h2 id="nav_point_21" class="calibre24">1.4 Resumen</h2>
+
+  <p class="zw">El propósito de este capítulo es describir un conocimiento básico suficiente del lenguaje C para darle
+    una impresión general del lenguaje C. Con esta base, será más fácil de entender en los siguientes capítulos.</p>
+
+  <p class="zw">
+    Los programas de ejemplo de este capítulo ilustran muchos puntos. Los comentarios comienzan con / * y terminan con *
+    /, que se utilizan para agregar algunas instrucciones descriptivas al programa. La directiva #include preprocessing
+    permite que el compilador procese el contenido de un archivo de encabezado de biblioteca, y la directiva #define le
+    permite tomar un nombre simbólico para la constante literal.</p>
+
+  <p class="zw">
+    Todos los programas en C deben tener una función principal, que es el punto de partida de la ejecución del programa.
+    El parámetro escalar de la función se pasa por valor y el parámetro del nombre de la matriz tiene la semántica de
+    llamada por dirección. Una cadena es una cadena de caracteres terminada por un byte NUL, y hay un conjunto de
+    funciones de biblioteca dedicadas a manipular cadenas de diferentes formas. La función printf realiza la salida
+    formateada, la función scanf se usa para formatear la entrada y getchar y putchar realizan la entrada y salida de
+    caracteres sin formato, respectivamente. El uso de declaraciones if y while en lenguaje C no es muy diferente de su
+    uso en otros lenguajes.
+  </p>
+
+  <p class="zw">Después de observar la ejecución del programa de ejemplo, es posible que desee escribir algunos
+    programas usted mismo. Puede pensar que el lenguaje C debería contener mucho más que estos, es cierto. Sin embargo,
+    este programa de ejemplo debería ser suficiente para comenzar.</p>
+
+  <h2 id="nav_point_22" class="calibre24">1.5 Resumen de advertencias</h2>
+
+  <p class="zw">1. El carácter &amp; no se agrega antes del parámetro escalar de la función scanf.</p>
+
+  <p class="zw">2. El código de formato de la función printf se copia mecánicamente en la función scanf.</p>
+
+  <p class="zw">3. El operador &amp; se usó incorrectamente donde debería usarse el operador &amp;&amp;.</p>
+
+  <p class="zw">4. Mal uso del operador = en lugar del operador == para probar la igualdad.</p>
+
+  <h2 id="nav_point_23" class="calibre24">1.6 Resumen de consejos de programación</h2>
+
+  <p class="zw">1. Utilice la directiva #include para evitar declaraciones repetidas.</p>
+
+  <p class="zw">2. Utilice la directiva #define para nombrar el valor constante.</p>
+
+  <p class="zw">3. Coloque el prototipo de la función en el archivo #include.</p>
+
+  <p class="zw">4. Verifique sus valores antes de usar subíndices.</p>
+
+  <p class="zw">5. La operación de asignación está implícita en la expresión while o if.</p>
+
+  <p class="zw">6. Cómo escribir un cuerpo de bucle vacío.</p>
+
+  <p class="zw">7. Siempre verifique para asegurarse de que la matriz no esté fuera de los límites.</p>
+
+  <h2 id="nav_point_24" class="calibre24">1.7 Problema</h2>
+
+  <p class="zw">1. C es un lenguaje de forma libre, lo que significa que no hay reglas que gobiernen cómo debería verse
+    <a id="ac19" href="#anchor19" class="calibre5"><sup class="calibre15">[9]</sup></a> . Pero los programas de ejemplo
+    de este capítulo siguen ciertas reglas de uso en blanco. ¿Qué piensas sobre esto?</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">2. Poner las declaraciones (como la declaración
+    de prototipos de funciones) en el archivo de encabezado y usar la directiva #include para incluirlas en el archivo
+    fuente cuando sea necesario. ¿Cuáles son los beneficios de este enfoque?</p>
+
+  <p class="zw">3. ¿Cuáles son los beneficios de usar la directiva #define para nombrar constantes literales?</p>
+
+  <p class="zw">4. Para imprimir un entero decimal, una cadena y un valor de punto flotante en secuencia, ¿qué códigos
+    de formato debería usar en la función printf? Intente editar un ejemplo, deje que estos valores impresos estén
+    separados por espacios y agregue un carácter de nueva línea al final de la línea de salida.</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">5. Para escribir una declaración scanf,
+    necesita leer dos enteros y almacenarlos en las variables de cantidad y precio respectivamente, y luego leer una
+    cadena y almacenarla en una matriz de caracteres llamada departamento.</p>
+
+  <p class="zw">6. El lenguaje C no realiza la verificación de validez del subíndice de la matriz. ¿Por qué cree que
+    esta obvia medida de seguridad se omite en el lenguaje?</p>
+
+  <p class="zw">7. El programa de reorganización descrito en este capítulo contiene la siguiente declaración</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　strncpy( output + output_col, 
+　　　　　　input + columns[col], nchars );</code></pre>
+
+  <p class="zw">La función strcpy solo acepta dos parámetros, por lo que el segundo parámetro especifica el número de
+    caracteres que realmente copia. En este programa, ¿qué pasará si se usa la función strcpy en lugar de la función
+    strncpy?</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">8. El programa de reorganización contiene la
+    siguiente declaración</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　while( gets( input ) != NULL ) {</code></pre>
+
+  <p class="zw">¿Qué crees que podría estar mal con este código?</p>
+
+  <h2 id="nav_point_25" class="calibre24">1.8 Ejercicios de programación</h2>
+
+  <p class="zw">★ 1. El programa "¡Hola mundo!" Es a menudo el primer programa escrito por un principiante en
+    programación C. Imprime ¡Hola mundo! En la salida estándar y agrega un carácter de nueva línea después. Cuando desee
+    averiguar cómo ejecutar un compilador de C en su propio sistema, este pequeño programa suele ser un buen caso de
+    prueba.</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★ 2. Escriba un programa que lea algunas
+    líneas de entrada de entrada estándar. Cada línea de entrada debe imprimirse en la salida estándar, precedida por un
+    número de línea. Al escribir este programa, intente que la longitud de la línea de entrada que el programa puede
+    manejar sea ilimitada.</p>
+
+  <p class="zw">★★ 3. Escriba un programa que lea algunos caracteres de la entrada estándar y los escriba en la salida
+    estándar. También debe calcular el valor de la suma de comprobación y escribirlo después del carácter.</p>
+
+  <p class="zw">La suma de comprobación (suma de comprobación) se calcula con una variable de tipo char chamuscado, que
+    inicialmente es -1. A medida que se lee cada carácter de la entrada estándar, su valor se agrega a la suma de
+    comprobación. Si la variable de suma de comprobación produce desbordamientos, estos desbordamientos se ignorarán.
+    Cuando se escriben todos los caracteres, el programa imprime el valor de la suma de comprobación en forma de un
+    entero decimal, que puede ser un valor negativo. Tenga en cuenta que se debe agregar un carácter de nueva línea
+    después de la suma de verificación.
+  </p>
+
+  <p class="zw">En una computadora que usa código ASCII, ejecutar este programa en un archivo que contiene las palabras
+    "¡Hola mundo!" Y termina con una nueva línea debería producir el siguiente resultado:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8"> 　Hello world!
+　  102</code></pre>
+
+  <p class="zw">★★ 4. Escriba un programa que lea la línea de entrada línea por línea hasta llegar al final del archivo.
+    Calcule la longitud de cada línea de entrada y luego imprima la línea más larga. En aras de la simplicidad, puede
+    asumir que todas las líneas de entrada no superan los 1000 caracteres.</p>
+
+  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★★ 5. Las siguientes declaraciones en el
+    programa de reorganización
+  </p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　　if( columns[col] &gt;= len ... )
+　　　　　　　　 break;</code></pre>
+
+  <p class="zw">Deje de copiar cuando el rango de caracteres de la columna exceda el final de la línea de entrada. Esta
+    afirmación es correcta solo cuando los rangos de las columnas aparecen en orden creciente, pero de hecho no es
+    necesariamente el caso. Modifique esta declaración para que la tarea se pueda completar correctamente incluso cuando
+    el rango de columnas no se lea en orden.</p>
+
+  <p class="zw">
+    ★★★ 6. Modifique el programa de reorganización para eliminar la restricción de que el número de etiquetas de columna
+    en la entrada debe ser un número par. Si la etiqueta de la columna de lectura es un número impar, la función
+    establecerá el rango de la última columna en el rango desde la columna especificada por la etiqueta de la última
+    columna hasta el final de la fila. Todos los caracteres desde la etiqueta de la última columna hasta el final de la
+    línea se copiarán en la cadena de salida.
+  </p>
+  <hr class="calibre4">
+
+  <p class="calibre2"><a id="anchor11" href="#ac11" class="calibre5">[1]</a>
+    NUL es el nombre del carácter '\ 0' en el conjunto de caracteres ASCII, y su patrón de bytes es todo 0. NULL se
+    refiere a un puntero cuyo valor es 0. Todos son valores enteros y sus valores son los mismos, por lo que se pueden
+    usar indistintamente. Sin embargo, aún debe usar la constante apropiada, porque le dice al lector no solo que use el
+    valor 0, sino también el propósito de usar este valor.
+  </p>
+
+  <p class="calibre2"><a id="anchor12" href="#ac12" class="calibre5">[2] El</a> símbolo NULL se define en el archivo de
+    encabezado stdio.h. Por otro lado, no hay un símbolo predefinido NUL, por lo que si desea usarlo en lugar de la
+    constante de carácter '\ 0', debe definirlo usted mismo.</p>
+
+  <p class="calibre2"><a id="anchor13" href="#ac13" class="calibre5">[3]</a> Pero, incluso si colocas un "&amp;" delante
+    de él, no hay nada de malo, así que puedes agregarlo si quieres.</p>
+
+  <p class="calibre2"><a id="anchor14" href="#ac14" class="calibre5">[4]</a> La frase "la ruptura del bucle" significa
+    el final del bucle, no que de repente haya salido mal. Esta oración se deriva de la declaración break, que
+    discutiremos en el Capítulo 4.</p>
+
+  <p class="calibre2"><a id="anchor15" href="#ac15" class="calibre5">[5]</a> Algunos compiladores más nuevos emitirán
+    mensajes de advertencia cuando encuentren que los operadores de asignación se usan en expresiones if y while. La
+    teoría es que en tal contexto, la posibilidad de que los usuarios necesiten usar operaciones de comparación es mucho
+    mayor que las operaciones de asignación.</p>
+
+  <p class="calibre2"><a id="anchor16" href="#ac16" class="calibre5">[6] Con</a> el operador prefijo y sufijo ++, en
+    realidad hay 4 formas de aumentar el valor de una variable.</p>
+
+  <p class="calibre2"><a id="anchor17" href="#ac17" class="calibre5">[7] El</a> lector experto notará que si encontramos
+    una línea de entrada particularmente larga, no tenemos forma de evitar que la función de obtención se desborde. Esta
+    vulnerabilidad es de hecho una falla en la función gets, por lo que debería usarse fgets en su lugar (descrito en el
+    Capítulo 15).</p>
+
+  <p class="calibre2"><a id="anchor18" href="#ac18" class="calibre5">[8]</a> Si el número de caracteres en la cadena de
+    origen es menor que el número de copia especificado en el tercer parámetro, los bytes restantes en la cadena de
+    destino se llenarán con bytes NUL.</p>
+
+  <p class="calibre2"><a id="anchor19" href="#ac19" class="calibre5">[9]</a>
+    Pero las directivas de preprocesamiento tienen reglas más estrictas.</p>
+
+  <p class="zw"><br class="calibre6"></p>
+  <div class="calibre6"></div>
+  <p></p>
+  <!-- Code injected by live-server -->
+  <script type="text/javascript">
+    // <![CDATA[  <-- For SVG support
+    if ('WebSocket' in window) {
+      (function () {
+        function refreshCSS() {
+          var sheets = [].slice.call(document.getElementsByTagName("link"));
+          var head = document.getElementsByTagName("head")[0];
+          for (var i = 0; i < sheets.length; ++i) {
+            var elem = sheets[i];
+            var parent = elem.parentElement || head;
+            parent.removeChild(elem);
+            var rel = elem.rel;
+            if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+              var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+              elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+            }
+            parent.appendChild(elem);
+          }
+        }
+        var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+        var address = protocol + window.location.host + window.location.pathname + '/ws';
+        var socket = new WebSocket(address);
+        socket.onmessage = function (msg) {
+          if (msg.data == 'reload') window.location.reload();
+          else if (msg.data == 'refreshcss') refreshCSS();
+        };
+        if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+          console.log('Live reload enabled.');
+          sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+        }
+      })();
+    }
+    else {
+      console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+    }
+	// ]]>
+  </script>
+</body>
+
+</html>

@@ -1,1 +1,1 @@
-# pointers-on-c-book
+# E-book: Pointers on C - Kenneth Reek

@@ -1,0 +1,2545 @@
+<html xmlns="http://www.w3.org/1999/xhtml" class="translated-ltr">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Desconocido</title>
+
+  <link href="../stylesheet.css" rel="stylesheet" type="text/css">
+  <link href="../page_styles.css" rel="stylesheet" type="text/css">
+
+<body id="LTSU0-e167752e5b154d43a225b5f350ab7738" class="calibre">
+  <h1 id="nav_point_403" class="not-in-toc">Respuestas a algunas preguntas del apéndice</h1>
+
+  <p class="zw">La parte del apéndice de este libro ha seleccionado algunas preguntas de cada capítulo y respuestas a
+    los ejercicios de programación. Para los ejercicios de programación, además de las respuestas dadas aquí, debería
+    haber muchas otras respuestas correctas.</p>
+
+  <h3 class="calibre7" id="nav_point_404">Capítulo 1 Preguntas</h3>
+
+  <p class="zw">1.2 La declaración solo debe escribirse una vez, para que sea más fácil mantenerla y modificarla más
+    adelante. De manera similar, escribir la declaración solo una vez elimina la posibilidad de inconsistencias en
+    múltiples copias.</p>
+
+  <p class="zw">1,5　<code class="calibre8">scanf( "%d %d %s", &amp;amp;quantity, &amp;amp;price, department );</code>
+  </p>
+
+  <p class="zw">1.8 Cuando se pasa una matriz como parámetro de función, la función no puede conocer su longitud. Por lo
+    tanto, la función gets no tiene forma de evitar que una línea de entrada muy larga haga que la matriz de entrada se
+    desborde. La función fgets requiere que se le pase la longitud de la matriz como parámetro, por lo que este problema
+    no existe.</p>
+
+  <h3 class="calibre7" id="nav_point_405">Capítulo 1 Ejercicios de programación</h3>
+
+  <p class="zw">1.2 Al leer carácter por carácter en lugar de línea por línea desde la entrada, se pueden evitar las
+    restricciones de longitud de línea. En esta solución, si se definen los símbolos VERDADERO y FALSO, la legibilidad
+    del programa será mejor, pero esta técnica no se ha discutido en este capítulo.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+** 从标准输入复制到标准输出，并对输出行标号 
+*/
+
+#include &lt; stdio.h&gt;
+#include &lt; stdlib.h&gt;
+
+int
+main()
+　　 {
+　　 int ch;
+　　 int line;
+　　 int at_beginning;
+
+　　 line = 0;
+　　 at_beginning = 1;
+　　 /*
+　　 **　读取字符并逐个处理它们。
+　　 */
+　　 while( (ch = getchar()) != EOF ){
+　　　/*
+　　　**　如果我们位于一行的起始位置，打印行号。
+　　　*/
+　　　if( at_beginning == 1 ){
+　　　　at_beginning = 0;
+　　　　line += 1;
+　　　　printf( "%d ", line );
+　　　}
+
+　　　/*
+　　　**　打印字符，并对行尾进行检查。
+　　　*/
+　　　putchar( ch );
+　　　if( ch == '\n' )
+　　　　at_beginning = 1;
+　　 }
+
+　　 return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 1.2</strong></p>
+
+  <p class="calibre11">número.c</p>
+
+  <p class="zw">1.5 Cuando la línea de salida está llena, todavía podemos interrumpir el ciclo, pero en otros casos el
+    ciclo debe continuar. También debemos comprobar cuántos caracteres se han copiado en cada rango para evitar que un
+    byte NUL se copie al búfer de salida de forma prematura. Aquí hay un plan de modificación para completar este
+    trabajo.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 处理一个输入行，方法是把指定列的字符连接在一起。输出行用NUL结尾。 
+*/
+
+void
+rearrange( char *output, char const *input,
+　　int const n_columns, int const columns[] )
+{
+　　　　 int　col;　　　/* columns数组的下标 */
+　　　　 int　output_col;　/* 输出列计数器 */
+　　　　 int　len;　　　/* 输入行的长度 */
+
+　　　　 len = strlen( input );
+　　　　 output_col = 0;
+
+　　　　 /*
+　　　　 ** 处理每对列号 
+　　　　 */
+　　　　 for( col = 0; col &lt; n_columns; col += 2 ){
+　　　　　　　 int　 nchars = columns[col + 1] - columns[col] + 1;
+
+　　　　　　　 /*
+　　　　　　　 **　如果输入行没这么长，跳过这个范围。
+　　　　　　　 */
+　　　　　　　 if( columns[col] &gt;= len )
+　　　　　 continue;
+
+　　　　　　　 /*
+　　　　　　　 ** 如果输出数组已满，任务就完成。
+　　　　　　　 */
+　　　　　　　 if( output_col == MAX_INPUT - 1 )
+　　　　　　break;
+
+　　　　　　　 /*
+　　　　　　　 ** 如果输出数组空间不够，只复制可以容纳的部分。
+　　　　　　　 */
+　　　　　　　 if( output_col + nchars &gt; MAX_INPUT - 1 )
+　　　　　　nchars = MAX_INPUT - output_col - 1;
+
+　　　　　　　 /*
+　　　　　　　 ** 观察输入行中多少个字符在这个范围里面。如果它小于nchars,
+　　　　　　　　** 对nchars的值进行调整。
+　　　　　　　 */
+　　　　　　　 if( columns[col] + nchars - 1 &gt;= len )
+　　　　　　nchars = len - columns[col];
+
+　　　　　　　 /*
+　　　　　　　 ** 复制相关的数据。
+　　　　　　　 */
+　　　　　　　 strncpy( output + output_col, input + columns[col],
+　　　　　　　　　　 nchars );
+　　　　　　　 output_col += nchars;
+　　　　 }
+
+　　　　 output[output_col] = '\0';
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 1.5</strong></p>
+
+  <p class="calibre11">rearran2.c</p>
+
+  <h3 class="calibre7" id="nav_point_406">Capítulo 2 Preguntas</h3>
+
+  <p class="zw">2.4 Suponiendo que el sistema usa el juego de caracteres ASCII, existe la siguiente relación de
+    igualdad.</p>
+
+  <p class="zw">\ 40 = 32 = carácter de espacio</p>
+
+  <p class="zw">\ 100 = 64 = '@'</p>
+
+  <p class="zw">\ x40 = 64 = '@'</p>
+
+  <p class="zw">\ x100 ocupa 12 dígitos (aunque los primeros tres dígitos son cero). En la mayoría de las máquinas, este
+    valor es demasiado grande para almacenarlo en un carácter, por lo que sus resultados varían de un compilador a otro.
+  </p>
+
+  <p class="zw">\ 0123 consta de dos caracteres, '\ 012' y '3'. El valor del resultado varía de un compilador a otro.
+  </p>
+
+  <p class="zw">\ x0123 es demasiado grande para almacenarse en un carácter y el valor del resultado varía con los
+    compiladores.</p>
+
+  <p class="zw">2.7 Existe el bien y el mal. Sí: a excepción de las directivas de preprocesamiento, el lenguaje no
+    impone ninguna regla sobre cómo debería aparecer el programa. Incorrecto: Los programas de mal estilo son difíciles
+    o imposibles de mantener, por lo que, además de los programas extremadamente simples, el estilo de escritura de la
+    mayoría de los programas es muy importante.</p>
+
+  <p class="zw">2.8 Los bucles while de estos dos programas carecen de una llave de cierre para finalizar la
+    declaración. Sin embargo, el segundo programa es más fácil de encontrar este error. Este ejemplo ilustra el valor de
+    sangrar declaraciones en funciones.</p>
+
+  <p class="zw">2.11 Cuando se modifica un archivo de encabezado, todos los archivos que lo contienen deben
+    recompilarse.</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <thead class="calibre17">
+      <tr class="calibre18">
+        <th class="calibre19">
+          <p class="calibre2">Si este archivo se modifica</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">Estos archivos deben volver a compilarse</p>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">list.c</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">list.c</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">list.h</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">list.c, table.c, main.c</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">table.h</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">table.c, main.c</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="zw">El entorno de desarrollo integrado de Windows del compilador Borland C / C ++ busca estas relaciones en
+    cada archivo y compila automáticamente solo aquellos archivos que necesitan ser recompilados. Los sistemas UNIX
+    tienen una herramienta llamada make que se usa para realizar la misma tarea. Sin embargo, para utilizar esta
+    herramienta, debe crear un "archivo MAKE", que se utiliza para describir la relación entre los distintos archivos.
+  </p>
+
+  <h3 class="calibre7" id="nav_point_407">Capítulo 2 Ejercicios de programación</h3>
+
+  <p class="zw">2.2 Este programa es fácil de implementar con un contador. Sin embargo, no es tan simple como parece.
+    Utilice la entrada "} {" para probar su solución.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 检查一个程序的花括号对。
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int
+main()
+{
+　　 int ch;
+　　 int braces;
+
+　　 braces = 0;
+
+　　 /*
+　　 ** 逐字符读取程序。
+　　 */
+　　 while( (ch = getchar()) != EOF ){
+　　　/*
+　　　** 左花括号始终是合法的。
+　　　*/
+　　　if( ch == '{' )
+　　　　braces += 1;
+
+　　　/*
+　　　** 右花括号只有当它和一个左花括号匹配时才是合法的。
+　　　*/
+　　　if( ch == '}' )
+　　　　if( braces == 0 )
+　　　　　printf( "Extra closing brace!\n" );
+　　　　else
+　　　　　braces -= 1;
+　　　}
+
+　　　/*
+　　　** 没有更多输入：验证不存在任何未被匹配的左花括号。
+　　 */
+　　 if( braces &gt; 0 )
+　　　printf( "%d unmatched opening brace(s)!\n", braces );
+
+　　 return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 2.2</strong>　</p>
+
+  <p class="calibre11">llaves.c</p>
+
+  <h3 class="calibre7" id="nav_point_408">Capítulo 3 Preguntas</h3>
+
+  <p class="zw">3.3 Declare el nombre de una variable entera para que el tipo de la variable tenga una cierta longitud
+    (como int8, int16, int32). Para el número entero que desea que sea la longitud predeterminada, use un nombre como
+    defint8, defint16 o defint32 de acuerdo con el valor máximo que puede contener. Luego cree un archivo llamado
+    int_sizes.h para cada máquina, que contenga algunas declaraciones typedef, y elija la longitud entera más apropiada
+    para el nombre de tipo que cree. En una máquina típica de 32 bits, este archivo contendrá:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00375.gif" class="calibre14"></p>
+
+  <p class="zw">En una máquina típica de enteros de 16 bits, este archivo contendrá:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00376.gif" class="calibre14"></p>
+
+  <p class="zw">También puede utilizar la directiva #define.</p>
+
+  <p class="zw">3.7 La variable jar es un tipo enumerado, pero su valor es en realidad un número entero. Sin embargo, el
+    código de formato printf% s se usa para imprimir cadenas en lugar de enteros. Como resultado, no podemos juzgar cómo
+    se verá su salida. Si el código de formato es% d, la salida será:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　32
+　　48</code></pre>
+
+  <p class="zw">3.10 No. El valor de cualquier n bits tiene solo 2 <sup class="calibre15">n</sup> combinaciones
+    diferentes. La única diferencia entre un valor con signo y un valor sin signo es cómo se interpreta la mitad de su
+    valor. En un valor con signo, son valores negativos. En un valor sin signo, son un valor positivo mayor.</p>
+
+  <p class="zw">3.11 El rango de float es mayor que int, pero si no tiene más dígitos que int, no puede representar
+    valores más diferentes que int. La respuesta a la pregunta anterior ha sugerido que el número de valores diferentes
+    que deberían poder representar es el mismo, pero en la mayoría de los sistemas de punto flotante, esta respuesta es
+    incorrecta. Por lo general, hay muchas representaciones de cero y, al usar formas decimales irregulares, otros
+    valores también tienen muchas representaciones diferentes. Por lo tanto, el número de valores diferentes que puede
+    representar float es menor que el de int.</p>
+
+  <p class="zw">3.21 Sí, es posible, pero no debes contar con ello. Además, incluso si no hay otras llamadas a
+    funciones, es probable que sus valores sean diferentes. En máquinas con algunas arquitecturas, una interrupción de
+    hardware empujará el estado de la máquina a la pila y destruirá estas variables.</p>
+
+  <h3 class="calibre7" id="nav_point_409">Capítulo 4 Preguntas</h3>
+
+  <p class="zw">4.1 Es legal, pero no afectará el estado del programa. Ninguno de estos operadores tiene efectos
+    secundarios y los resultados de sus cálculos no se asignan a ninguna variable.</p>
+
+  <p class="zw">4.4 Usar declaraciones vacías</p>
+
+  <p class="calibre13"><img alt="" src="../images/00377.gif" class="calibre14"></p>
+
+  <p class="zw">Puede modificar la condición y omitir la cláusula vacía entonces. Su efecto es el mismo.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00378.gif" class="calibre14"></p>
+
+  <p class="zw">4.9 Dado que no hay una declaración de ruptura, para cada número par, se imprimirán ambas piezas de
+    información.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　odd
+　　　even
+　　　odd
+　　　odd
+　　　even
+　　　odd</code></pre>
+
+  <p class="zw">4.12 Si se ocupa de las situaciones más especiales al principio y se ocupa de las situaciones más
+    generales más tarde, su tarea será más sencilla.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00379.gif" class="calibre14"></p>
+
+  <h3 class="calibre7" id="nav_point_410">Capítulo 4 Ejercicios de programación</h3>
+
+  <p class="zw">4.1 Se deben usar variables de coma flotante y el programa debe verificar la entrada negativa.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 计算一个数的平方根。
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int
+main()
+{
+　　　float　new_guess;
+　　　float　last_guess;
+　　　float　number;
+
+　　　/*
+　　　** 催促用户输入，读取数据并对它进行检查。
+　　　*/
+　　　printf( "Enter a number: " );
+　　　scanf( "%f", &amp;number );
+if( number &lt; 0 ){
+　　　 printf( "Cannot compute the square root of a "
+　　　　"negative number!\n" );
+　　return EXIT_FAILURE;
+}
+
+/*
+** 计算平方根的近似值，直到它的值不再变化。
+*/
+new_guess = 1;
+do {
+　　last_guess = new_guess;
+　　new_guess = ( last_guess + number / last_guess ) / 2;
+　　printf( "%.15e\n", new_guess );
+} while( new_guess != last_guess );
+
+/*
+** 打印结果。
+*/
+printf( "Square root of %g is %g\n", number, new_guess );
+
+return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 4.1</strong></p>
+
+  <p class="calibre11">sqrt.c</p>
+
+  <p class="zw">4.4 La asignación de src a dst puede estar contenida en la instrucción if.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 从src中的字符串向dst数组准确地复制N个字符（如果需要，用NUL进行填充）。
+*/
+void
+copy_n( char dst[], char src[], int n )
+{
+　　　　　int dst_index, src_index;
+
+　　　　　src_index = 0;
+
+　　　　　for( dst_index = 0; dst_index &lt; n; dst_index += 1 ){
+　　　　　　　dst[dst_index] = src[src_index];
+　　　　　　　if( src[src_index] != 0 )
+　　　　　　　　　src_index += 1;
+　　　　　}
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 4.4</strong></p>
+
+  <p class="calibre11">copy_n.c</p>
+
+  <h3 class="calibre7" id="nav_point_411">Capítulo 5 Preguntas</h3>
+
+  <p class="zw">5.2 Ésta es una pregunta astuta. La respuesta obvia es -10 (2-3 * 4), pero de hecho varía de un
+    compilador a otro. La operación de multiplicación debe completarse antes de la operación de suma, pero no hay una
+    regla para el orden en que se completan las llamadas a las funciones. Por lo tanto, las siguientes respuestas son
+    todas correctas:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00380.gif" class="calibre14"></p>
+
+  <p class="zw">5.4 No, todos realizan la misma tarea. Si es más quisquilloso, la solución que usa si parece un poco
+    hinchada porque tiene dos instrucciones almacenadas en i. Sin embargo, solo se ejecutará una instrucción entre
+    ellos, por lo que no hay diferencia en la velocidad.</p>
+
+  <p class="zw">5.6 El operador () en sí mismo no tiene efectos secundarios, pero las funciones que llama pueden tener
+    efectos secundarios.</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <thead class="calibre17">
+      <tr class="calibre18">
+        <th class="calibre19">
+          <p class="calibre2">Operador</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">efecto secundario</p>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">++, -</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Independientemente de la forma de prefijo o sufijo, estos operadores modificarán sus
+            operandos</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">=</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Incluyendo todos los demás operadores de asignación compuesta: todos modifican el operando
+            izquierdo como un lvalue</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="calibre7" id="nav_point_412">Capítulo 5 Ejercicios de programación</h3>
+
+  <p class="zw">5.1 La forma recomendada de convertir mayúsculas y minúsculas es utilizar la función de biblioteca
+    tolower. Como sigue:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 将标准输入复制到标准输出，将所有大写字母转换为小写字母。注意，它依赖于
+** 这个事实：如果参数并非大写字母，tolower函数将不修改它的参数，直接返回
+** 它的值。
+*/
+#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+
+int
+main( void )
+{
+　　int　ch;
+
+　　while( (ch = getchar()) != EOF )
+　　　putchar( tolower( ch ) );
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 5.1a</strong></p>
+
+  <p class="calibre11">uc_lc.c</p>
+
+  <p class="zw">Sin embargo, aún no hemos discutido esta función, así que aquí hay otra solución:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 将标准输入复制到标准输出，把所有的大写字母转换为小写字母。
+*/
+#include &lt;stdio.h&gt;
+
+int
+main( void )
+{
+　　int　ch;
+
+　　while( (ch = getchar()) != EOF ){
+　　　 if( ch &gt;= 'A' &amp;&amp; ch &lt;= 'Z' )
+　　　　 ch += 'a' - 'A';
+　　　 putchar( ch );
+　　}
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 5.1b</strong>　</p>
+
+  <p class="calibre11">uc_lc_b.c</p>
+
+  <p class="zw">Este segundo programa funciona bien en máquinas que utilizan el juego de caracteres ASCII. Pero en
+    aquellos juegos de caracteres donde las letras mayúsculas no son continuas (como EBCDIC), convertirá los caracteres
+    que no son letras, lo que viola las disposiciones del título, por lo que la mejor manera es usar las funciones de la
+    biblioteca.</p>
+
+  <p class="zw">5.3 El recuento de bits no utiliza codificación rígida, lo que puede evitar problemas de portabilidad.
+    Esta solución usa un bit para ser cambiado en un entero sin signo para controlar el ciclo que crea la respuesta.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 在一个无符号整数值中翻转位的顺序。
+*/
+
+unsigned int
+reverse_bits( unsigned int value )
+{
+unsigned int　answer;
+unsigned int　i;
+
+answer = 0;
+
+/*
+** 只是i不是0就继续进行。这就使循环与机器的字长无关，从而避免了可移植性问题。
+*/
+for( i = 1; i != 0; i &lt;&lt;= 1 ){
+　　/*
+　　** 把旧的answer左移1位，为下一个位留下空间；
+　　** 如果value的最后一位是1，answer就与1进行OR操作；
+　　** 然后将value右移至下一个位。
+　　*/
+　　answer &lt;&lt;= 1;
+　　if( value &amp; 1 )
+　　　answer |= 1;
+　　value &gt;&gt;= 1;
+　}
+
+　return answer;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 5.3</strong></p>
+
+  <p class="calibre11">reverse.c</p>
+
+  <h3 class="calibre7" id="nav_point_413">Capítulo 6 Preguntas</h3>
+
+  <p class="zw">6.1 La máquina no puede emitir un juicio. El compilador crea instrucciones apropiadas basadas en el tipo
+    declarado del valor, y la máquina simplemente ejecuta estas instrucciones a ciegas.</p>
+
+  <p class="zw">6.4 Esto es muy peligroso. Primero, el resultado de desreferenciar un puntero NULL varía de un
+    compilador a otro, por lo que el programa no debería hacer esto. Es lamentable permitir que el programa continúe
+    ejecutándose después de dicho acceso, porque es posible que el programa no se esté ejecutando correctamente en este
+    momento.</p>
+
+  <p class="zw">6.6 Hay dos errores. Al eliminar la referencia del puntero incrementado, el primer elemento de la matriz
+    no se borra. Además, el puntero todavía está desreferenciado después de cruzar el límite derecho de la matriz y
+    borrará el contenido de alguna otra dirección de memoria.</p>
+
+  <p class="zw">Tenga en cuenta que pi se declara inmediatamente después de la matriz. Si el compilador lo coloca en la
+    ubicación de la memoria inmediatamente después de la matriz, el resultado será catastrófico. Cuando el puntero se
+    mueve a la ubicación de la memoria detrás de la matriz, la última ubicación de la memoria que se borra es la
+    ubicación donde se guarda el puntero. Este puntero (que ahora se ha convertido en cero) es, por lo tanto, aún menor
+    que &amp; array [ARRAY_SIZE], por lo que el bucle continuará ejecutándose. El puntero se incrementa antes de
+    desreferenciarse, por lo que el siguiente valor dañado es la variable almacenada en la ubicación de memoria 4
+    (asumiendo que la longitud del entero es de 4 bytes). Si el hardware no detecta el error y termina el programa, el
+    bucle continuará felizmente, el puntero avanzará felizmente en la memoria, destruyendo todos los valores que
+    encuentre. Cuando vuelva a alcanzar la posición de la matriz, repetirá el proceso anterior, lo que dará como
+    resultado un bucle infinito sutil.</p>
+
+  <h3 class="calibre7" id="nav_point_414">Capítulo 6 Ejercicios de programación</h3>
+
+  <p class="zw">6.3 La clave de este algoritmo es detenerse cuando dos punteros se encuentran o pasan. De lo contrario,
+    estos caracteres se voltearán dos veces, lo que en realidad equivale a ningún efecto.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 翻转参数字符串。
+*/
+
+void reverse_string( char *str )
+{
+char*last_char;
+
+/*
+** 把last_char设置为指向字符串的最后一个字符。 
+*/
+for( last_char = str; *last_char != '\0'; last_char++ )
+　　;
+
+last_char--;
+
+/*
+** 交换str和last_char指向的字符，然后str前进一步，last_char后退一
+** 步，在两个指针相遇或擦肩而过之前重复这个过程。
+*/
+while( str &lt; last_char ){
+　　char temp;
+
+　　temp = *str;
+　　*str++ = *last_char;
+　　*last_char-- = temp;
+ }
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 6.3</strong></p>
+
+  <p class="calibre11">rev_str.c</p>
+
+  <h3 class="calibre7" id="nav_point_415">Capítulo 7 Preguntas</h3>
+
+  <p class="zw">7.1 Cuando se llama a la función stub, imprima un mensaje para mostrar que se ha llamado, o también
+    puede imprimir el valor que se le pasó como parámetro.</p>
+
+  <p class="zw">7.7 Esta función asume que se le pasa una matriz de exactamente 10 elementos cuando se la llama. Si la
+    matriz de parámetros es más grande, ignorará los elementos restantes. Si pasa una matriz con menos de 10 elementos,
+    la función accederá a valores fuera de los límites de la matriz.</p>
+
+  <p class="zw">7.8 Tanto la recursividad como la iteración deben establecer algunos objetivos y finalizar la ejecución
+    cuando se alcancen estos objetivos. Cada llamada recursiva y cada iteración del ciclo deben hacer algún progreso
+    para acercarse a estos objetivos.</p>
+
+  <h3 class="calibre7" id="nav_point_416">Capítulo 7 Ejercicios de programación</h3>
+
+  <p class="zw">7.1 Los polinomios de Hermite se utilizan en física y estadística. También se pueden utilizar en
+    programas como ejercicios recursivos.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 计算Hermite polynomial的值
+**
+**　输入:
+**　　n, x: 用于标识值
+**
+**　输出:
+**　　polynomial的值 (返回值)
+*/
+
+int
+hermite( int n, int x )
+{
+　　/*
+　　** 处理不需要递归的特殊情况。
+　　*/
+　　if( n &lt;= 0 )
+　　　 return 1;
+　　if( n == 1 )
+　　　 return 2 * x;
+
+　　/*
+　　** 否则，递归地计算结果值。
+　　*/
+　　return 2 * x * hermite( n - 1, x ) -
+　　　　2 * ( n - 1 ) * hermite( n - 2, x );
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 7.1</strong></p>
+
+  <p class="calibre11">hermite.c</p>
+
+  <p class="zw">7.3 Este problema debería resolverse mediante métodos iterativos en lugar de métodos recursivos.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 把一个数字字符串转换为一个整数。
+*/
+
+int
+ascii_to_integer( char *string )
+{
+　　int　value;
+
+　　value = 0;
+
+　　/*
+　　** 逐个把字符串的字符转换为数字。
+　　*/
+　　while( *string &gt;= '0' &amp;&amp; *string &lt;= '9' ){
+　　　value *= 10;
+　　　value += *string - '0';
+　　　string++;
+　　}
+
+　　/*
+　　** 错误检查：如果由于遇到一个非数字字符而终止，把结果设置为0。
+　　*/
+　　if( *string != '\0' )
+　　　value = 0;
+
+　　return value;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 7.3</strong></p>
+
+  <p class="calibre11">atoi.c</p>
+
+  <h3 class="calibre7" id="nav_point_417">Capítulo 8 Preguntas</h3>
+
+  <p class="zw">8.1 La respuesta a dos de las expresiones es incierta, porque no sabemos dónde el compilador elige
+    almacenar la ip.</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <thead class="calibre17">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">ints</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">100</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ip</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">112</p>
+        </td>
+      </tr>
+    </thead>
+
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">ints [4]</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">50</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ip [4]</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">80</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">ints + 4</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">116</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ip + 4</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">128</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">* pulgadas + 4</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">14</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">* ip + 4</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">44</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">* (pulgadas + 4)</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">50</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">* (ip + 4)</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">80</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">ints [-2]</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ilegal</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ip [-2]</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">20</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">&amp; ints</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">100</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">&amp; ip</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">desconocido</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">&amp; ints [4]</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">116</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">&amp; ip [4]</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">128</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2">&amp; ints + 4</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">116</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">&amp; ip + 4</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">desconocido</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2">&amp; ints [-2]</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ilegal</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">&amp; ip [-2]</p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">104</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="zw">8.5 Con frecuencia, el 80% del tiempo de ejecución de un programa se utiliza para ejecutar el 20% del
+    código, por lo que las declaraciones del otro 80% del código no son particularmente sensibles a la eficiencia, por
+    lo que las ganancias de eficiencia obtenidas mediante el uso de punteros no pueden compensar las pérdidas en otros
+    aspectos.</p>
+
+  <p class="zw">8.8 En la primera asignación, el compilador considera que a es una variable de puntero, por lo que
+    extrae el valor del puntero almacenado allí, suma 12 (multiplicando la longitud del número entero por 3) y luego
+    realiza un acceso indirecto al resultado. Pero a es en realidad la posición inicial de una matriz de enteros, por lo
+    que el valor obtenido como "puntero" es en realidad el primer elemento entero de la matriz. Se suma a 12, el
+    resultado se interpreta como una dirección y luego se accede indirectamente. Como resultado, extraerá el contenido
+    de alguna ubicación de memoria arbitraria o hará que el programa falle debido a algún tipo de error de dirección.
+  </p>
+
+  <p class="zw">En la segunda asignación, el compilador considera que b es un nombre de matriz, por lo que agrega 12 (el
+    resultado ajustado de 3) a la dirección de almacenamiento de b, y luego la operación de acceso indirecto obtiene el
+    valor de allí. De hecho, b es una variable de puntero, por lo que las siguientes tres palabras extraídas de la
+    memoria se obtienen en realidad de otra variable arbitraria. Esta pregunta muestra que aunque los punteros y las
+    matrices están relacionados, de ninguna manera son lo mismo.</p>
+
+  <p class="zw">8.12 Al realizar cualquier operación de "acceso a elementos en el orden en que aparecen en la memoria".
+    Por ejemplo, inicializar una matriz, leer o escribir más de un elemento de la matriz y "aplanar" la matriz moviendo
+    el puntero para acceder a la memoria subyacente de la matriz son todas estas operaciones.</p>
+
+  <p class="zw">8.17 El primer parámetro es un escalar, por lo que la función obtiene una copia del valor. Las
+    modificaciones a esta copia no afectarán los parámetros originales, por lo que la función de la palabra clave const
+    no es evitar que se modifiquen los parámetros originales.</p>
+
+  <p class="zw">El segundo parámetro es en realidad un puntero a un número entero. Lo que se pasa a la función es una
+    copia del puntero, modificarlo no afectará al parámetro del puntero en sí, pero la función puede modificar el valor
+    del programa que llama al realizar un acceso indirecto al puntero. La palabra clave const se utiliza para evitar
+    esta modificación.</p>
+
+  <h3 class="calibre7" id="nav_point_418">Capítulo 8 Ejercicios de programación</h3>
+
+  <p class="zw">8.2 Dado que esta tabla es bastante corta, también se puede implementar usando una serie de
+    declaraciones if. Lo que estamos usando es un bucle, que se puede usar tanto para tablas cortas como largas. Esta
+    tabla (similar a un folleto como la guía de impuestos) muestra muchos valores más de una vez para que las
+    instrucciones sean más claras. La solución presentada aquí no almacena estos valores redundantes. Tenga en cuenta
+    que los datos se declaran como estáticos, esto es para evitar que los programas de usuario accedan directamente a
+    ellos. Si los datos se almacenan en una estructura en lugar de una matriz, el programa sería mejor, pero aún no
+    hemos aprendido la estructura.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 计算1995年美国联邦政府对每位公民征收的个人收入所得税。
+*/
+
+#include &lt;float.h&gt;
+
+static　double　income_limits[]
+ = { 0, 　 23350,　 56550,　117950,　256500,　DBL_MAX };
+static　float　base_tax[]
+ = { 0, 　 3502.5, 12798.5, 31832.5, 81710.5 };
+static　float　percentage[]
+ = { .15,　.28,　 .31,　　.36,　　 .396 };
+
+double
+single_tax( double income )
+{
+　　int　category;
+
+　　/*
+　　** 找到正确的收入类别。DBL_MAX被添加到这个列表的末尾，保证循环不会进
+　　** 行得太久。
+　　*/
+　　for( category = 1;
+　　　　income &gt;= income_limits[ category ];
+　　　　category += 1 )
+　　　　　;
+　　category -= 1;
+
+　　/*
+　　** 计算税。
+　　*/
+　　return base_tax[ category ] + percentage[ category ] *
+　　　　( income - income_limits[ category ] );
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 8.2</strong></p>
+
+  <p class="calibre11">sing_tax.c</p>
+
+  <p class="zw">8.5 Teniendo en cuenta el trabajo real realizado por el programa, en realidad es bastante compacto. Dado
+    que no tiene nada que ver con el tamaño de la matriz, esta función no puede usar subíndices; este programa es un
+    buen ejemplo de uso de punteros. Sin embargo, es técnicamente ilegal porque aplastará la matriz.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 将两个矩阵相乘。
+*/
+
+void
+matrix_multiply( int *m1, int *m2, register int *r,
+　　int x, int y, int z )
+{
+　　register int　*m1p;
+　　register int　*m2p;
+　　register int　k;
+　　int　row;
+　　int　column;
+
+　　/*
+　　** 外层的两个循环逐个产生结果矩阵的元素。由于这是按照存在顺序进行的。
+　　** 我们可以通过对r进行间接访问来访问这些元素。
+　　*/
+　　for( row = 0; row &lt; x; row += 1 ){
+　　　for( column = 0; column &lt; z; column += 1 ){
+　　　　/*
+　　　　** 计算结果的一个值。这是通过获得指向m1和m2的合适元素的指针，
+　　　　** 当我们进行循环时，使它们前进来实现的。
+　　　　*/
+　　　　m1p = m1 + row * y;
+　　　　m2p = m2 + column;
+　　　　*r = 0;
+
+　　　　for( k = 0; k &lt; y; k += 1 ){
+　　　　　*r += *m1p * *m2p;
+　　　　　m1p += 1;
+　　　　　m2p += z;
+　　　　}
+
+　　　　/*
+　　　　** r前进一步，指向下一个元素。
+　　　　*/
+　　　　r++;
+　　　}
+　　}
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones a 8.5</strong></p>
+
+  <p class="calibre11">matmult.c</p>
+
+  <h3 class="calibre7" id="nav_point_419">Capítulo 9 Preguntas</h3>
+
+  <p class="zw">9.1 Este tema es controvertido (aunque he llegado a una conclusión). La ventaja actual de este método es
+    la eficiencia de la manipulación de matrices de caracteres y la flexibilidad de acceso. Su desventaja es que puede
+    causar errores: desbordar la matriz, el subíndice utilizado excede el límite de la cadena y la longitud de cualquier
+    matriz utilizada para almacenar la cadena no se puede cambiar.</p>
+
+  <p class="zw">Mi conclusión proviene de la tecnología moderna orientada a objetos. Sin excepción, la clase de cadena
+    incluye una verificación completa de errores, asignación de memoria dinámica para cadenas y otras medidas de
+    protección. Estas medidas provocarán una pérdida de eficiencia. Sin embargo, si el programa no se puede ejecutar, no
+    importa cuán eficiente sea, no tiene mucho sentido. Además, en comparación con la era en la que se diseñó el
+    lenguaje C, la escala de los proyectos de software modernos es mucho mayor.</p>
+
+  <p class="zw">Por lo tanto, hace unos años, la falta de un tipo de cadena explícito aún podía verse como una ventaja.
+    Sin embargo, debido a los peligros inherentes de este método, vale la pena utilizar clases de cadenas modernas
+    avanzadas y completas. Si los programadores de C están dispuestos a utilizar cadenas de forma coherente, también se
+    pueden obtener estas ventajas.</p>
+
+  <p class="zw">9.4 Utilice una de las funciones de la biblioteca que manipulan la memoria:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">memcpy( y, x, 50 );</code></pre>
+
+  <p class="zw">Es importante no utilizar ninguna función str ---, porque se detendrán en el primer byte NUL. Si desea
+    escribir el bucle usted mismo, es mucho más complicado y es poco probable que abrume esta solución en términos de
+    eficiencia.</p>
+
+  <p class="zw">9.8 Si el búfer contiene una cadena, memchr buscará el primer byte que contenga 0 al comienzo del búfer
+    en la memoria y devolverá un puntero a ese byte. Reste el búfer de este puntero para obtener la longitud de la
+    cadena almacenada en este búfer. La función strlen realiza la misma tarea, pero el valor de retorno de strlen es un
+    valor de tipo sin signo (size_t), y el valor de la resta de puntero debe ser de un tipo con signo (ptrdiff_t).</p>
+
+  <p class="zw">Sin embargo, si los datos del búfer no terminan con un byte NULL, la función memchr devolverá un puntero
+    NULL. Restar el búfer de este valor producirá un resultado sin sentido. Por otro lado, la función strlen continúa
+    buscando en la parte posterior de la matriz hasta que finalmente encuentra un byte NUL.</p>
+
+  <p class="zw">Aunque se puede obtener el mismo resultado usando la función strlen, generalmente es imposible encontrar
+    el byte NUL usando la función string, porque este valor se usa para terminar la cadena. Si es el byte lo que
+    necesita encontrar, debe usar funciones de manipulación de memoria.</p>
+
+  <h3 class="calibre7" id="nav_point_420">Capítulo 9 Ejercicios de programación</h3>
+
+  <p class="zw">9.2 ¡Muy desafortunado! La biblioteca de funciones estándar no proporciona esta función.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 安全的字符串长度函数。它返回一个字符串的长度，即使字符串并未以NUL字节结
+** 尾。'size'是存储字符串的缓冲区的长度。
+*/
+
+#include &lt;string.h&gt;
+#include &lt;stddef.h&gt;
+
+size_t
+my_strnlen( char const *string, int size )
+{
+　　register size_t　length;
+
+　　for( length = 0; length &lt; size; length += 1 )
+　　　if( *string++ == '\0' )
+　　　　break;
+
+　　return length;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 9.2</strong>　</p>
+
+  <p class="calibre11">mstrnlen.c</p>
+
+  <p class="zw">9.6 Hay dos soluciones a este problema. La primera es una solución simple pero menos eficiente.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 字符串拷贝函数，返回一个指向目标参数末尾的指针（版本1）。
+*/
+
+#include &lt;string.h&gt;
+
+char *
+my_strcpy_end( char *dst, char const *src )
+{
+　　strcpy( dst, src );
+
+　　return dst + strlen( dst );
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 9.2a</strong></p>
+
+  <p class="calibre11">mstrcpe1.c</p>
+
+  <p class="zw">Usando esta solución para resolver el problema, el tiempo consumido por la última llamada a la función
+    strlen no será menor que el tiempo ahorrado al omitir esa función de concatenación de cadenas.</p>
+
+  <p class="zw">La segunda solución evita el uso de funciones de biblioteca. La declaración de registro se utiliza para
+    mejorar la eficiencia de la función.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">*
+** 字符串拷贝函数，返回一个指向目标参数末尾的指针，不使用任何标准库字符处理
+** 函数（版本2）。
+*/
+
+#include &lt;string.h&gt;
+
+char *
+my_strcpy_end( register char *dst, register char const *src )
+{
+　　while( ( *dst++ = *src++ ) != '\0' )
+　　;
+
+　　return dst - 1;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 9.2b</strong></p>
+
+  <p class="calibre11">mstrcpe2.c</p>
+
+  <p class="zw">El uso de esta solución para resolver el problema no aprovecha al máximo la eficiencia adicional
+    proporcionada por algunas máquinas que implementan instrucciones especiales de procesamiento de cadenas.</p>
+
+  <p class="zw">9.11 Una matriz de búfer con una longitud de 101 bytes, que se utiliza para almacenar 100 bytes de
+    entrada y terminador NUL. La función strtok se usa para extraer palabras una por una.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 计算标准输入中单词“the”出现的次数。字母是区分大小写的，输入中的单词由** 一个或多次空白字符分隔。
+*/
+
+#include &lt; stdio.h&gt;
+#include &lt; string.h&gt;
+#include &lt; stdlib.h&gt;
+
+char const　　whitespace[] = " \n\r\f\t\v";
+
+int
+main()
+{
+　　char buffer[101];
+　　int　count;
+
+　　count = 0;
+
+　　/*
+　　** 读入文本行，直到发现EOF。
+　　*/
+　　while( gets( buffer ) ){
+　　　char*word;
+
+　　　/*
+　　　** 从缓冲区逐个提取单词，直到缓冲区内不再有单词。
+　　　*/
+　　　for( word = strtok( buffer, whitespace );
+　　　　　word != NULL;
+　　　　　word = strtok( NULL, whitespace ) ){
+　　　　if( strcmp( word, "the" ) == 0 )
+　　　　　count += 1;
+　　　}
+　　}
+
+　　printf( "%d\n", count );
+
+　　return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones a 9.11</strong></p>
+
+  <p class="calibre11">la C</p>
+
+  <p class="zw">9.15 Aunque no se indica en la especificación, esta función debe verificar ambos parámetros para
+    asegurarse de que no sean NULL. El programa incluye el archivo stdio.h porque define NULL. Si los parámetros pasan
+    la prueba, solo podemos asumir que la cadena de entrada se terminó correctamente con un terminador.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 把数字字符串’src’转换为美元和美分的格式，并存储于’dst’。
+*/
+
+#include &lt;stdio.h&gt;
+
+void
+dollars( register char *dst, register char const *src )
+{
+　　int　len;
+
+　　if( dst == NULL || src == NULL )
+　　　return;
+
+　　*dst++ = '$';
+　　len = strlen( src );
+
+　　/*
+　　** 如果数字字符串足够长，复制将出现在小数点左边的数字，在适当的位置添
+　　** 加逗号。如果字符串短于3个数字，在小数点前面再添加一个'0'。
+　　*/
+　　if( len &gt;= 3 ){
+　　　　　　int i;
+
+　　　　　　for( i = len - 2; i &gt; 0; ){
+　　　　　　　　　*dst++ = *src++;
+　　　　　　　　　if( --i &gt; 0 &amp;&amp; i % 3 == 0 )
+　　　　　　　　　　　　*dst++ = ',';
+　　　　　　}
+　　} else
+　　　　　　*dst++ = '0';
+
+　　/*
+　　** 存储小数字，然后存储'src'中剩余的数字。如果'src'中的数字少于2个数
+　　** 字，用'0'填充。然后在'dst'中添加NUL终止符。
+　　*/
+　　*dst++ = '.';
+　　*dst++ = len &lt; 2 ? '0' : *src++;
+　　*dst++ = len &lt; 1 ? '0' : *src;
+　　*dst = 0;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones a 9.15</strong></p>
+
+  <p class="calibre11">dólares c</p>
+
+  <h3 class="calibre7" id="nav_point_421">Capítulo 10 Preguntas</h3>
+
+  <p class="zw">10.2 La estructura es un escalar. Como cualquier otro escalar, cuando el nombre de una estructura se usa
+    como rvalue en una expresión, representa el valor almacenado en la estructura. Cuando se usa como un valor l,
+    representa la ubicación de la memoria donde se almacena la estructura. Sin embargo, cuando el nombre de la matriz se
+    usa como rvalue en una expresión, su valor es un puntero al primer elemento de la matriz. Dado que su valor es un
+    puntero constante, el nombre de la matriz no se puede utilizar como lvalue.</p>
+
+  <p class="zw">10.7 Una de las respuestas es incierta, porque no sabemos dónde elegirá el compilador almacenar np.</p>
+
+  <table border="1" width="90%" class="calibre16">
+    <thead class="calibre17">
+      <tr class="calibre18">
+        <th class="calibre19">
+          <p class="calibre2">expresión</p>
+        </th>
+
+        <th class="calibre19">
+          <p class="calibre2">valor</p>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="calibre20">
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">200</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes.a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ilegal</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes[3].a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">12</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes[3].c</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">200</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes[3].c-&amp;gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">5</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*nodes</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">{5, nodes+3, NULL}</code></p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*nodes.a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ilegal</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">(*nodes).a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">5</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes-&amp;gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">5</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">nodes[3].b-&amp;gt;b</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">248</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*nodes[3].b-&amp;gt;b</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">{18,　nodes+12, nodes+1 }</code></p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">200</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes[3].a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">236</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes[3].c</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">244</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes[3].c-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">200</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;nodes-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">200</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">np</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">224</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">np-a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">Veintidós</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">np-&gt;c-&gt;c-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">15</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">npp</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">216</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">npp-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ilegal</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*npp</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">248</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">**npp</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">{18, nodes+2, nodes+1}</code></p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">*npp-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">ilegal</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">(*npp)-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">18</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;np</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">desconocido</p>
+        </td>
+      </tr>
+
+      <tr class="calibre18">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;np-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">224</p>
+        </td>
+      </tr>
+
+      <tr class="calibre22">
+        <td class="calibre21">
+          <p class="calibre2"><code class="calibre26">&amp;np-&gt;c-&gt;c-&gt;a</code></p>
+        </td>
+
+        <td class="calibre21">
+          <p class="calibre2">212</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="zw">10.11 x debe declararse como un número entero (o entero sin signo) y luego usar desplazamiento y
+    enmascaramiento para almacenar el valor apropiado. La traducción de cada declaración individualmente da el siguiente
+    código:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00381.gif" class="calibre14"></p>
+
+  <p class="calibre13"><img alt="" src="../images/00382.gif" class="calibre14"></p>
+
+  <p class="zw">Si solo le importa el resultado final, el siguiente código es más eficiente:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00383.gif" class="calibre14"></p>
+
+  <p class="zw">Aquí hay otro método:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00384.gif" class="calibre14"></p>
+
+  <h3 class="calibre7" id="nav_point_422">Capítulo 10 Ejercicios de programación</h3>
+
+  <p class="zw">10.1 Aunque no existe un requisito claro para esta pregunta, la forma correcta es declarar una
+    estructura para el número de teléfono y luego usar esta estructura para representar los tres miembros de la
+    estructura de la señal de pago.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 表示长途电话付账记录的结构。 
+*/
+struct PHONE_NUMBER {
+　　 short area;
+　　 short exchange;
+　　 short station;
+};
+
+　　 struct LONG_DISTANCE_BILL {
+　　 short　　month;
+　　 short　　day;
+　　 short　　year;
+　　 int　　time;
+　　 struct　PHONE_NUMBER　called;
+　　 struct　PHONE_NUMBER　calling;
+　　 struct　PHONE_NUMBER　billed;
+};</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 10.2a</strong></p>
+
+  <p class="calibre11">phone1.h</p>
+
+  <p class="zw">Otro método es utilizar una matriz de longitud PHONE_NUMBERS, como se muestra a continuación:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+**表示长途电话付账记录的结构。
+*/
+enum　PN_TYPE{ CALLED, CALLING, BILLED };
+
+struct LONG_DISTANCE_BILL {
+　　 short　　month;
+　　 short　　day;
+　　 short　　year;
+　　 int　　time;
+　　 struct　PHONE_NUMBER　numbers[3];
+};</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 10.2b</strong></p>
+
+  <p class="calibre11">phone2.h</p>
+
+  <h3 class="calibre7" id="nav_point_423">Capítulo 11 Preguntas</h3>
+
+  <p class="zw">11.3 Si la entrada está contenida en un archivo, debe ser colocado allí por otro programa (como un
+    editor). Si este es el caso, el programa editor admite la longitud de la línea más larga y tomará una decisión
+    lógica para determinar el tamaño de su búfer de entrada.</p>
+
+  <p class="zw">11.4 La principal ventaja es que esta memoria se liberará automáticamente cuando regrese la función que
+    asigna memoria. Este atributo está determinado por la forma en que funciona la pila y puede garantizar que no habrá
+    pérdidas de memoria. Pero este método también tiene desventajas. Dado que la memoria asignada desaparecerá cuando la
+    función regrese, no se puede usar para almacenar los datos devueltos al programa de llamada.</p>
+
+  <p class="zw">11,5　</p>
+
+  <p class="zw">una. Utilice la constante literal 2 como la longitud del valor entero. Este valor puede funcionar
+    normalmente en máquinas con un valor entero de 2 bytes de longitud. Pero en una máquina de números enteros de 4
+    bytes, la memoria asignada real será solo la mitad de la memoria requerida. Por lo tanto, se debe usar sizeof en su
+    lugar.</p>
+
+  <p class="zw">B. No se comprueba el valor devuelto por la función malloc. Si no hay memoria suficiente, será NULL.</p>
+
+  <p class="zw">C. Puede funcionar ajustar el rango del subíndice moviendo el puntero a la izquierda del límite
+    izquierdo de la matriz, pero viola la estipulación del estándar de que el puntero no puede cruzar el límite
+    izquierdo de la matriz.</p>
+
+  <p class="zw">D. Después de ajustar el puntero, el índice del primer elemento se convierte en 1 y el ciclo for
+    comenzará desde 0 por error. En muchos sistemas, este error destruirá la información utilizada por malloc para
+    rastrear el montón, lo que a menudo hace que el programa se bloquee.</p>
+
+  <p class="zw">mi. Antes de que se incremente la matriz, no se comprueba si el valor de entrada está en el rango
+    adecuado. Los valores de entrada ilegales pueden hacer que el programa se bloquee de una manera interesante.</p>
+
+  <p class="zw">F. Si se debe devolver la matriz, la función gratuita no puede liberarla.</p>
+
+  <h3 class="calibre7" id="nav_point_424">Capítulo 11 Ejercicios de programación</h3>
+
+  <p class="zw">11.2 Esta función asigna una matriz y reasigna la matriz de acuerdo con un incremento fijo cuando es
+    necesario. El DELTA incremental se puede ajustar para equilibrar la eficiencia y el desperdicio de memoria.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 从标准输入读取一列由EOF结尾的整数并返回一个包含这些值的动态分配的数组。
+数组的第1个元素是数组所包含的值的数量。
+*/
+
+#include &lt; stdio.h&gt;
+#include &lt; malloc.h&gt;
+
+#define　DELTA　　100
+
+int *
+readints()
+{
+　　int　*array;
+　　int　size;
+　　int　count;
+　　int　value;
+
+　　/*
+　　** 获得最初的数组，大小足以容纳DELTA 个值。
+　　*/
+　　size = DELTA;
+　　array = malloc( ( size + 1 ) * sizeof( int ) );
+　　if( array == NULL )
+　　　　 return NULL;
+
+　　/*
+　　** 从标准输入获得值。
+　　*/
+　　count = 0;
+　　while( scanf( "%d", &amp;value ) == 1 ){
+　　　　 /*
+　　　　 ** 如果需要，使数组变大，然后存储这个值。
+　　　　 */
+　　　　 count += 1;
+　　　　 if( count &gt; size ){
+　　　　 size += DELTA;
+　　　　 array = realloc( array,
+　　　　　( size + 1 ) * sizeof( int ) );
+　　　　 if( array == NULL )
+　　　　　return NULL;
+　　}
+　　array[ count ] = value;
+}
+
+/*
+** 改变数组的长度，使其刚刚正好，然后存储计数值并返回这个数组。
+** 这样做绝不会使数组更大，所以它绝不应该失败（但还是应该进行检查！）。
+*/
+　　if( count &lt; size ){
+　　　　　 array = realloc( array,
+　　　　　 ( count + 1 ) * sizeof( int ) );
+　　　　　 if( array == NULL )
+　　　　　　return NULL;
+　　}
+　　array[ 0 ] = count;
+　　return array;
+　　}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 11.2</strong></p>
+
+  <p class="calibre11">readints.c</p>
+
+  <h3 class="calibre7" id="nav_point_425">Capítulo 12 Preguntas</h3>
+
+  <p class="zw">12.2 En comparación con la función sll_insert que no necesita lidiar con ningún código de caso especial,
+    esta técnica de usar el nodo principal no tiene ninguna ventaja. Paradójicamente, esta técnica que se dice que se
+    usa para eliminar situaciones especiales en realidad introducirá código para manejar situaciones especiales. Cuando
+    se crea la lista vinculada, se deben agregar nodos ficticios. Otras funciones que manipulan esta lista vinculada
+    deben omitir este nodo ficticio. Finalmente, este nodo ficticio también desperdicia memoria.</p>
+
+  <p class="zw">12.4 Si el nodo raíz asigna memoria de forma dinámica, podemos lograr el objetivo asignando memoria solo
+    para una parte del nodo.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　Node　*root;
+　　 root = malloc( sizeof(Node) – sizeof(ValueType) );</code></pre>
+
+  <p class="zw">Una forma más segura es declarar una estructura que solo contenga punteros. El puntero raíz es una de
+    esas estructuras y cada nodo contiene solo una de estas estructuras. Lo interesante de este método es la
+    interdependencia entre las estructuras, cada estructura contiene un campo del otro tipo. Este tipo de
+    interdependencia crea una pregunta de "huevo o gallina" al declararlos: ¿qué estructura se declara primero? Este
+    problema solo se resuelve mediante la declaración incompleta de una de las etiquetas de estructura.</p>
+
+  <p class="calibre13"><img alt="" src="../images/00385.gif" class="calibre14"></p>
+
+  <p class="zw">12.7 Buscar en un esquema de lista de enlaces múltiples es mucho más eficiente que buscar en una lista
+    enlazada que contenga todas las palabras. Por ejemplo, para encontrar una palabra que comience con la letra b, no es
+    necesario buscar en esas palabras que comienzan con a. En 26 letras, si la frecuencia de las palabras que comienzan
+    con cada letra es la misma, la eficiencia de este esquema de listas múltiples enlazadas puede incrementarse en casi
+    26 veces. Sin embargo, la mejora real es menor que esto.</p>
+
+  <h3 class="calibre7" id="nav_point_426">Capítulo 12 Ejercicios de programación</h3>
+
+  <p class="zw">12.1 Esta función es muy simple, aunque solo se puede utilizar para el tipo de nodo en el que se
+    declara, debes conocer la estructura interna del nodo. El próximo capítulo discutirá técnicas para resolver este
+    problema.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 在单链表中计数节点的个数。
+*/
+
+#include "singly_linked_list_node.h"
+#include &lt;stdio.h&gt;
+
+int
+sll_count_nodes( struct NODE *first )
+{
+　　　int　count;
+
+　　　for( count = 0; first != NULL; first = first-&gt;link ){
+　　　　　 count += 1;
+　　　　}
+
+　　　return count;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones 12.1</strong></p>
+
+  <p class="calibre11">sll_cnt.c</p>
+
+  <p class="zw">Si se le pasa esta función cuando se le llama puntero a un nodo en el medio de la lista vinculada,
+    entonces contará los nodos después de este nodo en la lista vinculada.</p>
+
+  <p class="zw">12.5 Primero, la respuesta a esta pregunta: aceptar un puntero al nodo que deseamos eliminar puede hacer
+    que la función sea independiente del tipo de datos almacenados en la lista vinculada. Entonces, al incluir
+    diferentes archivos de encabezado para diferentes listas vinculadas, el mismo código se puede aplicar a cualquier
+    tipo de valor. Por otro lado, si no sabemos qué nodo contiene el valor que necesita ser eliminado, primero debemos
+    buscarlo.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 从一个单链表删除一个指定的节点。第1个参数指向链表的根指针，第2个参数
+** 指向需要被删除的节点。如果它可以被删除，函数返回TRUE，否则返回FALSE。
+*/
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;assert.h&gt;
+#include "singly_linked_list_node.h"
+
+#define　FALSE　0
+#define 　TRUE　　1
+
+int
+sll_remove( struct NODE **linkp, struct NODE *delete )
+{
+　　　 register Node*current;
+
+　　　 assert( delete != NULL );
+
+　　　 /*
+　　　 ** 寻找要求删除的节点。
+　　　 */
+　　　 while( ( current = *linkp ) != NULL &amp;&amp; current != delete )
+　　　　linkp = &amp;current-&gt;link;
+
+　　　 if( current == delete ){
+　　　　*linkp = current-&gt;link;
+　　　　free( current );
+　　　　return TRUE;
+　　　 }
+　　　 else 
+　　　　return FALSE;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones a 12.5</strong></p>
+
+  <p class="calibre11">sll_remv.c</p>
+
+  <p class="zw">Tenga en cuenta que permitir que esta función utilice la función libre para eliminar nodos la limitará a
+    la lista vinculada de nodos asignados dinámicamente. Otra solución es que si la función devuelve verdadero, el
+    programa que llama es responsable de eliminar el nodo. Por supuesto, si el programa que realiza la llamada no
+    elimina el nodo asignado dinámicamente, provocará una pérdida de memoria.</p>
+
+  <p class="zw">Una pregunta de discusión: ¿Por qué esta función necesita usar assert?</p>
+
+  <h3 class="calibre7" id="nav_point_427">Capítulo 13 Preguntas</h3>
+
+  <p class="zw">13.1 a. Ⅷ, b. Ⅲ, c. Ⅹ, d. Ⅺ, e. Ⅳ, f. Ⅸ, g. ⅩⅥ, h. Ⅶ, i. Ⅵ, j. ⅪⅩ</p>
+
+  <p class="zw">　　k. ⅩⅪ, l. ⅩⅩⅢ, m.ⅩⅩⅤ</p>
+
+  <p class="zw">13.4 Puede resultar útil declarar trans como una variable de registro, dependiendo del entorno que esté
+    utilizando. En algunas máquinas, los beneficios de colocar punteros en los registros son bastante importantes. En
+    segundo lugar, declare una variable local que contenga el valor de trans-&gt; producto. Como sigue:</p>
+
+  <p class="calibre13"><img alt="" src="../images/00386.gif" class="calibre14"></p>
+
+  <p class="zw">Esta expresión se puede utilizar varias veces, pero no es necesario volver a calcularla cada vez.
+    Algunos compiladores automáticamente harán estas dos cosas por usted, pero otros no.</p>
+
+  <p class="zw">13.7 Su única ventaja es tan obvia que es posible que no piense en ello. Esta es la razón para escribir
+    esta función: esta función facilita el procesamiento de los parámetros de la línea de comandos. Pero otros aspectos
+    de esta función son desventajas. Solo puede procesar parámetros de la forma compatible con esta función. Dado que no
+    forma parte del estándar, el uso de getopt reducirá la portabilidad del programa.</p>
+
+  <p class="zw">13.11 En primer lugar, algunos compiladores almacenan constantes de cadena en áreas de memoria que no se
+    pueden modificar, si intenta modificar dichas constantes de cadena, el programa terminará. En segundo lugar, incluso
+    si se utiliza una constante de cadena en más de un lugar del programa, algunos compiladores solo guardan una copia
+    de la constante de cadena. La modificación de una de las constantes de cadena afectará a todas las apariciones de
+    esta constante de cadena en el programa, lo que hace que la depuración sea extremadamente difícil. Por ejemplo, si
+    la siguiente instrucción se ejecuta al principio</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　strcpy("hello\n", "Bye!\n" );</code></pre>
+
+  <p class="zw">Luego ejecute la siguiente declaración:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　printf("hello\n" );</code></pre>
+
+  <p class="zw">¡Adiós!</p>
+
+  <h3 class="calibre7" id="nav_point_428">Capítulo 13 Ejercicios de programación</h3>
+
+  <p class="zw">13.1 Esta pregunta se dio en el Capítulo 9, pero no hay restricciones sobre las declaraciones if. La
+    intención de esta restricción es pedirle que considere otros métodos de implementación. El resultado de la función
+    is_not_print es el valor negativo del valor de retorno de la función isprint, lo que evita la necesidad de que el
+    bucle principal se ocupe de situaciones especiales.Cada elemento guarda el puntero de función, la etiqueta y el
+    valor de recuento de cada tipo.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 计算从标准输入的几类字符的百分比。
+*/
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+
+/*
+**　 定义一个函数，判断一个字符是否为可打印字符。这可以消除下面代码中这种类
+**　型的特殊情况。
+*/
+int is_not_print( int ch )
+{
+　　　return !isprint( ch );
+}
+
+/*
+**　用于区别每种类型的分类函数的跳转表。
+*/
+static　int(*test_func[])( int ) = {
+　　　iscntrl,
+　　　isspace,
+　　　isdigit,
+　　　islower,
+　　　isupper,
+　　　ispunct,
+　　　is_not_print
+};
+#define　N_CATEGORIES\
+　　　　　( sizeof( test_func ) / sizeof( test_func[ 0 ] ) )
+
+/*
+**　每种字符类型的名字。
+*/
+char*label[] = {
+　　 "control",
+　　 "whitespace",
+　　 "digit",
+　　 "lower case",
+　　 "upper case",
+　　 "punctuation",
+　　 "non-printable"
+};
+
+/*
+**　 目前见到的每种类型的字符数以及字符的总量。
+*/
+int　count[ N_CATEGORIES ];
+int　total;
+
+main()
+{
+　　　int　ch;
+　　　　 int　category;
+
+　　 /*
+　　 ** 读取和处理每个字符。
+　　 */
+　　 while( (ch = getchar()) != EOF ){
+　　　　　 total += 1;
+
+　　　　　 /*
+　　　　　 ** 为这个字符调用每个测试函数。如果结果为真，增加对应计数器的值。
+　　　　　 */
+　　　　　 for( category = 0; category &lt; N_CATEGORIES;
+　　　　　　　 category += 1 ){
+　　　　　　　　 if( test_func[ category ]( ch ) )
+　　　　　　　　　　　 count[ category ] += 1;
+　　　　　 }
+　　 }
+
+　　 /*
+　　 ** 打印结果。
+　　 */
+　　 if( total == 0 ){
+　　　　　printf( "No characters in the input!\n" );
+　　 }
+　　 else {
+　　　　　for( category = 0; category &lt; N_CATEGORIES;
+　　　　　　　category += 1 ){
+　　　　　　　　　　printf( "%3.0f%% %s characters\n",
+　　　　　　　　　　count[ category ] * 100.0 / total,
+　　　　　　　　　　label[ category ] );
+　　　　　 }
+　　 }
+
+　　 return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 13.1</strong></p>
+
+  <p class="calibre11">char_cat.c</p>
+
+  <h3 class="calibre7" id="nav_point_429">Capítulo 14 Preguntas</h3>
+
+  <p class="zw">14.1 El nombre del archivo y el número de línea pueden ser útiles al imprimir mensajes de error,
+    especialmente en las primeras etapas de la depuración. De hecho, las macros de aserción las utilizan para
+    implementar sus propias funciones. __DATE__ y __TIME__ pueden compilar información de versión en el programa.
+    Finalmente, __STDC__ se puede usar en compilación condicional para seleccionar estructuras ANSI y pre-ANSI en el
+    código fuente que deben ser compiladas por dos tipos de compiladores.</p>
+
+  <p class="zw">14.6 No podemos juzgar por el código fuente proporcionado. Si el proceso se implementa como una macro y
+    sus parámetros se evalúan más de una vez, los efectos secundarios de aumentar el valor del subíndice pueden causar
+    resultados incorrectos.</p>
+
+  <p class="zw">14.7 Hay varios errores en este código, algunos de los cuales son sutiles. Su principal problema es que
+    esta macro se basa en parámetros que tienen efectos secundarios (valores de subíndice crecientes). Esta dependencia
+    es muy peligrosa, porque el nombre de la macro no indica la tarea real que realiza (este es el segundo problema),
+    este peligro se incrementa aún más. Supongamos que el bucle se reescribió más tarde como:</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　 for( i = 0; i &lt; SIZE; i += 1 )
+　　　　　　sum += SUM( array[ i ] );</code></pre>
+
+  <p class="zw">Aunque tiene el mismo aspecto, el programa fallará en este momento. El último problema es: dado que la
+    macro siempre accede a dos elementos en la matriz, si SIZE es un valor impar, el programa fallará.</p>
+
+  <h3 class="calibre7" id="nav_point_430">Capítulo 14 Ejercicios de programación</h3>
+
+  <p class="zw">14.1 La única parte complicada de este problema es que se pueden seleccionar ambas opciones. Esta
+    posibilidad excluye el uso de la directiva #elif para ayudarlo a determinar cuáles no están definidos.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 打印风格由预定义符号指定的分类账户。
+*/
+
+void
+print_ledger( int x )
+{
+#ifdef　OPTION_LONG
+#　　define　OK　1
+　　　print_ledger_long( x );
+#endif
+
+#ifdef　OPTION_DETAILED
+#　　define　OK　1
+　　　print_ledger_detailed( x );
+#endif
+
+#ifndef　OK
+　　　print_ledger_default( x );
+#endif
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 14.1</strong></p>
+
+  <p class="calibre11">prt_ldgr.c</p>
+
+  <h3 class="calibre7" id="nav_point_431">Capítulo 15 Preguntas</h3>
+
+  <p class="zw">15.1 Si la apertura falla por cualquier motivo, el valor de retorno de la función será NULO. Cuando este
+    valor se pasa a la función de E / S subsiguiente, la función fallará. En cuanto a si el programa falla, depende del
+    compilador. Si el programa no termina, la operación de E / S puede modificar el contenido de algunas ubicaciones
+    inesperadas en la memoria.</p>
+
+  <p class="zw">15.2 El programa fallará porque la estructura de ARCHIVO que está intentando usar no se ha inicializado
+    correctamente. Es posible que se modifique el contenido de una dirección de memoria inesperada.</p>
+
+  <p class="zw">15.4 Los diferentes sistemas operativos proporcionan diferentes mecanismos para detectar esta
+    redirección, pero los programas generalmente no necesitan saber si la entrada proviene de un archivo o de un
+    teclado. El sistema operativo es responsable de muchos aspectos de la mayoría de las operaciones de entrada que no
+    tienen nada que ver con el dispositivo, y las funciones de E / S de la biblioteca se encargan del resto. Para la
+    mayoría de las aplicaciones, el programa lee de la entrada estándar de la misma manera, independientemente de dónde
+    provenga realmente la entrada.</p>
+
+  <p class="zw">15.16 Si el valor real es 1.4049, el código de formato% .3f hará que el 4 al final del sufijo se
+    redondee a 5, pero utilizando el código de formato% .2f, el 0 al final del sufijo es no se redondea a 1, porque el
+    primero se trunca después. El número es 4.</p>
+
+  <h3 class="calibre7" id="nav_point_432">Capítulo 15 Ejercicios de programación</h3>
+
+  <p class="zw">15.2 La condición de que la línea de entrada tenga una limitación de longitud simplifica enormemente el
+    problema. Si usa get, la longitud del búfer es de al menos 81 bytes para almacenar 80 caracteres más un byte NUL de
+    terminación. Si usa fgets, la longitud del búfer es de al menos 82 bytes, porque también necesita almacenar un
+    carácter de nueva línea.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 将标准输入复制到标准输出，每次复制一行。每行的长度不超过80个字符。
+*/
+
+#include &lt;stdio.h&gt;
+
+#define　BUFSIZE　81/* 80个数据字节加上NUL字节 */
+
+main()
+{
+　　charbuf[BUFSIZE];
+
+　　while( gets( buf ) != NULL )
+　　　puts( buf );
+
+　　 return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Solución 15.2</strong></p>
+
+  <p class="calibre11">prog2.c</p>
+
+  <p class="zw">15.9 La restricción de que una cadena no puede contener un carácter de nueva línea significa que el
+    programa puede leer una línea a la vez del archivo. No es necesario que el programa intente hacer coincidir la
+    cadena en la línea incorrecta. Esta restricción significa que puede usar la función strstr para buscar líneas de
+    texto. La limitación de la longitud de la línea de entrada simplifica la solución. El uso de matrices asignadas
+    dinámicamente debería poder eliminar esta limitación de longitud, porque cuando el programa encuentra una línea de
+    entrada cuya longitud es mayor que la del búfer, vuelve a especificar la longitud del búfer. El contenido principal
+    del programa se utiliza para procesar el nombre del archivo y abrirlo.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 在指定的文件中，查找并打印所有包含指定字符串的文本行。
+**
+**　用法:
+**　　fgrep string file [ file ... ]
+*/
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define　BUFFER_SIZE　512
+
+void
+search( char *filename, FILE *stream, char *string )
+{
+　　　char　buffer[ BUFFER_SIZE ];
+
+　　　while( fgets( buffer, BUFFER_SIZE, stream ) != NULL ){
+　　　if( strstr( buffer, string ) != NULL ){
+　　　　if( filename != NULL )
+ 　　　　printf( "%s:", filename );
+　　　　fputs( buffer, stdout );
+　　　}
+　　　}
+}
+
+int
+main( int ac, char **av )
+{
+　　　char*string;
+
+　　　if( ac &lt;= 1 ){
+　　　　fprintf( stderr, "Usage: fgrep string file ...\n" );
+　　　　exit( EXIT_FAILURE );
+　　　}
+
+　　　/*
+　　　** 得到字符串。
+　　　*/
+　　　string = *++av;
+
+　　　/*
+　　　** 处理文件。
+　　　*/
+　　　if( ac &lt;= 2 )
+　　　　search( NULL, stdin, string );
+　　　else {
+　　　　while( *++av != NULL ){
+　　　　　FILE*stream;
+
+　　　　　stream = fopen( *av, "r" );
+　　　　　if( stream == NULL )
+　　　　　　perror( *av );
+　　　　　else {
+　　　　　　search( *av, stream, string );
+　　　　　　fclose( stream );
+　　　　}
+　　　}
+　　　}
+
+　　　return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones a 15.9</strong></p>
+
+  <p class="calibre11">fgrep.c</p>
+
+  <h3 class="calibre7" id="nav_point_433">Capítulo 16 Preguntas</h3>
+
+  <p class="zw">16.1 Los criterios para esta situación no están definidos, por lo que debe intentarlo usted mismo y
+    observar los resultados. Pero incluso si parece producir algunos resultados útiles, <strong class="calibre3">¡no lo
+      use! </strong>De lo contrario, su código perderá portabilidad.</p>
+
+  <p class="zw">16.3 Depende de la calidad de la función de generación de números aleatorios proporcionada por su
+    compilador. Idealmente, debería generar una secuencia aleatoria de 0 y 1. Pero algunas funciones de generación de
+    números aleatorios no son tan buenas, generan secuencias alternas de 0 y 1, esto no parece muy aleatorio. Si su
+    compilador también es de este tipo, puede encontrar que los bits de bytes altos son más aleatorios que los bits de
+    bytes bajos.</p>
+
+  <p class="zw">16.5 Primero, se debe pasar un puntero NULL a la función de tiempo. Pero no se pasa aquí, por lo que el
+    compilador se quejará de que la llamada no coincide con el prototipo. En segundo lugar, se debe pasar un puntero al
+    valor de tiempo a la función localtime, y el compilador también debería poder detectar esta situación. En tercer
+    lugar, el mes debe tener un rango de 0-11, pero aquí se imprime directamente como parte de la fecha de la salida. Su
+    valor debe agregarse en 1 antes de imprimir. Cuarto, después del 2000, el año impreso se verá extraño.</p>
+
+  <h3 class="calibre7" id="nav_point_434">Capítulo 16 Ejercicios de programación</h3>
+
+  <p class="zw">16.2 Aparte del requisito de "probabilidad igual", las otras partes del problema son muy simples. Aquí
+    hay un ejemplo. En circunstancias normales, tomará un número aleatorio módulo 6 para generar un valor de 0 a 5,
+    agregará 1 a este valor y regresará. Sin embargo, si el valor máximo devuelto por la función de generación de
+    números aleatorios es 32 767, estos valores no son "iguales en probabilidad". La probabilidad de cada valor entre 0
+    y 5 producida por el valor devuelto de 0 a 32 765 es igual. Sin embargo, los valores de retorno de los dos últimos
+    valores, 32 766 y 32 767 serán 0 y 1, respectivamente, lo que aumenta su probabilidad de ocurrencia (5462/32 768 en
+    lugar de 5461/32 768). Dado que el rango de respuestas que necesitamos es muy reducido, la diferencia es muy
+    pequeña. Si esta función intenta generar un número aleatorio en el rango de 1 a 30 000, entonces la probabilidad de
+    los primeros 2768 valores será el doble de la de los últimos. El bucle del programa se utiliza para eliminar este
+    error generando otro valor aleatorio una vez que aparecen los dos últimos valores.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 通过返回一个范围为1至6的值，模拟掷一个六边的骰子。
+*/
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+/*
+**　计算将产生6作为骰子值的随机数生成函数所返回的最大数。
+*/
+#define MAX_OK_RAND\
+　　 (int)( ( ( (long)RAND_MAX + 1 ) / 6 ) * 6 - 1 )
+
+int
+throw_die( void ){
+　　　static int is_seeded = 0;
+　　　int value;
+
+　　　if( !is_seeded ){
+　　　　is_seeded = 1;
+　　　　srand( (unsigned int)time( NULL ) );
+　　　}
+
+　　　do {
+　　　　value = rand();
+　　　} while( value &gt; MAX_OK_RAND );
+
+　　　return value % 6 + 1;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones 16.2</strong></p>
+
+  <p class="calibre11">morir.c</p>
+
+  <p class="zw">16.7 Este programa es esencialmente un programa de una sola vez, y esta solución poco elegante es más
+    que suficiente para esta tarea.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 测试rand函数所产生的值的随机程度。
+*/
+#include &lt; stdlib.h&gt;
+#include &lt; stdio.h&gt;
+
+/*
+**　用于计数各个数字相对频率的数组。
+*/
+int　frequency2[2];
+int　frequency3[3];
+int　frequency4[4];
+int　frequency5[5];
+int　frequency6[6];
+int　frequency7[7];
+int　frequency8[8];
+int　frequency9[9];
+int　frequency10[10];
+
+/*
+**　用于计数各个数字周期性频率的数组。
+*/
+int　cycle2[2][2];
+int　cycle3[3][3];
+int　cycle4[4][4];
+int　cycle5[5][5];
+int　cycle6[6][6];
+int　cycle7[7][7];
+int　cycle8[8][8];
+int　cycle9[9][9];
+int　cycle10[10][10];
+
+/*
+**　用于为一个特定的数字同时计数频率和周期性频率的宏。
+*/
+#define　CHECK( number, f_table, c_table )　　　　　　　\
+　　　　　 remainder = x % number;　　　　　　　\
+　　　　　 f_table[ remainder ] += 1;　　　　　　　\
+　　　　　 c_table[ remainder ][ last_x % number ] += 1
+
+/*
+**　用于打印一个频率表的宏。
+*/
+#define　PRINT_F( number, f_table )　　　　　　　　\
+　　　printf( "\nFrequency of random numbers modulo %d\n\t",　　\
+　　　　　 number ); 　　　　　　　　　　　\
+　　　for( i = 0; i &lt; number; i += 1 )　　　　　　　\
+　　　　　 printf( " %5d", f_table[ i ] );　　　　　　\
+　　　printf( "\n" )
+
+/*
+**　用于打印一个周期性频率表的宏。
+*/
+#define PRINT_C( number, c_table )　　　　　　　　\
+　　　 printf( "\nCyclic frequency of random numbers modulo %d\n",　\
+　　　　 number );　　　　　　　　　　　\
+　　　 for( i = 0; i &lt; number; i += 1 ){　　　　　　　\
+　　　　　printf( "\t" );　　　　　　　　　　\
+　　　　　for( j = 0; j &lt; number; j += 1 )　　　　　　\
+　　　　　printf( " %5d", c_table[ i ][ j ] );　　　　　\
+　　　printf( "\n" );　　　　　　　　　　\
+}
+
+int
+main( int ac, char **av )
+{
+　　 int　i;
+　　 int　j;
+　　 int　x;
+　　 int　last_x;
+　　 int　remainder;
+
+　　 /*
+　　 ** 如果给出了种子，就为随机数生成函数设置种子。
+　　 */
+　　 if( ac &gt; 1 )
+　　 　srand( atoi( av[ 1 ] ) );
+
+　　 last_x = rand();
+
+　　 /*
+　　 ** 运行测试。
+　　 */
+　　 for( i = 0; i &lt; 10000; i += 1 ){
+　　 　　x = rand();
+　　 　　CHECK( 2, frequency2, cycle2 );
+　　 　　CHECK( 3, frequency3, cycle3 );
+　　 　　CHECK( 4, frequency4, cycle4 );
+　　 　　CHECK( 5, frequency5, cycle5 );
+　　 　　CHECK( 6, frequency6, cycle6 );
+　　 　　CHECK( 7, frequency7, cycle7 );
+　　 　　CHECK( 8, frequency8, cycle8 );
+　　 　　CHECK( 9, frequency9, cycle9 );
+　　 　　CHECK( 10, frequency10, cycle10 );
+　　 　　last_x = x;
+　　 }
+
+　　 /*
+　　 ** 打印结果。
+　　 */
+　　 PRINT_F( 2, frequency2 );
+　　 PRINT_F( 3, frequency3 );
+　　 PRINT_F( 4, frequency4 );
+　　 PRINT_F( 5, frequency5 );
+　　 PRINT_F( 6, frequency6 );
+　　 PRINT_F( 7, frequency7 );
+　　 PRINT_F( 8, frequency8 );
+　　 PRINT_F( 9, frequency9 );
+　　 PRINT_F( 10, frequency10 );
+
+　　 PRINT_C( 2, cycle2 );
+　　 PRINT_C( 3, cycle3 );
+　　 PRINT_C( 4, cycle4 );
+　　 PRINT_C( 5, cycle5 );
+　　 PRINT_C( 6, cycle6 );
+　　 PRINT_C( 7, cycle7 );
+　　 PRINT_C( 8, cycle8 );
+　　 PRINT_C( 9, cycle9 );
+　　 PRINT_C( 10, cycle10 );
+
+　　 return EXIT_SUCCESS;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones a 16.7</strong>　</p>
+
+  <p class="calibre11">testrand.c</p>
+
+  <h3 class="calibre7" id="nav_point_435">Capítulo 17 Preguntas</h3>
+
+  <p class="zw">17.3 Las interfaces tradicionales y las formas alternativas de interfaces pueden coexistir fácilmente.
+    La función top devuelve el valor del elemento superior de la pila, pero en realidad no lo elimina. La función pop
+    elimina el elemento superior de la pila y lo devuelve. Los usuarios que deseen utilizar el método de paso pueden
+    utilizar la función pop de la forma tradicional. Si desea utilizar una alternativa, el usuario puede utilizar la
+    función superior para obtener el valor del elemento superior de la pila e ignorar su valor de retorno cuando utilice
+    la función emergente.</p>
+
+  <p class="zw">17.7 Dado que cada uno de ellos se asigna por separado con la función malloc, sacarlos uno por uno puede
+    garantizar que se libere cada elemento. El código utilizado para liberarlos ya existe en la función pop, por lo que
+    llamar a la función pop es mejor que copiar esos códigos.</p>
+
+  <p class="zw">17.9 Considere una matriz con 5 elementos, que puede aparecer en 6 estados diferentes: puede estar vacía
+    o puede contener 1, 2, 3, 4 o 5 elementos, respectivamente. Pero la parte delantera y trasera siempre deben apuntar
+    a uno de los cinco elementos de la matriz. Entonces, para cualquier valor dado de front, rear solo puede aparecer en
+    5 situaciones diferentes: puede ser igual a: front, front + 1, front + 2, front + 3 o front + 4 (recuerde, front + 5
+    es en realidad front , porque ha circulado hasta esta posición). Es imposible para nosotros representar 6 estados
+    diferentes con variables que solo pueden representar 5 estados diferentes.</p>
+
+  <p class="zw">17.12 Suponiendo que tiene un puntero al final de la lista enlazada, una lista enlazada individualmente
+    puede lograr su propósito. La cola nunca se atravesará en la dirección inversa, porque la lista de doble enlace
+    tiene una sobrecarga de campo de cadena adicional, por lo que no tiene ninguna ventaja en esta ocasión.</p>
+
+  <p class="zw">17.18 El recorrido en orden puede visitar cada nodo de un árbol de búsqueda binaria en orden ascendente.
+    No existe un método de recorrido predefinido para visitar los nodos del árbol de búsqueda binaria en orden
+    descendente, pero podemos modificar ligeramente el recorrido en orden para que pueda atravesar el subárbol derecho y
+    luego el subárbol izquierdo para lograr este objetivo.</p>
+
+  <h3 class="calibre7" id="nav_point_436">Capítulo 17 Ejercicios de programación</h3>
+
+  <p class="zw">17.3 Esta conversión es similar a una pila encadenada, pero cuando se elimina el último elemento, el
+    puntero trasero también debe establecerse en NULL.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 一个用链表形式实现的队列，它没有长度限制。
+*/
+#include "queue.h"
+#include &lt; stdio.h&gt;
+#include &lt; assert.h&gt;
+
+/*
+**　定义一个结构用地保存一个值。link字段将指向队列中的下一个节点。
+*/
+typedef　struct　QUEUE_NODE {
+　　　QUEUE_TYPE　value;
+　　　struct QUEUE_NODE *next;
+} QueueNode;
+
+/*
+**　指向队列第1个和最后一个节点的指针。
+*/
+static　QueueNode*front;
+static　QueueNode*rear;
+
+/*
+**　destroy_queue
+*/
+void
+destroy_queue( void )
+{
+　　　　while( !is_empty() )
+　　　　　 delete();
+}
+
+/*
+**　insert
+*/
+void
+insert( QUEUE_TYPE value )
+{
+　　 QueueNode*new_node;
+
+　　 /*
+　　 ** 分配一个新节点，并填充它的各个字段。
+　　 */
+　　 new_node = (QueueNode *)malloc( sizeof( QueueNode ) );
+　　 assert( new_node != NULL );
+　　 new_node-&gt;value = value;
+　　 new_node-&gt;next = NULL;
+
+　　 /*
+　　 ** 把它插入到队列的尾部。
+　　 */
+　　 if( rear == NULL ){
+　　　　　 front = new_node;
+　　 }
+　　 else {
+　　　　　 rear-&gt;next = new_node;
+　　 }
+　　 rear = new_node;
+}
+
+/*
+**　delete
+*/
+void
+delete( void )
+{
+　　　　QueueNode　*next_node;
+
+　　　　/*
+　　　　** 从队列的头部删除一个节点，如果它是最后一个节点，
+　　　　** 将rear也设置为NULL。
+　　　　*/
+assert( !is_empty() );
+next_node = front-&gt;next;
+free( front );
+front = next_node;
+if( front == NULL )
+　　rear = NULL;
+}
+
+/*
+**　first
+*/
+QUEUE_TYPE first( void )
+{
+　　assert( !is_empty() );
+　　return front-&gt;value;
+}
+
+/*
+**　is_empty
+*/
+int
+is_empty( void )
+{
+　　return front == NULL;
+}
+
+/*
+**　is_full
+*/
+int
+is_full( void )
+{
+　　return 0;
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones 17.3</strong></p>
+
+  <p class="calibre11">l_queue.c</p>
+
+  <p class="zw">17.6 Si usamos el módulo de cola, debemos resolver el problema de los conflictos de nombres.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 对一个数组形式的二叉搜索树执行层次遍历。
+*/
+void
+breadth_first_traversal( void (*callback)( TREE_TYPE value ) )
+{
+　　int　current;
+　　int　child;
+
+　　/*
+　　** 把根节点插入到队列中。
+　　*/
+　　queue_insert( 1 );
+
+　　/*
+　　** 当队列还没有空时...
+　　*/
+　　while( !is_queue_empty() ){
+　　　/*
+　　　** 从队列中取出第1个值并对它进行处理。
+　　　*/
+　　　current = queue_first();
+　　　queue_delete();
+　　　callback( tree[ current ] );
+
+　　　/*
+　　　** 将该节点的所有孩子添加到队列中。
+　　　*/
+　　　child = left_child( current );
+　　　if( child &lt; ARRAY_SIZE &amp;&amp; tree[ child ] != 0 )
+　　　　queue_insert( child );
+　　　child = left_child( current );
+　　　if( child &lt; ARRAY_SIZE &amp;&amp; tree[ child ] != 0 )
+　　　　　queue_insert( child );
+　　}
+}</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones a 17.6</strong></p>
+
+  <p class="calibre11">amplitud c</p>
+
+  <h3 class="calibre7" id="nav_point_437">Capítulo 18 Preguntas</h3>
+
+  <p class="zw">18.5 Esta idea suena bien, pero no se puede realizar. En el prototipo de la función, la palabra clave
+    register es opcional, por lo que no hay una forma confiable de llamar a la función para saber qué parámetros (si los
+    hay) se declaran de esta manera.</p>
+
+  <p class="zw">18.6 No, es imposible. Solo la función que realiza la llamada sabe cuántos parámetros se insertan
+    realmente en la pila. Sin embargo, si empuja un contador de parámetros en la pila, la función llamada puede borrar
+    todos los parámetros. Sin embargo, primero debe mostrar la dirección de devolución y guardarla.</p>
+
+  <h3 class="calibre7" id="nav_point_438">Capítulo 18 Ejercicios de programación</h3>
+
+  <p class="zw">18.3 La respuesta en realidad depende del entorno específico. Pero la solución aquí es aplicable al
+    entorno discutido en este capítulo. El usuario debe proporcionar el tipo real del parámetro después de la conversión
+    de tipo estándar. La macro real stdarg.h hace precisamente eso.</p>
+  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+** 标准库文件stdarg.h 所定义的宏的替代品。
+*/
+
+/*
+** va_list
+**　为一个保存一个指向参数列表可变部分的指针的变量进行类型定义。 这里使用的
+**　是char * ，因为作用于它们之上的运算并没有经过调整。
+*/
+typedef　char*va_list;
+
+/*
+** va_start
+**　用于初始化一个va_list变量的宏，使它指向堆栈中第1个可变参数。
+*/
+#define　va_start(arg_ptr,arg)　arg_ptr = (char *)&amp;arg + sizeof( arg )
+
+/*
+** va_arg
+**　用于返回堆栈中下一个变量值的宏，它同时增加arg_ptr的值，使它指向下一个参数。
+*/
+#define　va_arg(arg_ptr,type)　*((type *)arg_ptr)++
+
+/*
+** va_end
+**　在可变参数最后的访问之后调用。在这个环境中，它不需要执行任何任务。
+*/
+#define　va_end(arg_ptr)</code></pre>
+
+  <p class="calibre2"><strong class="calibre3">Soluciones 18.3</strong></p>
+
+  <p class="calibre11">mystdarg.h</p>
+
+</body>
+
+</html>

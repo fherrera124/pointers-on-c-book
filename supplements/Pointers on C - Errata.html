@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!-- saved from url=(0052)http://www.cs.rit.edu/~kar/pointers.on.c/errata.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+   
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (X11; I; SunOS 5.7 sun4u) [Netscape]">
+   <title>Pointers on C - Errata</title>
+<style type="text/css"></style></head>
+<body bgcolor="#eeeeee">
+
+<center>
+<h1>
+Errata for <i>Pointers on C</i></h1></center>
+
+<hr>
+Please send errata to <img src="./Pointers on C - Errata_files/antispam.gif"> -- thanks!
+<br>
+<hr>Errors corrected in the second printing:
+<ul>
+<li>
+Page ix: The correct URL is <a href="http://www.awl.com/cseng/titles/0-673-99986-6/">http://www.awl.com/cseng/titles/0-673-99986-6/</a>.</li>
+
+<li>
+Page 26, Figure 2.1: The bottom object, labelled "Object code", should
+be labelled "Executable."</li>
+
+<li>
+Page 463: The description of difftime should mention that the result is
+computed by subtracting time1 - time2.</li>
+
+<li>
+Page 576: The answer for the expression <tt>&amp;ints[-2]</tt> should be
+<i>illegal</i>.</li>
+
+<li>
+Page 584: The answer for the expression <tt>&amp;nodes</tt> should be <i>200</i>.</li>
+</ul>
+
+<hr>Errors corrected in the third printing:
+<ul>
+<li>
+Page 52: In the first line after the example in the Tip, change "an integer"
+to "a character".</li>
+
+<li>
+Page 64: The fourth paragraph should begin like this: "Lines 19 and 20
+create local variables (automatic, no linkage, scope limited to this block)."</li>
+
+<li>
+Page 64: The first line of the last paragraph before the summary should
+begin: "Finally, line 25 declares ..."</li>
+
+<li>
+Page 96 &amp; 100: The text describes Programs 5.1 and 5.2 as using a right
+shift, but in fact they mistakenly use a left shift. Be sure to fix this
+because the functions don't work as shown!</li>
+
+<li>
+Page 176: The last sentence should read, "... static keyword to restrict
+the accessibility of ..."</li>
+
+<li>
+Page 211: The last paragraph on this page should begin as follows: "Note
+the expression <tt>*string++</tt> in the <tt>while</tt> statement. It gets
+the character to which ..."</li>
+
+<li>
+Page 229, fifth sentence in the first new paragraph on the page: "The calling
+program must know that zero means do, one means for, ..."</li>
+
+<li>
+Page 236: The declaration in problem 13 should be <tt>int array[4][5][3];</tt></li>
+</ul>
+
+<hr>The errors below have not yet been corrected, and the publisher is unlikely to ever correct them. I've organized this list
+by the date each error was reported to me; this makes it easier to see what
+has been added since the last time you checked the list.
+<ul>
+<li>
+11/6/97 Page 430: The description of the printf family should state that
+all three functions return a count of the number of characters printed
+or stored.</li>
+
+<li>
+3/21/98 Page 39: The last sentence should begin "Long integers are at least
+..."</li>
+
+<li>
+3/21/98 Page 199: 4 lines up from the bottom: the accent on "voila" is
+backwards.</li>
+
+<li>
+3/21/98 Page 217, third paragraph from the bottom: The second sentence
+should read, "Does matrix have six rows of ten columns each, or ten rows
+of six columns each?"</li>
+
+<li>
+3/21/98 Page 610: Add an entry to the index: automatic 59, 213</li>
+
+<li>
+3/21/98 Page 612: In the index entry for function, change 167 to 165.</li>
+
+<li>
+12/9/98 Page 612: In index entry for exit, add page 410 as the primary
+reference.</li>
+
+<li>
+6/6/99 Page 575: The solution to programming problem 7-3 is incorrect.
+The declaration for <font face="Courier New, Courier, mono">digit</font>
+should be deleted, and the statement <font face="Courier New, Courier, mono">string++;</font>
+should be added to the end of the <font face="Courier New, Courier, mono">while</font>
+loop.</li>
+
+<li>
+2/2/00 Page 308: In program 11.1b, the string literal in the printf should
+end with \n rather than \en.</li>
+<li>
+3/13/00 Page 263: In exercise 11, the comparison should be
+case dependent, not case independent.</li>
+<li>
+6/17/00 Page 64, last line before section 3.10: Function d can indeed
+call function i, but there will be no type checking on the arguments
+due to the lack of a prototype.</li>
+<li>
+6/17/00 Page 169, 4 lines up from the bottom: omit the duplicate "the".</li>
+<li>
+6/17/00 Page 178, last line: change "lookup_entry" to "find_entry".</li>
+<li>
+6/17/00 Page 193, 3rd line: Remove the first occurrence of "it".</li>
+<li>
+6/17/00 Page 193, 2nd line from the bottom: "ellipsis" is spelled wrong.</li>
+<li>
+1/29/01 Page 198, 3rd paragraph (just before the example): In the sentence
+that begins "Taking the address of an array name gives a pointer to", change
+"the first element in the array." to "the array (pointers to arrays are
+discussed in section 8.2.2 and 8.2.3)."</li>
+<li>
+10/25/01 Page 42, line 16: Change "apostrophies" to "apostrophes".</li>
+<li>
+12/5/01 Page 463, table 16.2: The range for tm_mday should be 1-31, not 0-31.</li>
+<li>
+12/10/01 Page 256, table 9.1: In the line for isspace, the words "carriage
+return" should be followed by: '\r'.</li>
+<li>
+3/7/02 Page 195, problem 1: The subscripts are broken in the line for
+n &gt;= 2.  It should read "2xH sub [n-1] (x) - 2(n-1)H sub [n-2] (x)".
+</li>
+<li>
+3/7/02 Page 196, problem 3: In the last sentence after the phrase
+"multiply the value you have so far" add the words "by ten"
+</li>
+<li>
+9/18/02 Page 212, second tip: After writing the tip,
+I seem to have followed by own advice and removed the register declarations
+from the function to let the compiler optimize it on its own.
+I also eliminated the local variable.
+The tip itself makes a valid point,
+but the example doesn't illustrate it very well.
+</li>
+<li>
+9/18/02 Pages 229 &amp; 230: the last block of the "register" string should contain
+just a 0, not '0.
+</li>
+<li>
+9/18/02 Page 576, problem 8-8: Starting with the second sentence,
+the answer should read: "But a is actually where the array of integers begins, so the value obtained as the "pointer" will be the value of the first integer in the array."
+</li>
+<li>
+10/1/02 Page 311, just before the 3rd <tt>exit( EXIT_FAILURE )</tt>: add
+the line <tt>free( array );</tt> to fix the memory leak.
+</li>
+<li>
+10/28/02 Page 466, section 16.4.1 and program 16.2: The Standard states
+that setjmp can only be used as the entire controlling expression of an
+iteration or selection statement
+(optionally with a !, or a relational or equality operator and
+an integral constant expression), or as the entire expression
+in an expression statement.
+In program 16.2, I separated the call to setjmp and the test of its result
+in order to better explain each with its own comment.
+However, assigning the value of setjmp to a variable violates this rule,
+so the program should be:
+<pre>switch( setjmp( restart ) ){
+</pre>
+</li>
+<li>
+10/28/02 Page 198 and 231: If x is an array name, the expression &amp;x
+generates a pointer to the array, not a pointer to the first element.
+While these values are numerically equal, they have different types.
+</li>
+<li>
+4/22/03 Page 475: The prototype for the atexit function should be:
+<pre>void atexit( void (*func)( void ) );
+</pre>
+</li>
+<li>
+4/22/03 Page 477: The prototype for the system function should be:
+<pre>int system( char const *command );
+</pre>
+</li>
+<li>
+5/23/03 Page 294: The first line of code after the "else" should be:
+<pre>y = rec.info.subassy.n_parts;
+</pre>
+</li>
+<li>
+5/23/03 Page 584: The answer to the 11th expression in problem 10.7
+should be:
+<pre>{ 18, nodes+2, nodes+1 }
+</pre>
+</li>
+<li>
+3/8/04 Page 43: The second line of the first example should be:
+<pre>value = value - 060;
+</pre>
+</li>
+<li>
+9/22/06 Page 487: Two references to <tt>strxcoll</tt> should actually be <tt>strcoll</tt>.
+</li>
+<li>
+7/30/07 Page 518: In the fifth paragraph, make the following changes:
+<br>
+<br>
+... suppose an array of 200 elements is used ...
+<br>
+<br>
+... they will be stored in locations 1, 3, 7, 15, 31, 63, and 127, respectively.
+<br>
+<br>
+... because the right child of 7 would be stored in location 255, ...
+</li>
+<li>
+1/25/09 Page 111, halfway down the page, where it begins, Note that when the computer ...", change "evalutes" to "evaluates".
+</li>
+<li>
+3/23/09 Instructor's Guide: The solution given for problem 11.1 is incorrect. Replace the <tt>while</tt> statement with this:<br>
+<tt>for( ; n_elements &gt; 0; n_elements -= 1 )</tt>
+</li>
+<li>
+3/30/09 Page 224, omit the duplicate "the" just before the list of assignments to <tt>matrix</tt>.
+</li>
+<li>
+3/30/09 Instructor's Guide, Page 95, #10: should read "... to be changed if a copy of it were passed ..."
+</li>
+<li>
+3/30/09 Page 464, about halfway down: should read "Format codes consist of a % character followed by a character that indicates the type of value desired."
+</li>
+<li>
+3/30/09 Page 607, at the bottom of solution 17.6: The second call to "left_child" ought to be "right_child".
+</li>
+<li>
+4/28/09 Instructor's Guide, page 7, #6 should read: "... because they all differ in the case ..."
+</li>
+<li>
+4/28/09 Instructor's Guide, page 13: d(4) and e(4) should actually be d(6) and e(6).  Similarly, y(12) and y(19) should actually read y(13) and y(20).
+</li>
+<li>
+4/28/09 Instructor's Guide, page 35: replace the first two lines of code with this:<br>
+<tt>int n_primes = 1;<br>
+int limit = 1000;</tt>
+</li>
+<li>
+5/14/09 Instructor's Guide, page 58, 1st paragraph: The last sentence should read: "For this reason, this solution uses <tt>my_strlen</tt>, which is analagous to the <tt>my_strnlen</tt> function developed in exercise two.
+</li>
+</ul>
+
+
+</body></html>
