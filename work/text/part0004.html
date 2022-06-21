@@ -8,215 +8,245 @@
   <link href="../page_styles.css" rel="stylesheet" type="text/css">
 
 <body id="3Q280-e167752e5b154d43a225b5f350ab7738" class="calibre">
-  <h1 id="nav_point_2" class="not-in-toc">Prefacio</h1>
+  <div class="container">
+    <h1 id="nav_point_2" class="not-in-toc">Prefacio</h1>
 
-  <h3 id="nav_point_3" class="calibre7">¿Por qué necesitas este libro?</h3>
+    <h3 id="nav_point_3" class="calibre7">¿Por qué necesitas este libro?</h3>
 
-  <p class="zw">Ya hay muchos libros excelentes en el mercado sobre el lenguaje C. ¿Por qué necesitamos este? He estado
-    enseñando programación en C en la universidad durante 10 años, pero hasta ahora no he encontrado un libro que hable
-    sobre punteros de la manera que me gusta. Muchos libros utilizan un capítulo dedicado a las sugerencias y, a menudo,
-    aparecen en la segunda mitad del libro. Sin embargo, no es suficiente describir la sintaxis de los punteros y usar
-    algunos ejemplos simples para mostrar su uso. Comencé a enseñar consejos muy temprano cuando estaba enseñando, y a
-    menudo hablaba de consejos en el curso de la enseñanza posterior. Describo su uso efectivo en una variedad de
-    contextos diferentes y muestro el lenguaje de programación usando punteros. También hablé de algunos temas
-    relacionados, como el compromiso entre la eficiencia de la programación y la mantenibilidad del programa. El puntero
-    es la pista del libro y está integrado en todo el libro.</p>
+    <p class="zw">Ya hay muchos libros excelentes en el mercado sobre el lenguaje C. ¿Por qué necesitamos este? He
+      estado
+      enseñando programación en C en la universidad durante 10 años, pero hasta ahora no he encontrado un libro que
+      hable
+      sobre punteros de la manera que me gusta. Muchos libros utilizan un capítulo dedicado a las sugerencias y, a
+      menudo,
+      aparecen en la segunda mitad del libro. Sin embargo, no es suficiente describir la sintaxis de los punteros y usar
+      algunos ejemplos simples para mostrar su uso. Comencé a enseñar consejos muy temprano cuando estaba enseñando, y a
+      menudo hablaba de consejos en el curso de la enseñanza posterior. Describo su uso efectivo en una variedad de
+      contextos diferentes y muestro el lenguaje de programación usando punteros. También hablé de algunos temas
+      relacionados, como el compromiso entre la eficiencia de la programación y la mantenibilidad del programa. El
+      puntero
+      es la pista del libro y está integrado en todo el libro.</p>
 
-  <p class="zw">¿Por qué son tan importantes los indicadores? Mi creencia es: son los indicadores los que hacen que C
-    sea infinitamente poderoso. Algunas tareas se pueden implementar en otros lenguajes, pero C se puede implementar de
-    manera más efectiva; algunas tareas no se pueden implementar en otros lenguajes, como el acceso directo al hardware,
-    pero C sí. Para convertirse en un buen programador de C, un conocimiento profundo y completo de los punteros es un
-    requisito previo.</p>
+    <p class="zw">¿Por qué son tan importantes los indicadores? Mi creencia es: son los indicadores los que hacen que C
+      sea infinitamente poderoso. Algunas tareas se pueden implementar en otros lenguajes, pero C se puede implementar
+      de
+      manera más efectiva; algunas tareas no se pueden implementar en otros lenguajes, como el acceso directo al
+      hardware,
+      pero C sí. Para convertirse en un buen programador de C, un conocimiento profundo y completo de los punteros es un
+      requisito previo.</p>
 
-  <p class="zw">Sin embargo, aunque el puntero es muy poderoso, los riesgos asociados con él no son pequeños. En
-    comparación con las limas de uñas, las motosierras pueden cortar madera más rápido, pero es más probable que las
-    motosierras le hagan daño, y las lesiones suelen ocurrir muy rápidamente y las consecuencias son muy graves. Los
-    punteros son como motosierras: si se usan correctamente, pueden simplificar la implementación de algoritmos y
-    hacerlos más eficientes; si se usan incorrectamente, pueden causar errores, dando lugar a síntomas sutiles y
-    confusos, y es extremadamente difícil encontrar la causa. Es muy peligroso saber un poco sobre el puntero y dejarlo
-    pasar. Si ese es el caso, siempre le traerá dolor en lugar de alegría. Este libro proporciona el conocimiento
-    profundo y completo sobre las sugerencias que necesita, lo suficiente para evitar el dolor que pueden traer las
-    sugerencias.</p>
+    <p class="zw">Sin embargo, aunque el puntero es muy poderoso, los riesgos asociados con él no son pequeños. En
+      comparación con las limas de uñas, las motosierras pueden cortar madera más rápido, pero es más probable que las
+      motosierras le hagan daño, y las lesiones suelen ocurrir muy rápidamente y las consecuencias son muy graves. Los
+      punteros son como motosierras: si se usan correctamente, pueden simplificar la implementación de algoritmos y
+      hacerlos más eficientes; si se usan incorrectamente, pueden causar errores, dando lugar a síntomas sutiles y
+      confusos, y es extremadamente difícil encontrar la causa. Es muy peligroso saber un poco sobre el puntero y
+      dejarlo
+      pasar. Si ese es el caso, siempre le traerá dolor en lugar de alegría. Este libro proporciona el conocimiento
+      profundo y completo sobre las sugerencias que necesita, lo suficiente para evitar el dolor que pueden traer las
+      sugerencias.</p>
 
-  <h3 id="nav_point_4" class="calibre7">Por que aprender el lenguaje C</h3>
+    <h3 id="nav_point_4" class="calibre7">Por que aprender el lenguaje C</h3>
 
-  <p class="zw">¿Por qué el lenguaje C sigue siendo tan popular? Históricamente, por diversas razones, la industria
-    eligió C, siendo la principal su eficiencia. Los programas C excelentes son casi tan eficientes como los programas
-    en lenguaje ensamblador, pero los programas en C son obviamente más fáciles de desarrollar que los programas en
-    lenguaje ensamblador. En comparación con muchos otros lenguajes, C brinda a los programadores más control, como
-    controlar la ubicación de almacenamiento de datos y el proceso de inicialización. C carece de la función de "red de
-    seguridad", que ayuda a mejorar su eficiencia, pero también aumenta la posibilidad de errores. Por ejemplo, C no
-    realiza comprobaciones de validez en referencias de subíndices de matrices y accesos de punteros, lo que puede
-    ahorrar tiempo, pero debe tener mucho cuidado al utilizar estas funciones. Si puede cumplir estrictamente con las
-    regulaciones pertinentes al usar el lenguaje C, puede evitar estos problemas potenciales.</p>
+    <p class="zw">¿Por qué el lenguaje C sigue siendo tan popular? Históricamente, por diversas razones, la industria
+      eligió C, siendo la principal su eficiencia. Los programas C excelentes son casi tan eficientes como los programas
+      en lenguaje ensamblador, pero los programas en C son obviamente más fáciles de desarrollar que los programas en
+      lenguaje ensamblador. En comparación con muchos otros lenguajes, C brinda a los programadores más control, como
+      controlar la ubicación de almacenamiento de datos y el proceso de inicialización. C carece de la función de "red
+      de
+      seguridad", que ayuda a mejorar su eficiencia, pero también aumenta la posibilidad de errores. Por ejemplo, C no
+      realiza comprobaciones de validez en referencias de subíndices de matrices y accesos de punteros, lo que puede
+      ahorrar tiempo, pero debe tener mucho cuidado al utilizar estas funciones. Si puede cumplir estrictamente con las
+      regulaciones pertinentes al usar el lenguaje C, puede evitar estos problemas potenciales.</p>
 
-  <p class="zw">C proporciona un amplio conjunto de operadores, que permiten a los programadores realizar de manera
-    eficiente algunos cálculos de bajo nivel, como el desplazamiento y el blindaje, sin tener que recurrir al lenguaje
-    ensamblador. Esta característica de C hace que muchas personas llamen a C un lenguaje ensamblador de "alto nivel".
-    Sin embargo, cuando es necesario, los programas en C pueden proporcionar fácilmente interfaces en lenguaje
-    ensamblador. Estas características hacen de C una buena opción para implementar sistemas operativos y software de
-    controlador integrado.</p>
+    <p class="zw">C proporciona un amplio conjunto de operadores, que permiten a los programadores realizar de manera
+      eficiente algunos cálculos de bajo nivel, como el desplazamiento y el blindaje, sin tener que recurrir al lenguaje
+      ensamblador. Esta característica de C hace que muchas personas llamen a C un lenguaje ensamblador de "alto nivel".
+      Sin embargo, cuando es necesario, los programas en C pueden proporcionar fácilmente interfaces en lenguaje
+      ensamblador. Estas características hacen de C una buena opción para implementar sistemas operativos y software de
+      controlador integrado.</p>
 
-  <p class="zw">Otra razón de la popularidad de C se debe a su ubicuidad. El compilador de C se implementa en muchas
-    máquinas. Además, el estándar ANSI mejora la portabilidad de los programas C entre diferentes máquinas.</p>
+    <p class="zw">Otra razón de la popularidad de C se debe a su ubicuidad. El compilador de C se implementa en muchas
+      máquinas. Además, el estándar ANSI mejora la portabilidad de los programas C entre diferentes máquinas.</p>
 
-  <p class="zw">Finalmente, C es la base de C ++. C ++ proporciona una vista del diseño y la implementación del programa
-    que es diferente de C. Sin embargo, si tiene conocimientos y habilidades de C, como punteros y bibliotecas estándar,
-    será de gran ayuda para convertirse en un excelente programador de C ++.</p>
+    <p class="zw">Finalmente, C es la base de C ++. C ++ proporciona una vista del diseño y la implementación del
+      programa
+      que es diferente de C. Sin embargo, si tiene conocimientos y habilidades de C, como punteros y bibliotecas
+      estándar,
+      será de gran ayuda para convertirse en un excelente programador de C ++.</p>
 
-  <h3 id="nav_point_5" class="calibre7">¿Por qué debería leer este libro?</h3>
+    <h3 id="nav_point_5" class="calibre7">¿Por qué debería leer este libro?</h3>
 
-  <p class="zw">Este libro no es un libro de introducción a la programación. Los lectores a los que está dirigido ya
-    deberían tener algo de experiencia en programación, o alguien que quiera aprender C, pero que no quiera demorarse
-    con preguntas superficiales como por qué los bucles son importantes y cuándo usar declaraciones if.</p>
+    <p class="zw">Este libro no es un libro de introducción a la programación. Los lectores a los que está dirigido ya
+      deberían tener algo de experiencia en programación, o alguien que quiera aprender C, pero que no quiera demorarse
+      con preguntas superficiales como por qué los bucles son importantes y cuándo usar declaraciones if.</p>
 
-  <p class="zw">Por otro lado, no requiero que los lectores de este libro hayan aprendido C antes. Hablé de todos los
-    aspectos del lenguaje C. Esta amplia cobertura de contenido hace que este libro no solo sea adecuado para
-    estudiantes, sino también para profesionales. En otras palabras, es adecuado para lectores que están aprendiendo C
-    por primera vez y para aquellos que son usuarios más experimentados que desean mejorar aún más sus habilidades
-    lingüísticas.</p>
+    <p class="zw">Por otro lado, no requiero que los lectores de este libro hayan aprendido C antes. Hablé de todos los
+      aspectos del lenguaje C. Esta amplia cobertura de contenido hace que este libro no solo sea adecuado para
+      estudiantes, sino también para profesionales. En otras palabras, es adecuado para lectores que están aprendiendo C
+      por primera vez y para aquellos que son usuarios más experimentados que desean mejorar aún más sus habilidades
+      lingüísticas.</p>
 
-  <p class="zw">Los buenos libros de C ++ tienen razón para centrarse en temas relacionados con el modelo orientado a
-    objetos (como el diseño de clases) en lugar de centrarse en las habilidades básicas de C. Pero C ++ está construido
-    sobre la base de C, y las habilidades básicas de C siguen siendo muy importantes, especialmente aquellas que pueden
-    implementar clases reutilizables. Es cierto que los programadores de C ++ pueden omitir algunos contenidos
-    familiares al leer este libro, pero encontrarán muchas herramientas y técnicas de C útiles en este libro.</p>
+    <p class="zw">Los buenos libros de C ++ tienen razón para centrarse en temas relacionados con el modelo orientado a
+      objetos (como el diseño de clases) en lugar de centrarse en las habilidades básicas de C. Pero C ++ está
+      construido
+      sobre la base de C, y las habilidades básicas de C siguen siendo muy importantes, especialmente aquellas que
+      pueden
+      implementar clases reutilizables. Es cierto que los programadores de C ++ pueden omitir algunos contenidos
+      familiares al leer este libro, pero encontrarán muchas herramientas y técnicas de C útiles en este libro.</p>
 
-  <h3 id="nav_point_6" class="calibre7">Organización de este libro</h3>
+    <h3 id="nav_point_6" class="calibre7">Organización de este libro</h3>
 
-  <p class="zw">Este libro está organizado en forma de tutorial y está dirigido a personas con experiencia previa en
-    programación. Su estilo de escritura es similar al de un tutor que observa tu trabajo detrás de ti, dándote algunos
-    consejos y sugerencias de vez en cuando. Mi objetivo es impartir a los lectores el conocimiento y las opiniones que
-    suelen requerir años de práctica. Este tipo de organización también afecta el orden de los materiales; por lo
-    general, presento un tema en un solo lugar y doy una explicación completa. Por lo tanto, este libro también se puede
-    utilizar como manual de referencia.</p>
+    <p class="zw">Este libro está organizado en forma de tutorial y está dirigido a personas con experiencia previa en
+      programación. Su estilo de escritura es similar al de un tutor que observa tu trabajo detrás de ti, dándote
+      algunos
+      consejos y sugerencias de vez en cuando. Mi objetivo es impartir a los lectores el conocimiento y las opiniones
+      que
+      suelen requerir años de práctica. Este tipo de organización también afecta el orden de los materiales; por lo
+      general, presento un tema en un solo lugar y doy una explicación completa. Por lo tanto, este libro también se
+      puede
+      utilizar como manual de referencia.</p>
 
-  <p class="zw">En esta forma de organización, hay dos excepciones notables. El primero es el puntero, que recorre el
-    libro y se discutirá en muchos contextos diferentes. El segundo es el Capítulo 1, que proporciona una rápida
-    introducción a los conceptos básicos del idioma. Este tipo de introducción le ayudará a dominar rápidamente las
-    habilidades para escribir programas sencillos. Los temas tratados en el Capítulo 1 se explicarán en profundidad en
-    los capítulos siguientes.</p>
+    <p class="zw">En esta forma de organización, hay dos excepciones notables. El primero es el puntero, que recorre el
+      libro y se discutirá en muchos contextos diferentes. El segundo es el Capítulo 1, que proporciona una rápida
+      introducción a los conceptos básicos del idioma. Este tipo de introducción le ayudará a dominar rápidamente las
+      habilidades para escribir programas sencillos. Los temas tratados en el Capítulo 1 se explicarán en profundidad en
+      los capítulos siguientes.</p>
 
-  <p class="zw">En comparación con otros libros, este libro se centra más en muchas áreas, principalmente para dar más
-    profundidad a cada tema y para enseñar a los lectores una experiencia que solo se puede obtener a través de la
-    práctica. Además, utilicé algunos ejemplos que no son muy comunes en la programación real. Aunque algunos no son
-    fáciles de entender, estos ejemplos muestran los aspectos interesantes de C.</p>
+    <p class="zw">En comparación con otros libros, este libro se centra más en muchas áreas, principalmente para dar más
+      profundidad a cada tema y para enseñar a los lectores una experiencia que solo se puede obtener a través de la
+      práctica. Además, utilicé algunos ejemplos que no son muy comunes en la programación real. Aunque algunos no son
+      fáciles de entender, estos ejemplos muestran los aspectos interesantes de C.</p>
 
-  <h3 id="nav_point_7" class="calibre7">ANSI C</h3>
+    <h3 id="nav_point_7" class="calibre7">ANSI C</h3>
 
-  <p class="zw">Este libro describe ANSI C, que está definido por ANSI / ISO 9899-1990 [ANSI 90] y descrito por [KERN
-    89]. Elegí esta versión de C por dos razones: Primero, es la sucesora de la antigua C (a veces llamada Kernighan y
-    Ritchie [KERN 78], o K&amp;R C), y ha reemplazado fundamentalmente a la última. En segundo lugar, ANSI C es el
-    fundación de C ++. Todos los ejemplos de este libro están escritos en ANSI C. A menudo me refiero a "documentos
-    estándar ANSI C" como "estándares" para abreviar.</p>
+    <p class="zw">Este libro describe ANSI C, que está definido por ANSI / ISO 9899-1990 [ANSI 90] y descrito por [KERN
+      89]. Elegí esta versión de C por dos razones: Primero, es la sucesora de la antigua C (a veces llamada Kernighan y
+      Ritchie [KERN 78], o K&amp;R C), y ha reemplazado fundamentalmente a la última. En segundo lugar, ANSI C es el
+      fundación de C ++. Todos los ejemplos de este libro están escritos en ANSI C. A menudo me refiero a "documentos
+      estándar ANSI C" como "estándares" para abreviar.</p>
 
-  <h3 id="nav_point_8" class="calibre7">Instrucciones tipográficas</h3>
+    <h3 id="nav_point_8" class="calibre7">Instrucciones tipográficas</h3>
 
-  <p class="zw">El formato de descripción de la sintaxis es el siguiente</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">if( <em class="calibre9">expression</em> )
+    <p class="zw">El formato de descripción de la sintaxis es el siguiente</p>
+    <pre class="code"><code class="calibre8">if( <em class="calibre9">expression</em> )
       <em class="calibre9"> statement</em>
 <strong class="calibre3">else</strong>
       <strong class="calibre3"><em class="calibre9"> statement</em></strong>
 </code></pre>
 
-  <p class="zw">Usé 4 fuentes en la descripción gramatical, y los códigos necesarios (palabras clave en este ejemplo
-    <code class="calibre8">if</code>) se establecen como <code class="calibre8">Courier New</code>fuentes como se
-    muestra arriba . Se expresa la descripción abstracta del código necesario (como la <em
-      class="calibre9">expresión</em> del ejemplo anterior ) <em class="calibre9"><code
-        class="calibre8">Courier New</code></em>. Algunas declaraciones tienen partes opcionales. Si decido usar la
-    parte opcional (la palabra clave <strong class="calibre3">else</strong> en este ejemplo ), se marcará en <strong
-      class="calibre3">negrita<code class="calibre8">Courier New</code></strong> estrictamente como en el ejemplo
-    anterior . La descripción del resumen de la parte opcional (como la segunda <em class="calibre9"><strong
-        class="calibre3"><code class="calibre8">statement</code></strong></em>) se mostrará en <em
-      class="calibre9"><strong class="calibre3">negrita y cursiva<code class="calibre8">Courier New</code></strong></em>
-    . Cada vez que se introduzca un término nuevo, lo señalaré en <strong class="calibre3">negrita</strong> .
-  </p>
+    <p class="zw">Usé 4 fuentes en la descripción gramatical, y los códigos necesarios (palabras clave en este ejemplo
+      <code class="calibre8">if</code>) se establecen como <code class="calibre8">Courier New</code>fuentes como se
+      muestra arriba . Se expresa la descripción abstracta del código necesario (como la <em
+        class="calibre9">expresión</em> del ejemplo anterior ) <em class="calibre9"><code
+          class="calibre8">Courier New</code></em>. Algunas declaraciones tienen partes opcionales. Si decido usar la
+      parte opcional (la palabra clave <strong class="calibre3">else</strong> en este ejemplo ), se marcará en <strong
+        class="calibre3">negrita<code class="calibre8">Courier New</code></strong> estrictamente como en el ejemplo
+      anterior . La descripción del resumen de la parte opcional (como la segunda <em class="calibre9"><strong
+          class="calibre3"><code class="calibre8">statement</code></strong></em>) se mostrará en <em
+        class="calibre9"><strong class="calibre3">negrita y cursiva<code
+            class="calibre8">Courier New</code></strong></em>
+      . Cada vez que se introduzca un término nuevo, lo señalaré en <strong class="calibre3">negrita</strong> .
+    </p>
 
-  <p class="zw">El programa completo se marcará con un número y se mostrará en el formato "Programa 0.1". El título da
-    el nombre del programa y el nombre del archivo que contiene el código fuente se muestra en la esquina inferior
-    derecha; estos archivos se pueden encontrar en el sitio web de Addison Wesley Longman.</p>
+    <p class="zw">El programa completo se marcará con un número y se mostrará en el formato "Programa 0.1". El título da
+      el nombre del programa y el nombre del archivo que contiene el código fuente se muestra en la esquina inferior
+      derecha; estos archivos se pueden encontrar en el sitio web de Addison Wesley Longman.</p>
 
-  <p class="zw">Hay una sección de " <strong class="calibre3">pistas</strong> " en el texto . Muchos de estos consejos
-    son discusiones sobre buenas habilidades de programación, es decir, hacer que los programas sean más fáciles de
-    escribir, más fáciles de leer y más fáciles de entender en el futuro. Cuando se escribe un programa por primera vez,
-    un poco más de esfuerzo puede ahorrar mucho tiempo para modificar el programa más tarde. Otros consejos pueden
-    ayudarlo a escribir código de manera más compacta o más eficiente.</p>
+    <p class="zw">Hay una sección de " <strong class="calibre3">pistas</strong> " en el texto . Muchos de estos consejos
+      son discusiones sobre buenas habilidades de programación, es decir, hacer que los programas sean más fáciles de
+      escribir, más fáciles de leer y más fáciles de entender en el futuro. Cuando se escribe un programa por primera
+      vez,
+      un poco más de esfuerzo puede ahorrar mucho tiempo para modificar el programa más tarde. Otros consejos pueden
+      ayudarlo a escribir código de manera más compacta o más eficiente.</p>
 
-  <p class="zw">También hay algunos consejos relacionados con temas de ingeniería de software. El nacimiento de C es muy
-    anterior a la formación de los principios de la ingeniería de software moderna. Por lo tanto, estos principios no
-    defienden algunas características del lenguaje y habilidades generales. Estos temas generalmente involucran un
-    compromiso entre la eficiencia de una estructura particular y la legibilidad y mantenibilidad del código. Las
-    discusiones en esta área le proporcionarán algunos conocimientos básicos que le ayudarán a juzgar si las ganancias
-    en eficiencia valen la pena por las otras pérdidas en calidad.</p>
+    <p class="zw">También hay algunos consejos relacionados con temas de ingeniería de software. El nacimiento de C es
+      muy
+      anterior a la formación de los principios de la ingeniería de software moderna. Por lo tanto, estos principios no
+      defienden algunas características del lenguaje y habilidades generales. Estos temas generalmente involucran un
+      compromiso entre la eficiencia de una estructura particular y la legibilidad y mantenibilidad del código. Las
+      discusiones en esta área le proporcionarán algunos conocimientos básicos que le ayudarán a juzgar si las ganancias
+      en eficiencia valen la pena por las otras pérdidas en calidad.</p>
 
-  <p class="zw">Tenga especial cuidado cuando vea " <strong class="calibre3">advertencias</strong> ": lo que voy a
-    señalar es uno de los errores que los nuevos programadores de C (ya veces incluso los veteranos) cometen a menudo, o
-    el código no se ejecutará como esperaba. Esta señal de advertencia hará que el contenido del mensaje no sea fácil de
-    olvidar y será más fácil mirar hacia atrás más adelante.</p>
+    <p class="zw">Tenga especial cuidado cuando vea " <strong class="calibre3">advertencias</strong> ": lo que voy a
+      señalar es uno de los errores que los nuevos programadores de C (ya veces incluso los veteranos) cometen a menudo,
+      o
+      el código no se ejecutará como esperaba. Esta señal de advertencia hará que el contenido del mensaje no sea fácil
+      de
+      olvidar y será más fácil mirar hacia atrás más adelante.</p>
 
-  <p class="zw">"K&amp;R C" significa que estoy discutiendo la importante diferencia entre ANSI C y K&amp;R C. Aunque la
-    mayoría de los programas escritos en K&amp;R C pueden ejecutarse en el entorno ANSI C con una modificación mínima, a
-    veces puede encontrar un compilador anterior a ANSI o un programa más antiguo. De esta forma, la diferencia entre
-    los dos es crucial.</p>
+    <p class="zw">"K&amp;R C" significa que estoy discutiendo la importante diferencia entre ANSI C y K&amp;R C. Aunque
+      la
+      mayoría de los programas escritos en K&amp;R C pueden ejecutarse en el entorno ANSI C con una modificación mínima,
+      a
+      veces puede encontrar un compilador anterior a ANSI o un programa más antiguo. De esta forma, la diferencia entre
+      los dos es crucial.</p>
 
-  <h3 id="nav_point_9" class="calibre7">Preguntas y ejercicios de programación para cada capítulo</h3>
+    <h3 id="nav_point_9" class="calibre7">Preguntas y ejercicios de programación para cada capítulo</h3>
 
-  <p class="zw">La última sección de cada capítulo de este libro son preguntas y ejercicios de programación. Los
-    problemas varían desde problemas gramaticales simples hasta problemas más complejos, como el compromiso entre
-    eficiencia y facilidad de mantenimiento. Los ejercicios de programación se dividen en niveles de dificultad: ★ los
-    ejercicios son los más fáciles, ★★★★★ los ejercicios son los más difíciles. Muchos de estos ejercicios se han
-    utilizado durante muchos años como pruebas en el aula. Si hay un <img alt="" src="../images/00001.jpeg" width="23"
-      class="calibre10">símbolo antes de la pregunta o el ejercicio de programación , significa que puede encontrar su
-    respuesta de referencia en el apéndice.</p>
+    <p class="zw">La última sección de cada capítulo de este libro son preguntas y ejercicios de programación. Los
+      problemas varían desde problemas gramaticales simples hasta problemas más complejos, como el compromiso entre
+      eficiencia y facilidad de mantenimiento. Los ejercicios de programación se dividen en niveles de dificultad: ★ los
+      ejercicios son los más fáciles, ★★★★★ los ejercicios son los más difíciles. Muchos de estos ejercicios se han
+      utilizado durante muchos años como pruebas en el aula. Si hay un <img alt="" src="../images/00001.jpeg" width="23"
+        class="calibre10">símbolo antes de la pregunta o el ejercicio de programación , significa que puede encontrar su
+      respuesta de referencia en el apéndice.</p>
 
-  <h3 id="nav_point_10" class="calibre7">Materiales complementarios</h3>
+    <h3 id="nav_point_10" class="calibre7">Materiales complementarios</h3>
 
-  <p class="zw">Addison Wesley Longman mantiene un sitio en la World Wide Web específicamente para este libro. La URL
-    del sitio es <a href="http://www.awl.com/cseng/titles/0-673-99986-6/"
-      class="calibre5">http://www.awl.com/cseng/titles/0-673-99986-6/</a> (o puede visitar directamente la página de
-    inicio del autor www.cs.rit.edu/~kar/). Este sitio contiene el código fuente de todos los programas de este libro,
-    clasificados por capítulo. También puede ver las últimas erratas del libro anterior. También puede comunicarse con
-    el representante cercano de Addison Wesley Longman para obtener la <em class="calibre9">Guía del instructor</em> ,
-    que contiene todas las respuestas a las preguntas y ejercicios de programación que no se incluyen en el libro.</p>
+    <p class="zw">Addison Wesley Longman mantiene un sitio en la World Wide Web específicamente para este libro. La URL
+      del sitio es <a href="http://www.awl.com/cseng/titles/0-673-99986-6/"
+        class="calibre5">http://www.awl.com/cseng/titles/0-673-99986-6/</a> (o puede visitar directamente la página de
+      inicio del autor www.cs.rit.edu/~kar/). Este sitio contiene el código fuente de todos los programas de este libro,
+      clasificados por capítulo. También puede ver las últimas erratas del libro anterior. También puede comunicarse con
+      el representante cercano de Addison Wesley Longman para obtener la <em class="calibre9">Guía del instructor</em> ,
+      que contiene todas las respuestas a las preguntas y ejercicios de programación que no se incluyen en el libro.</p>
 
-  <p class="zw">Si es un educador, también puede obtener software gratuito para el envío automático y la prueba de
-    programas de estudiantes en sistemas UNIX [REEK 89, REEK96], a través de FTP anónimo: ftp.cs.rit.edu, el directorio
-    es pub / kar / try .</p>
+    <p class="zw">Si es un educador, también puede obtener software gratuito para el envío automático y la prueba de
+      programas de estudiantes en sistemas UNIX [REEK 89, REEK96], a través de FTP anónimo: ftp.cs.rit.edu, el
+      directorio
+      es pub / kar / try .</p>
 
-  <h3 id="nav_point_11" class="calibre7">Gracias</h3>
+    <h3 id="nav_point_11" class="calibre7">Gracias</h3>
 
-  <p class="zw">No puedo enumerar a todas las personas que contribuyeron a este libro, pero les agradeceré a todas. Mi
-    esposa Margaret me animó a escribir y me brindó apoyo espiritual, y en silencio sufrió la soledad en su vida que le
-    provocó que escribiera este libro.</p>
+    <p class="zw">No puedo enumerar a todas las personas que contribuyeron a este libro, pero les agradeceré a todas. Mi
+      esposa Margaret me animó a escribir y me brindó apoyo espiritual, y en silencio sufrió la soledad en su vida que
+      le
+      provocó que escribiera este libro.</p>
 
-  <p class="zw">Me gustaría agradecer al profesor Warren Caithers, mi colega en RIT, quien leyó y revisó el primer
-    borrador de este libro. Su crítica sincera me ayudó a generar un manuscrito claro y coherente a partir de una gran
-    cantidad de notas de clase y ejemplos.</p>
+    <p class="zw">Me gustaría agradecer al profesor Warren Caithers, mi colega en RIT, quien leyó y revisó el primer
+      borrador de este libro. Su crítica sincera me ayudó a generar un manuscrito claro y coherente a partir de una gran
+      cantidad de notas de clase y ejemplos.</p>
 
-  <p class="zw">Estoy muy agradecido con los estudiantes de mi curso de programación en lenguaje C. Ellos me ayudaron a
-    encontrar errores tipográficos, presentaron sugerencias para mejorar y soportaron borradores de libros de texto
-    durante el proceso de enseñanza. Su respuesta a mi trabajo me proporcionó comentarios útiles y me ayudó a mejorar
-    aún más la calidad de este libro.</p>
+    <p class="zw">Estoy muy agradecido con los estudiantes de mi curso de programación en lenguaje C. Ellos me ayudaron
+      a
+      encontrar errores tipográficos, presentaron sugerencias para mejorar y soportaron borradores de libros de texto
+      durante el proceso de enseñanza. Su respuesta a mi trabajo me proporcionó comentarios útiles y me ayudó a mejorar
+      aún más la calidad de este libro.</p>
 
-  <p class="zw">También me gustaría agradecer a Steve Allan, Bill Appelbe, Richard C. Detmer, Roger Eggen, Joanne
-    Goldenberg, Dan Hinton, Dan Hirschberg, Keith E. Jolly, Joseph F. Kent, Masoud Milani, Steve Summit y Kanupriya
-    Tewary por su Contribuciones en este libro Se evaluó antes de su publicación. Sus sugerencias y opiniones me han
-    ayudado enormemente a mejorar aún más la presentación de este libro.</p>
+    <p class="zw">También me gustaría agradecer a Steve Allan, Bill Appelbe, Richard C. Detmer, Roger Eggen, Joanne
+      Goldenberg, Dan Hinton, Dan Hirschberg, Keith E. Jolly, Joseph F. Kent, Masoud Milani, Steve Summit y Kanupriya
+      Tewary por su Contribuciones en este libro Se evaluó antes de su publicación. Sus sugerencias y opiniones me han
+      ayudado enormemente a mejorar aún más la presentación de este libro.</p>
 
-  <p class="zw">Finalmente, me gustaría expresar mi gratitud a la Sra. Deborah Lafferty, mi editora en Addison-Wesley, y
-    a la Sra. Amy Willcutt, editora de productos. Fue su ayuda la que hizo de este libro un libro formal a partir de un
-    manuscrito. No solo me dieron muchas sugerencias valiosas, sino que también me animaron a mejorar la tipografía con
-    la que originalmente me sentía bien. Ahora que he visto los resultados, sus opiniones son correctas.</p>
+    <p class="zw">Finalmente, me gustaría expresar mi gratitud a la Sra. Deborah Lafferty, mi editora en Addison-Wesley,
+      y
+      a la Sra. Amy Willcutt, editora de productos. Fue su ayuda la que hizo de este libro un libro formal a partir de
+      un
+      manuscrito. No solo me dieron muchas sugerencias valiosas, sino que también me animaron a mejorar la tipografía
+      con
+      la que originalmente me sentía bien. Ahora que he visto los resultados, sus opiniones son correctas.</p>
 
-  <p class="zw">Ahora es el momento de comenzar a aprender, ¡deseo que todos encuentren la felicidad en el proceso de
-    aprender el lenguaje C!</p>
+    <p class="zw">Ahora es el momento de comenzar a aprender, ¡deseo que todos encuentren la felicidad en el proceso de
+      aprender el lenguaje C!</p>
 
-  <p class="calibre11">Kenneth A. Reek</p>
+    <p class="calibre11">Kenneth A. Reek</p>
 
-  <p class="calibre11">kar@cs.rit.edu</p>
+    <p class="calibre11">kar@cs.rit.edu</p>
 
-  <p class="calibre11">Churchville, Nueva York</p>
+    <p class="calibre11">Churchville, Nueva York</p>
 
+  </div>
 </body>
 
 </html>

@@ -14,18 +14,38 @@
   margin: 1em 0;
 }
 
+
+body {
+  background-color: #b2b1b1;
+}
+
+
+@media (min-width:900px) {
+  body {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
+
+div.container {
+  background-color: #faf6f1;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+@media (min-width:1200px) {
+  body {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+}
+
 .calibre {
   display: block;
   font-size: 20px;
   /*1em*/
   color: #444;
-  /*added*/
-  padding-left: 100px;
-  /*0*/
-  padding-right: 100px;
-  /*0*/
   margin: 0 5pt;
-  background-color: #faf6f1;
   /*added*/
   font-family: "Lato", sans-serif;
 }
@@ -107,13 +127,9 @@
   margin: 1em 0;
   margin: 1.3em 0;
   padding: 0.3em;
-  border: #000 solid 2px;
-  /*#000 solid 1px;*/
-  border-radius: 5px;
-  /*added*/
   padding: 20px;
-  /*added*/
-  background-color: #f4f4f4;
+  border-radius: 5px;
+  background-color: #e8e7e7;
 }
 
 table {
@@ -130,8 +146,8 @@ td {
 }
 
 .calibre14 {
-  height: auto;
-  width: 40%;
+  width: 60%;
+  min-width: 300px;
   /*auto*/
 }
 
@@ -286,26 +302,30 @@ td {
   width: 50%;
 }
 
-.dai_ma_wu_xing_hao {
+code,
+pre {
+  background: #e8e7e7;
+  overflow: auto;
+  /*white-space: pre-wrap;*/
+  word-wrap: break-word;
+} 
+
+.code {
   display: block;
   font-family: Courier, Menlo, Monaco, Consolas, monospace;
   font-size: 0.75em;
-  white-space: pre-wrap;
-  word-wrap: break-word;
   margin: 1.3em 0;
-  padding: 0.3em;
-  border: #000 solid 2px;
+  
+
   /*#000 solid 1px;*/
   border-radius: 5px;
   /*added*/
   padding: 20px;
   /*added*/
+  overflow-x: auto;
 }
 
-code,
-pre {
-  background-color: #f4f4f4;
-}
+
 
 .di_1ji_wu_xu_lie_biao {
   display: list-item;

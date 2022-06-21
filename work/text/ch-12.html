@@ -8,89 +8,91 @@
   <link href="../page_styles.css" rel="stylesheet" type="text/css">
 
 <body id="F8900-e167752e5b154d43a225b5f350ab7738" class="calibre">
-  <h1 id="nav_point_241" class="not-in-toc">Chapter 12 Using Structures and Pointers</h1>
+  <div class="container">
+    <h1 id="nav_point_241" class="not-in-toc">Chapter 12 Using Structures and Pointers</h1>
 
-  <p class="zw">You can create powerful data structures by combining structures and pointers. In this
-    chapter we take a closer look at some techniques for using structures and pointers.
-    We spend a lot of time with a data structure called a linked list, not only because it is
-    very useful but also because many of the techniques used to manipulate linked lists
-    are applicable to other data structures.</p>
+    <p class="zw">You can create powerful data structures by combining structures and pointers. In this
+      chapter we take a closer look at some techniques for using structures and pointers.
+      We spend a lot of time with a data structure called a linked list, not only because it is
+      very useful but also because many of the techniques used to manipulate linked lists
+      are applicable to other data structures.</p>
 
-  <h2 id="nav_point_242" class="calibre24">12.1 Linked Lists</h2>
+    <h2 id="nav_point_242" class="calibre24">12.1 Linked Lists</h2>
 
-  <p class="zw">For those of you who are not familiar with linked lists, here is a brief introduction. A
-    linked list is a collection of independent structures (often called nodes) that contain data.
-    The individual nodes in the list are connected by links, or pointers. A program
-    accesses the nodes in the list by following the pointers. Usually the nodes are
-    dynamically allocated, though occasionally you will find linked lists constructed
-    among elements of an array of nodes. Even in this case, though, a program traverses
-    the list by following the pointers.</p>
+    <p class="zw">For those of you who are not familiar with linked lists, here is a brief introduction. A
+      linked list is a collection of independent structures (often called nodes) that contain data.
+      The individual nodes in the list are connected by links, or pointers. A program
+      accesses the nodes in the list by following the pointers. Usually the nodes are
+      dynamically allocated, though occasionally you will find linked lists constructed
+      among elements of an array of nodes. Even in this case, though, a program traverses
+      the list by following the pointers.</p>
 
-  <h2 id="nav_point_243" class="calibre24">12.2 Singly Linked Lists</h2>
+    <h2 id="nav_point_243" class="calibre24">12.2 Singly Linked Lists</h2>
 
-  <p class="zw">In a singly linked list, each node contains a pointer to the next node in the list. The
-    pointer field of the last node in the list contains NULL to indicate that there are no
-    more nodes in the list. After you have found the first node on a list, the pointers will
-    lead you to the remaining nodes. To keep track of where the list begins, a root pointer
-    is used. The root pointer points to the first node on the list. Notice that the root is a
-    pointer and it does not contain any data.</p>
+    <p class="zw">In a singly linked list, each node contains a pointer to the next node in the list. The
+      pointer field of the last node in the list contains NULL to indicate that there are no
+      more nodes in the list. After you have found the first node on a list, the pointers will
+      lead you to the remaining nodes. To keep track of where the list begins, a root pointer
+      is used. The root pointer points to the first node on the list. Notice that the root is a
+      pointer and it does not contain any data.</p>
 
-  <p class="zw">Here is a diagram of a singly linked list.</p>
+    <p class="zw">Here is a diagram of a singly linked list.</p>
 
-  <p class="tu"><img alt="" src="../images/00243.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00243.jpeg" class="calibre14"></p>
 
-  <p class="zw">The nodes in this example are structures created with the following declaration.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">typedef struct　NODE　 {
+    <p class="zw">The nodes in this example are structures created with the following declaration.</p>
+    <pre class="code"><code class="calibre8">typedef struct　NODE　 {
 　　　　　struct　NODE　 *link;
 　　　　　int　　　　　　　value;
 } Node;</code></pre>
 
-  <p class="zw">The data stored in each node is an integer. This list contains three nodes. If you begin
-    at the root and follow the pointer to the first node, you can access the data stored in
-    that node. Following the pointer in the first node takes you to the second node, where
-    you can get its data. Finally, the next pointer brings you to the last node. The value
-    zero is used to indicate a NULL pointer; here it means that there are no more nodes in
-    the list.</p>
+    <p class="zw">The data stored in each node is an integer. This list contains three nodes. If you begin
+      at the root and follow the pointer to the first node, you can access the data stored in
+      that node. Following the pointer in the first node takes you to the second node, where
+      you can get its data. Finally, the next pointer brings you to the last node. The value
+      zero is used to indicate a NULL pointer; here it means that there are no more nodes in
+      the list.</p>
 
-  <p class="zw">In the diagram the nodes are shown as adjacent to display the logical ordering
-    that the links provide. In fact, the nodes might actually be scattered all through
-    memory. It doesn't make any difference to a program processing such a list whether
-    the nodes are physically adjacent or not, because the program always uses the links to
-    get from one node to the next.</p>
+    <p class="zw">In the diagram the nodes are shown as adjacent to display the logical ordering
+      that the links provide. In fact, the nodes might actually be scattered all through
+      memory. It doesn't make any difference to a program processing such a list whether
+      the nodes are physically adjacent or not, because the program always uses the links to
+      get from one node to the next.</p>
 
-  <p class="zw">A singly linked list can be traversed from start to end by following the links,
-    but the list cannot be traversed backwards. In other words, once your program has
-    reached the last node in the list, the only way to get back to any earlier node is to start
-    again from the root pointer. Of course, the program could save a pointer to the current
-    node before advancing to the next one, or it could even save pointers to the preceding
-    few' nodes. However, these linked lists are dynamic and can grow to hold hundreds
-    or thousands of nodes, so it is not feasible to save pointers to all of the preceding
-    nodes in a list.</p>
+    <p class="zw">A singly linked list can be traversed from start to end by following the links,
+      but the list cannot be traversed backwards. In other words, once your program has
+      reached the last node in the list, the only way to get back to any earlier node is to start
+      again from the root pointer. Of course, the program could save a pointer to the current
+      node before advancing to the next one, or it could even save pointers to the preceding
+      few' nodes. However, these linked lists are dynamic and can grow to hold hundreds
+      or thousands of nodes, so it is not feasible to save pointers to all of the preceding
+      nodes in a list.</p>
 
-  <p class="zw">The nodes in this particular list are linked so that the data values are in
-    ascending order. This ordering is important for some applications, such as organizing
-    appointments by time of day. It is also possible to create an unordered list for
-    applications that do not require any ordering.</p>
+    <p class="zw">The nodes in this particular list are linked so that the data values are in
+      ascending order. This ordering is important for some applications, such as organizing
+      appointments by time of day. It is also possible to create an unordered list for
+      applications that do not require any ordering.</p>
 
-  <h3 id="nav_point_244" class="calibre7">12.2.1 Inserting into a Singly Linked List</h3>
+    <h3 id="nav_point_244" class="calibre7">12.2.1 Inserting into a Singly Linked List</h3>
 
-  <p class="zw">How would we insert a new node into an ordered singly linked list? Suppose we had
-    a new value, say 12, to insert into the previous list. Conceptually this task is easy: start
-    at the beginning of the list, follow the pointers until you find the first node whose
-    value is larger than 12, and then insert the new value into the list just before that node.
-  </p>
+    <p class="zw">How would we insert a new node into an ordered singly linked list? Suppose we had
+      a new value, say 12, to insert into the previous list. Conceptually this task is easy: start
+      at the beginning of the list, follow the pointers until you find the first node whose
+      value is larger than 12, and then insert the new value into the list just before that node.
+    </p>
 
-  <p class="zw">In practice the algorithm is more interesting. We traverse the list and stop when
-    we reach the node containing 15, the first value greater than 12. We know that the new
-    value should be added to the list just before this node, but the pointer field of the
-    <strong class="calibre3">previous</strong> node must be modified to accomplish the insertion. However, we've passed
-    this node, and we cannot go back. The solution is to always save a pointer to the
-    previous node in the list.
-  </p>
+    <p class="zw">In practice the algorithm is more interesting. We traverse the list and stop when
+      we reach the node containing 15, the first value greater than 12. We know that the new
+      value should be added to the list just before this node, but the pointer field of the
+      <strong class="calibre3">previous</strong> node must be modified to accomplish the insertion. However, we've
+      passed
+      this node, and we cannot go back. The solution is to always save a pointer to the
+      previous node in the list.
+    </p>
 
-  <p class="zw">We will now develop a function to insert a node into an ordered, singly linked
-    list. Program 12.1 is our first attempt.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+    <p class="zw">We will now develop a function to insert a node into an ordered, singly linked
+      list. Program 12.1 is our first attempt.</p>
+    <pre class="code"><code class="calibre8">/* 
 ** Insert into an ordered, singly linked list. The arguments are
 ** a pointer to the first node in the list, and the value to
 ** insert.
@@ -135,97 +137,96 @@ sll_insert( Node *current, int new_value )
   return TRUE;
 }</code></pre>
 
-  <p class="calibre2"><strong class="calibre3">Program 12.1 Insert into an ordered, singly linked list: first
-      try</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 12.1 Insert into an ordered, singly linked list: first
+        try</strong></p>
 
-  <p class="calibre11">insert1.c</p>
+    <p class="calibre11">insert1.c</p>
 
-  <p class="zw">We call the function in this manner:</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">result = sll_insert( root, 12 );</code></pre>
+    <p class="zw">We call the function in this manner:</p>
+    <pre class="code"><code class="calibre8">result = sll_insert( root, 12 );</code></pre>
 
-  <p class="zw">Let's trace this code and see whether it correctly inserts the new value 12 into
-    the list. First, the function is called with the value of the root variable, a pointer to the
-    first node in the list. Here is the state of the list when the function begins:</p>
+    <p class="zw">Let's trace this code and see whether it correctly inserts the new value 12 into
+      the list. First, the function is called with the value of the root variable, a pointer to the
+      first node in the list. Here is the state of the list when the function begins:</p>
 
-  <p class="tu"><img alt="" src="../images/00244.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00244.jpeg" class="calibre14"></p>
 
-  <p class="zw">This diagram does not show the root variable because the function cannot access it. A
-    copy of its value came into the function as the parameter current, but the function
-    cannot access root. Now current-&gt;value is 5, which is less than 12, so the body of the
-    loop is executed once. When we get back to the top of the loop, our pointers will have
-    advanced.</p>
+    <p class="zw">This diagram does not show the root variable because the function cannot access it. A
+      copy of its value came into the function as the parameter current, but the function
+      cannot access root. Now current-&gt;value is 5, which is less than 12, so the body of the
+      loop is executed once. When we get back to the top of the loop, our pointers will have
+      advanced.</p>
 
-  <p class="tu"><img alt="" src="../images/00245.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00245.jpeg" class="calibre14"></p>
 
-  <p class="zw">current-&gt;value is now 10, so the body of the loop executes again, with this result:</p>
+    <p class="zw">current-&gt;value is now 10, so the body of the loop executes again, with this result:</p>
 
-  <p class="tu"><img alt="" src="../images/00246.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00246.jpeg" class="calibre14"></p>
 
-  <p class="zw">Now current-&gt;value is greater than 12 so the loop breaks.</p>
+    <p class="zw">Now current-&gt;value is greater than 12 so the loop breaks.</p>
 
-  <p class="zw">At this point the previous pointer is the important one, because it points to the
-    node that must be changed to insert the new value. But first, a new node must be
-    obtained to hold the value. The next diagram shows the state of the list after the value
-    is copied into the new node.</p>
+    <p class="zw">At this point the previous pointer is the important one, because it points to the
+      node that must be changed to insert the new value. But first, a new node must be
+      obtained to hold the value. The next diagram shows the state of the list after the value
+      is copied into the new node.</p>
 
-  <p class="tu"><img alt="" src="../images/00247.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00247.jpeg" class="calibre14"></p>
 
-  <p class="zw">Linking the new node into the list requires two steps. First,</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">new-&gt;link = current;</code></pre>
+    <p class="zw">Linking the new node into the list requires two steps. First,</p>
+    <pre class="code"><code class="calibre8">new-&gt;link = current;</code></pre>
 
-  <p class="calibre2">makes the new node point to what will be the next node in the list, the first one we
-    found with a value larger than 12. After this step, the list looks like this:</p>
+    <p class="calibre2">makes the new node point to what will be the next node in the list, the first one we
+      found with a value larger than 12. After this step, the list looks like this:</p>
 
-  <p class="tu"><img alt="" src="../images/00248.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00248.jpeg" class="calibre14"></p>
 
-  <p class="zw">The second step is to make the previous node, the last one whose value was smaller
-    than 12, point to the new node. The following statement performs this task.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">previous-&gt;link = new;</code></pre>
+    <p class="zw">The second step is to make the previous node, the last one whose value was smaller
+      than 12, point to the new node. The following statement performs this task.</p>
+    <pre class="code"><code class="calibre8">previous-&gt;link = new;</code></pre>
 
-  <p class="zw">The result of this step is:</p>
+    <p class="zw">The result of this step is:</p>
 
-  <p class="tu"><img alt="" src="../images/00249.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00249.jpeg" class="calibre14"></p>
 
-  <p class="zw">The function then returns, leaving the list looking like this:</p>
+    <p class="zw">The function then returns, leaving the list looking like this:</p>
 
-  <p class="tu"><img alt="" src="../images/00250.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00250.jpeg" class="calibre14"></p>
 
-  <p class="zw">Starting at the root pointer and following the links verifies that the new node has been
-    correctly inserted.</p>
+    <p class="zw">Starting at the root pointer and following the links verifies that the new node has been
+      correctly inserted.</p>
 
-  <h5 class="sigil_not_in_toc">Debugging the Insert Function</h5>
+    <h5 class="sigil_not_in_toc">Debugging the Insert Function</h5>
 
-  <p class="calibre2"><br class="calibre1"></p>
+    <p class="calibre2"><br class="calibre1"></p>
 
-  <p class="editing-tag">CAUTION!</p>
+    <p class="editing-tag">CAUTION!</p>
 
-  <blockquote class="ti_shi">
-    <p class="zw"><br class="calibre1"></p>
+    <blockquote class="ti_shi">
+      <p class="zw"><br class="calibre1"></p>
 
-    <p class="calibre2">Unfortunately, the insert function is incorrect. Try inserting the value 20 into the list
-      and you will see one problem: the while loop runs off the end of the list and then
-      applies indirection to a NULL pointer. To solve this problem, we must test current to
-      make sure that it is not NULL before evaluating current-&gt;value:</p>
-  </blockquote>
-  <pre
-    class="dai_ma_wu_xing_hao"><code class="calibre8">while( current != NULL &amp; current-&gt;value &lt; value ){</code></pre>
+      <p class="calibre2">Unfortunately, the insert function is incorrect. Try inserting the value 20 into the list
+        and you will see one problem: the while loop runs off the end of the list and then
+        applies indirection to a NULL pointer. To solve this problem, we must test current to
+        make sure that it is not NULL before evaluating current-&gt;value:</p>
+    </blockquote>
+    <pre class="code"><code class="calibre8">while( current != NULL &amp; current-&gt;value &lt; value ){</code></pre>
 
-  <p class="zw">The next problem is tougher. Trace the function to insert the value 3 into the
-    list. What happens?</p>
+    <p class="zw">The next problem is tougher. Trace the function to insert the value 3 into the
+      list. What happens?</p>
 
-  <p class="zw">In order to add a node to the beginning of the list, the function must change the
-    root pointer. The function, however, cannot access the variable root. The easiest way
-    to fix this problem is to just make root a global variable so that the insertion function
-    can modify it. Unfortunately, this approach is also the <strong class="calibre3">worst</strong> way to fix the
-    problem, because then the function works only for that one list.</p>
+    <p class="zw">In order to add a node to the beginning of the list, the function must change the
+      root pointer. The function, however, cannot access the variable root. The easiest way
+      to fix this problem is to just make root a global variable so that the insertion function
+      can modify it. Unfortunately, this approach is also the <strong class="calibre3">worst</strong> way to fix the
+      problem, because then the function works only for that one list.</p>
 
-  <p class="zw">The better solution is to pass a pointer to root as an argument. Then the 
-    function can use indirection both to obtain the value of root  (the pointer to the first 
-    node of the list), and to store a new pointer into it. What is the type of this parameter? 
-    root is a pointer to a Node, so the parameter is of type Node **: a pointer to a pointer to 
-    a Node. The function in Program 12.2 contains these modifications. We must now call 
-    the function like this:</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">result = sll_insert( &amp;root, 12 );
+    <p class="zw">The better solution is to pass a pointer to root as an argument. Then the
+      function can use indirection both to obtain the value of root (the pointer to the first
+      node of the list), and to store a new pointer into it. What is the type of this parameter?
+      root is a pointer to a Node, so the parameter is of type Node **: a pointer to a pointer to
+      a Node. The function in Program 12.2 contains these modifications. We must now call
+      the function like this:</p>
+    <pre class="code"><code class="calibre8">result = sll_insert( &amp;root, 12 );
 
 /* 
 ** Insert into an ordered, singly linked list. The arguments are
@@ -282,92 +283,101 @@ sll_insert( Node **rootp, int new_value )
 　　　 return TRUE;
 }</code></pre>
 
-  <p class="calibre2"><strong class="calibre3">Program 12.2  Insert into an ordered, singly linked list: second try</strong>　</p>
+    <p class="calibre2"><strong class="calibre3">Program 12.2 Insert into an ordered, singly linked list: second
+        try</strong>　</p>
 
-  <p class="calibre11">insert2.c</p>
+    <p class="calibre11">insert2.c</p>
 
-  <p class="zw">This second version contains some additional statements.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">previous = NULL；</code></pre>
+    <p class="zw">This second version contains some additional statements.</p>
+    <pre class="code"><code class="calibre8">previous = NULL；</code></pre>
 
-  <p class="zw">is needed so that we can check later whether the new value will be the first node in the 
-    list.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">current = *rootp;</code></pre>
+    <p class="zw">is needed so that we can check later whether the new value will be the first node in the
+      list.</p>
+    <pre class="code"><code class="calibre8">current = *rootp;</code></pre>
 
-  <p class="zw">uses indirection on the root pointer argument to get the value of root, a pointer to the 
-    first node in the list. Finally</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">If (previous == NULL)
+    <p class="zw">uses indirection on the root pointer argument to get the value of root, a pointer to the
+      first node in the list. Finally</p>
+    <pre class="code"><code class="calibre8">If (previous == NULL)
 　　　　　*rootp = new;
 else
 　　　　　previous-&gt;link = new;</code></pre>
 
-  <p class="zw">was added to the end of the function. It checks whether the new value should be 
-    added to the beginning of the list. If so, we use indirection on the root pointer to make 
-    root point to the new node.</p>
+    <p class="zw">was added to the end of the function. It checks whether the new value should be
+      added to the beginning of the list. If so, we use indirection on the root pointer to make
+      root point to the new node.</p>
 
-  <p class="zw">This function works, and in many languages it is as good as you can get. 
-    However, we can do better because C allows you to get the address of (a pointer to) 
-    existing objects.</p>
+    <p class="zw">This function works, and in many languages it is as good as you can get.
+      However, we can do better because C allows you to get the address of (a pointer to)
+      existing objects.</p>
 
-  <h5 class="sigil_not_in_toc">Optimizing the Insert Function</h5>
+    <h5 class="sigil_not_in_toc">Optimizing the Insert Function</h5>
 
-  <p class="zw">It appears that inserting a node at the beginning of the list <strong class="calibre3">must</strong> be a special case. After 
-    all, the pointer that must be adjusted to insert the first node is the root pointer. For 
-    every other node, the pointer to be adjusted is the link field of the previous node. 
-    These seemingly different operations are really the same.</p>
+    <p class="zw">It appears that inserting a node at the beginning of the list <strong class="calibre3">must</strong>
+      be
+      a special case. After
+      all, the pointer that must be adjusted to insert the first node is the root pointer. For
+      every other node, the pointer to be adjusted is the link field of the previous node.
+      These seemingly different operations are really the same.</p>
 
-  <p class="zw">The key to eliminating the special case is to realize that every node in the list 
-    has a pointer somewhere pointing to it. For the first node, it is the root pointer, and for 
-    every other node it is the link field of the preceding node. The important point is that 
-    there is a pointer somewhere pointing to each node. Whether the pointer is or is not 
-    contained in a node is irrelevant.</p>
+    <p class="zw">The key to eliminating the special case is to realize that every node in the list
+      has a pointer somewhere pointing to it. For the first node, it is the root pointer, and for
+      every other node it is the link field of the preceding node. The important point is that
+      there is a pointer somewhere pointing to each node. Whether the pointer is or is not
+      contained in a node is irrelevant.</p>
 
-  <p class="zw">Let's look at the list once more to clarify this point. Here is the first node and its 
-    corresponding pointer.</p>
+    <p class="zw">Let's look at the list once more to clarify this point. Here is the first node and its
+      corresponding pointer.</p>
 
-  <p class="tu"><img alt="" src="../images/00251.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00251.jpeg" class="calibre14"></p>
 
-  <p class="zw">Si el nuevo valor se inserta antes del primer nodo, este puntero debe modificarse.</p>
+    <p class="zw">If the new value is inserted before the first node, then this pointer must be changed.</p>
 
-  <p class="zw">A continuación se muestra el segundo nodo y el puntero hacia él.</p>
+    <p class="zw">Here is the second node and its pointer.</p>
 
-  <p class="tu"><img alt="" src="../images/00252.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00252.jpeg" class="calibre14"></p>
 
-  <p class="zw">Si es necesario insertar el nuevo valor antes del segundo nodo, <strong class="calibre3">este</strong>
-    puntero debe modificarse. Tenga en cuenta que solo consideramos el puntero a este nodo, y no importa qué nodo
-    contenga este puntero. Este modo se puede aplicar a otros nodos de la lista vinculada.</p>
+    <p class="zw">If the new value is inserted before the second node, then this pointer must be changed.
+      Note that we're concerned only with the pointer; the node that contains it is irrelevant.
+      The same pattern holds for every node in the list.</p>
 
-  <p class="zw">Ahora echemos un vistazo a la función modificada (cuando comienza a ejecutarse). A continuación se
-    muestran las condiciones de cada variable después de la primera declaración de asignación.</p>
+    <p class="zw">Now let's take a look at the modified function as it begins to execute. Here are
+      its variables as they appear just after the first assignment statement.</p>
 
-  <p class="tu"><img alt="" src="../images/00253.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00253.jpeg" class="calibre14"></p>
 
-  <p class="zw">Tenemos un puntero al nodo actual y un puntero al campo de enlace del nodo actual. Aparte de eso, ¡no
-    necesitamos nada más! Si el valor del nodo actual es mayor que el nuevo valor, entonces el puntero rootp nos dirá
-    qué campo de vínculo debe modificarse para que el nuevo nodo se vincule a la lista vinculada. Si las inserciones en
-    otras posiciones de la lista vinculada también se pueden expresar de la misma manera, no hay ningún caso especial
-    mencionado anteriormente. La clave está en la relación puntero / nodo que vimos anteriormente.</p>
+    <p class="zw">We have a pointer to the current node and a pointer to the link that points to the
+      current node. We don't need anything else! If the value in the current node is larger
+      than the new value, the rootp pointer tells us which link field must be changed to link
+      the new node into the list. If insertions elsewhere in the list can be expressed the same
+      way, the special case disappears. The key is the pointer/node relationship we saw
+      earlier.</p>
 
-  <p class="zw">Al pasar al siguiente nodo, guardamos un puntero al <strong class="calibre3">campo</strong> de <strong
-      class="calibre3">enlace</strong> del siguiente nodo , en lugar de guardar un puntero al <strong
-      class="calibre3">nodo</strong> anterior . Fácilmente podemos hacer un dibujo que describa esta situación.<strong
-      class="calibre3"></strong><strong class="calibre3"></strong></p>
+    <p class="zw">When moving to the next node, save a pointer to the <strong class="calibre3">link</strong> that points
+      to the next
+      node instead of keeping a pointer to the previous <strong class="calibre3">node</strong>. It is easy to diagram
+      what
+      is
+      desired.
 
-  <p class="tu"><img alt="" src="../images/00254.jpeg" class="calibre14"></p>
+    </p>
 
-  <p class="zw">Tenga en cuenta que rootp aquí no apunta al nodo en sí, sino al campo de enlace dentro del nodo. Esta es
-    la clave para simplificar la función de inserción, pero debemos poder obtener la dirección del campo de enlace del
-    nodo actual. En C, esta operación es muy sencilla. La expresión &amp; current-&gt; link puede lograr este objetivo.
-    El programa 12.3 es la versión final de nuestra función de inserción. El parámetro rootp ahora se llama linkp porque
-    ahora apunta a un campo de enlace diferente, no solo al puntero raíz. Ya no necesitamos el puntero anterior, porque
-    nuestro puntero de enlace puede ser responsable de encontrar el campo de enlace que necesita ser modificado. La
-    última parte del código de la función anterior para manejar casos especiales también desapareció, porque siempre
-    tenemos un puntero al campo de enlace que necesita ser modificado; modificamos la variable raíz exactamente de la
-    misma manera que modificamos el campo de enlace del nodo . Finalmente, agregamos una declaración de registro a la
-    variable de puntero de la función para mejorar la eficiencia del código resultante.</p>
+    <p class="tu"><img alt="" src="../images/00254.jpeg" class="calibre14"></p>
 
-  <p class="zw">Agregamos un truco al bucle while en la versión final, que incorpora la asignación de current. El
-    siguiente es un bucle con la misma función pero con una longitud un poco más larga.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
+    <p class="zw">Notice here that rootp is not pointing to the node; it points to the link field within the
+      node. This fact is the key to simplifying the insert function, but it depends upon our
+      being able to obtain the address of the link field of the current node. This operation is
+      easy in C. The expression &amp;current-&gt;link does the trick. Program 12.3 is the final
+      version of our insertion function. The rootp parameter is now called linkp, because it
+      points to many different links now, not just the root. We don't need previous any
+      more, because our link pointer takes care of locating the link that needs to be
+      modified. The special case at the end of the function is gone because we always have a
+      pointer to the link field that needs to be changed—we modify the root variable in
+      exactly the same way as the link field of a node. Finally, register declarations have
+      been added to the pointer variables to improve the efficiency of the resulting code. </p>
+
+    <p class="zw">The while loop in this final version is trickier because of the embedded
+      assignment to current. Here is an equivalent, though slightly longer loop.</p>
+    <pre class="code"><code class="calibre8">/*
 ** Look for the right place.
 */
 current = *linkp;
@@ -377,16 +387,18 @@ while( current !=NULL &amp;&amp; current-&gt;value &lt; value ){
 current = * linkp;
 }</code></pre>
 
-  <p class="zw">Al principio, actual se establece para apuntar al primer nodo de la lista vinculada. El ciclo while
-    prueba si hemos llegado al final de la lista enlazada. En caso contrario, comprueba si hemos alcanzado la posición
-    de inserción correcta. Si no es así, el cuerpo del bucle continúa ejecutándose y linkp se establece para que apunte
-    al campo de enlace del nodo actual y el punto actual al siguiente nodo.</p>
+    <p class="zw">To begin, current is set to point to the first node in the list. The while test checks
+      whether we've reached the end of the list. If not, it then checks whether we are at the
+      proper place for the insertion. If not, the body of the loop executes, which sets linkp to
+      point to the link field in the current node, and advances current to the next node.</p>
 
-  <p class="zw">La última declaración del bucle es la misma que la declaración antes del bucle, lo que nos pide que la
-    "simplifiquemos" incrustando la asignación de actual en la expresión while. El resultado es un bucle un poco más
-    complejo pero más compacto, porque eliminamos la asignación redundante de corriente.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*
-** 插入到一个有序单链表。函数的参数是一个指向链表第一个节点的指针，以及一个需要插入的新值
+    <p class="zw">La última declaración del bucle es la misma que la declaración antes del bucle, lo que nos pide que la
+      "simplifiquemos" incrustando la asignación de actual en la expresión while. El resultado es un bucle un poco más
+      complejo pero más compacto, porque eliminamos la asignación redundante de corriente.</p>
+    <pre class="code"><code class="calibre8">/*
+** Insert into an ordered, singly linked list. The arguments are
+** a pointer to the first node in the list, and the value to
+** insert.
 */
 #include &lt;stdlib.h&gt;
 #include &lt;stdio.h&gt;
@@ -402,16 +414,17 @@ sll_insert( register Node **linkp, int new_value )
 　　 register Node　*new;
 
 　　 /* 
-　　 ** 寻找正确的插入位置，方法是按序访问链表，直到到达一个其值大于或等于
-　　 ** 新值的节点。
+　　 ** Look for the right place by walking down the list
+　　 ** until we reach a node whose value is greater than
+　　 ** or equal to the new value.
 　　 */
 　　 while( ( current = *linkp ) != NULL &amp;&amp;
 　　　　 current-&gt;value &lt; new_value )
 　　　　　 linkp = &amp;current-&gt;link;
 
 　　 /* 
-　　 ** 为新节点分配内存，并把新值存储到新节点中，如果内存分配失败，
-　　 ** 函数返回FALSE。
+　　 ** Allocate a new node and store the new value into it.
+　　 ** In this event, we return FALSE.
 　　 */
 　　 new = (Node *)malloc( sizeof( Node ) );
 　　 if( new == NULL )
@@ -419,134 +432,147 @@ sll_insert( register Node **linkp, int new_value )
 　　 new-&gt;value = new_value;
 
 　　 /* 
-　　 ** 在链表中插入新节点，并返回TRUE。
+　　 ** Insert the new node into the list, and return TRUE.
 　　 */
 　　 new-&gt;link = current;
 　　 *linkp = new;
 　　 return TRUE;
 }</code></pre>
 
-  <p class="calibre2"><strong class="calibre3">Procedimiento 12.3 Insertar en una lista ordenada con enlaces
-      individuales: versión final</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 12.3 Insert into an ordered, singly linked list: final
+        version</strong></p>
 
-  <p class="calibre11">insert3.c</p>
+    <p class="calibre11">insert3.c</p>
 
-  <p class="editing-tag">insinuación:</p>
+    <p class="editing-tag">TIP</p>
 
-  <blockquote class="ti_shi">
+    <blockquote class="ti_shi">
+      <p class="zw"><br class="calibre1"></p>
+
+      <p class="calibre2">Eliminating the special case made this function simpler. There are two factors that
+        make this improvement possible. The first factor is our ability to interpret the problem
+        correctly. Unless you can identify the commonality in seemingly different operations,
+        you will be stuck writing extra code to handle special cases. Often this knowledge is
+        acquired only after you have worked with the data structure for a while and
+        understand it more clearly. The second factor is that the C language provides the right
+        tools for you to exploit the commonality.</p>
+
+      <p class="calibre2">The improved function depends on C's ability to obtain the address of existing
+        objects. Like many C features, this ability is both powerful and dangerous. In Modula
+        and Pascal, for example, there isn't an "address of" operator, so the only pointers that
+        exist are those produced by dynamic memory allocation. It is not possible to obtain a
+        pointer to an ordinary variable or even to a field of a dynamically allocated structure.
+        Pointer arithmetic is not allowed, and there isn't any means for casting a pointer from
+        one type to another. These restrictions are advantageous in that they prevent the
+        programmer from making mistakes such as subscripting off the end of an array and
+        generating pointers of one type that in fact point to objects of some other type.
+      </p>
+    </blockquote>
+
     <p class="zw"><br class="calibre1"></p>
 
-    <p class="calibre2">La eliminación de casos especiales simplifica esta función. Esta mejora es factible debido a dos
-      factores. El primer factor es nuestra capacidad para explicar el problema correctamente. A menos que pueda resumir
-      los puntos en común en operaciones aparentemente diferentes, solo puede escribir código adicional para manejar
-      situaciones especiales. Normalmente, este tipo de conocimiento solo se puede adquirir después de haber aprendido
-      la estructura de datos durante un tiempo y haberla comprendido mejor. El segundo factor es que el lenguaje C
-      proporciona las herramientas adecuadas para ayudarlo a resumir los puntos en común del problema.</p>
+    <p class="editing-tag">CAUTION!</p>
 
-    <p class="calibre2">Esta función mejorada se basa en la capacidad de C para obtener la dirección de un objeto
-      existente. Como muchas funciones del lenguaje C, esta habilidad es poderosa y peligrosa. Por ejemplo, no hay un
-      operador de "dirección" en Modula y Pascal, por lo que la única fuente de punteros es la asignación de memoria
-      dinámica. No hay forma de obtener un puntero a una variable normal o incluso un puntero a un campo de una
-      estructura asignada dinámicamente. Las operaciones aritméticas no están permitidas en punteros y no hay forma de
-      convertir un puntero de un tipo a un puntero de otro tipo por coerción. La ventaja de estas restricciones es que
-      pueden evitar errores como "hacer referencia a elementos de matriz fuera de los límites" o "generar un puntero de
-      un tipo pero que en realidad apunte a un objeto de otro tipo".</p>
-  </blockquote>
+    <blockquote class="ti_shi">
+      <p class="zw"><br class="calibre1"></p>
 
-  <p class="zw"><br class="calibre1"></p>
+      <p class="calibre2">There are far fewer restrictions on pointers in C, which is why we were able to
+        improve the insertion function. On the other hand, C programmers must be more
+        careful when using pointers to avoid mistakes. The Pascal philosophy to pointers is
+        sort of like saying, "You might hurt yourself with a hammer, so we won't give you
+        one." The C philosophy is, "Here is a hammer. In fact, here are several kinds of
+        hammers. Good luck." With this power, C programmers can get into more trouble
+        than Pascal programmers, but good C programmers can produce smaller, more
+        efficient, and more maintainable code than their Pascal or Modula counterparts. This
+        is one of the reasons why C is so popular in industry, and why experienced C
+        programmers are in such demand.</p>
+    </blockquote>
 
-  <p class="editing-tag">advertir:</p>
+    <h3 id="nav_point_245" class="calibre7">12.2.2 Other List Operations</h3>
 
-  <blockquote class="ti_shi">
-    <p class="zw"><br class="calibre1"></p>
+    <p class="zw">Para que la lista enlazada individual sea más útil, necesitamos agregar más operaciones, como buscar y
+      eliminar. Sin embargo, los algoritmos utilizados para estas operaciones son muy sencillos y fáciles de implementar
+      utilizando las técnicas ilustradas por la función de inserción. Por tanto, dejo estas funciones a modo de
+      ejercicio.
+    </p>
 
-    <p class="calibre2">C tiene muchas menos restricciones de puntero, por lo que podemos mejorar la función de
-      inserción. Por otro lado, los programadores de C deben tener cuidado al usar punteros para evitar errores. La
-      filosofía de puntero del lenguaje Pascal es algo similar a la siguiente declaración: "Usar un martillo puede
-      lastimarte, así que no te damos un martillo". La filosofía de puntero del lenguaje C es: "Te da un martillo, en De
-      hecho, puede usar varios tipos de martillo. ¡Buena suerte! ”Con esta habilidad, los programadores de C tienen más
-      probabilidades de meterse en problemas que los programadores de Pascal, pero los buenos programadores de C pueden
-      producir productos más pequeños y eficientes que sus contrapartes de Pascal y Modula. Código con mejor
-      mantenibilidad. Esta es una de las razones por las que el lenguaje C es tan popular en la industria y por qué los
-      programadores C experimentados son tan populares.</p>
-  </blockquote>
+    <h2 id="nav_point_246" class="calibre24">12.3 Lista enlazada doble</h2>
 
-  <h3 id="nav_point_245" class="calibre7">12.2.2 Otras operaciones de lista enlazada</h3>
+    <p class="zw">La alternativa a las listas enlazadas individualmente son las listas doblemente enlazadas. En una
+      lista
+      doblemente enlazada, cada nodo contiene dos punteros: un puntero al nodo anterior y un puntero al siguiente. Esto
+      nos permite recorrer la lista doblemente enlazada en cualquier dirección, e incluso acceder a la lista doblemente
+      enlazada. La siguiente figura muestra una lista doblemente enlazada.</p>
 
-  <p class="zw">Para que la lista enlazada individual sea más útil, necesitamos agregar más operaciones, como buscar y
-    eliminar. Sin embargo, los algoritmos utilizados para estas operaciones son muy sencillos y fáciles de implementar
-    utilizando las técnicas ilustradas por la función de inserción. Por tanto, dejo estas funciones a modo de ejercicio.
-  </p>
+    <p class="tu"><img alt="" src="../images/00255.jpeg" class="calibre14"></p>
 
-  <h2 id="nav_point_246" class="calibre24">12.3 Lista enlazada doble</h2>
-
-  <p class="zw">La alternativa a las listas enlazadas individualmente son las listas doblemente enlazadas. En una lista
-    doblemente enlazada, cada nodo contiene dos punteros: un puntero al nodo anterior y un puntero al siguiente. Esto
-    nos permite recorrer la lista doblemente enlazada en cualquier dirección, e incluso acceder a la lista doblemente
-    enlazada. La siguiente figura muestra una lista doblemente enlazada.</p>
-
-  <p class="tu"><img alt="" src="../images/00255.jpeg" class="calibre14"></p>
-
-  <p class="zw">La siguiente es la declaración del tipo de nodo.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">typedf struct　NODE　 {
+    <p class="zw">La siguiente es la declaración del tipo de nodo.</p>
+    <pre class="code"><code class="calibre8">typedf struct　NODE　 {
 　　　　struct　NODE　 *fwd;
 　　　　struct　NODE　 *bwd;
 　　　　int　　　　　　　value;
 } Node;</code></pre>
 
-  <p class="zw">Ahora, hay dos punteros raíz: uno apunta al primer nodo de la lista vinculada y el otro apunta al último
-    nodo. Estos dos punteros nos permiten recorrer la lista vinculada desde cualquier extremo de la lista vinculada.</p>
+    <p class="zw">Ahora, hay dos punteros raíz: uno apunta al primer nodo de la lista vinculada y el otro apunta al
+      último
+      nodo. Estos dos punteros nos permiten recorrer la lista vinculada desde cualquier extremo de la lista vinculada.
+    </p>
 
-  <p class="zw">Es posible que deseemos declarar los dos punteros raíz como dos variables por separado. Pero esto es lo
-    mismo, debemos pasar ambos punteros a la función de inserción. Es más conveniente declarar un nodo completo para el
-    puntero raíz, pero su campo de valor nunca se utilizará. En nuestro caso, esta técnica solo desperdicia el espacio
-    de memoria de un valor entero. Para listas vinculadas con campos de valor muy grandes, puede ser mejor declarar los
-    dos punteros por separado. Además, también podemos guardar alguna otra información sobre la lista vinculada en el
-    campo de valor del nodo raíz, como el número de nodos que contiene actualmente la lista vinculada.</p>
+    <p class="zw">Es posible que deseemos declarar los dos punteros raíz como dos variables por separado. Pero esto es
+      lo
+      mismo, debemos pasar ambos punteros a la función de inserción. Es más conveniente declarar un nodo completo para
+      el
+      puntero raíz, pero su campo de valor nunca se utilizará. En nuestro caso, esta técnica solo desperdicia el espacio
+      de memoria de un valor entero. Para listas vinculadas con campos de valor muy grandes, puede ser mejor declarar
+      los
+      dos punteros por separado. Además, también podemos guardar alguna otra información sobre la lista vinculada en el
+      campo de valor del nodo raíz, como el número de nodos que contiene actualmente la lista vinculada.</p>
 
-  <p class="zw">El campo fwd del nodo raíz apunta al primer nodo de la lista vinculada y el campo bwd del nodo raíz
-    apunta al último nodo de la lista vinculada. Si la lista vinculada está vacía, ambos campos son NULL. El campo bwd
-    del primer nodo y el campo rwd del último nodo de la lista vinculada son ambos NULL. En una lista enlazada ordenada,
-    cada nodo se organizará en orden ascendente de acuerdo con el valor del campo de valor.</p>
+    <p class="zw">El campo fwd del nodo raíz apunta al primer nodo de la lista vinculada y el campo bwd del nodo raíz
+      apunta al último nodo de la lista vinculada. Si la lista vinculada está vacía, ambos campos son NULL. El campo bwd
+      del primer nodo y el campo rwd del último nodo de la lista vinculada son ambos NULL. En una lista enlazada
+      ordenada,
+      cada nodo se organizará en orden ascendente de acuerdo con el valor del campo de valor.</p>
 
-  <h3 id="nav_point_247" class="calibre7">12.3.1 Insertar en una lista doblemente enlazada</h3>
+    <h3 id="nav_point_247" class="calibre7">12.3.1 Insertar en una lista doblemente enlazada</h3>
 
-  <p class="zw">Esta vez, vamos a escribir una función para insertar un valor en una lista ordenada de doble enlace. La
-    función dll_insert acepta dos parámetros: un puntero al nodo raíz y un valor entero.</p>
+    <p class="zw">Esta vez, vamos a escribir una función para insertar un valor en una lista ordenada de doble enlace.
+      La
+      función dll_insert acepta dos parámetros: un puntero al nodo raíz y un valor entero.</p>
 
-  <p class="zw">La función de inserción de lista enlazada individual que escribimos anteriormente agrega valores
-    repetidos a la lista enlazada. En algunas aplicaciones, puede ser más apropiado no insertar valores duplicados. La
-    función dll_insert solo inserta el valor que se va a insertar cuando no existe en la lista vinculada.</p>
+    <p class="zw">La función de inserción de lista enlazada individual que escribimos anteriormente agrega valores
+      repetidos a la lista enlazada. En algunas aplicaciones, puede ser más apropiado no insertar valores duplicados. La
+      función dll_insert solo inserta el valor que se va a insertar cuando no existe en la lista vinculada.</p>
 
-  <p class="zw">Escribamos esta función de una manera más estandarizada. Cuando insertamos un nodo en una lista
-    vinculada, pueden ocurrir cuatro situaciones:</p>
+    <p class="zw">Escribamos esta función de una manera más estandarizada. Cuando insertamos un nodo en una lista
+      vinculada, pueden ocurrir cuatro situaciones:</p>
 
-  <p class="zw">1. Es posible que el nuevo valor deba insertarse en el medio de la lista vinculada.</p>
+    <p class="zw">1. Es posible que el nuevo valor deba insertarse en el medio de la lista vinculada.</p>
 
-  <p class="zw">2. Es posible que el nuevo valor deba insertarse al principio de la lista vinculada.</p>
+    <p class="zw">2. Es posible que el nuevo valor deba insertarse al principio de la lista vinculada.</p>
 
-  <p class="zw">3. Es posible que el nuevo valor deba insertarse al final de la lista vinculada.</p>
+    <p class="zw">3. Es posible que el nuevo valor deba insertarse al final de la lista vinculada.</p>
 
-  <p class="zw">4. Es posible que el nuevo valor deba insertarse al principio de la lista vinculada y al final de la
-    lista vinculada (es decir, la lista vinculada original está vacía).</p>
+    <p class="zw">4. Es posible que el nuevo valor deba insertarse al principio de la lista vinculada y al final de la
+      lista vinculada (es decir, la lista vinculada original está vacía).</p>
 
-  <p class="zw">En cada caso, se deben modificar 4 punteros.</p>
+    <p class="zw">En cada caso, se deben modificar 4 punteros.</p>
 
-  <ul class="calibre35">
-    <li class="di_1ji_wu_xu_lie_biao">En el caso (1) y el caso (2), el campo fwd del nuevo nodo debe establecerse para
-      que apunte al siguiente nodo en la lista vinculada, y el campo bwd del siguiente nodo en la lista vinculada debe
-      establecerse para que apunte a este nuevo nodo. En el caso (3) y el caso (4), el campo fwd del nuevo nodo debe
-      establecerse en NULL, y el campo bwd del nodo raíz debe establecerse para apuntar al nuevo nodo.</li>
+    <ul class="calibre35">
+      <li class="di_1ji_wu_xu_lie_biao">En el caso (1) y el caso (2), el campo fwd del nuevo nodo debe establecerse para
+        que apunte al siguiente nodo en la lista vinculada, y el campo bwd del siguiente nodo en la lista vinculada debe
+        establecerse para que apunte a este nuevo nodo. En el caso (3) y el caso (4), el campo fwd del nuevo nodo debe
+        establecerse en NULL, y el campo bwd del nodo raíz debe establecerse para apuntar al nuevo nodo.</li>
 
-    <li class="di_1ji_wu_xu_lie_biao">En el caso (1) y el caso (3), el campo bwd del nuevo nodo debe establecerse para
-      apuntar al nodo anterior en la lista vinculada, y el campo fwd del nodo anterior en la lista vinculada debe
-      establecerse para apuntar a el nuevo nodo. En el caso (2) y el caso (4), el campo bwd del nuevo nodo debe
-      establecerse en NULL, y el campo fwd del nodo raíz debe establecerse para apuntar al nuevo nodo.</li>
-  </ul>
+      <li class="di_1ji_wu_xu_lie_biao">En el caso (1) y el caso (3), el campo bwd del nuevo nodo debe establecerse para
+        apuntar al nodo anterior en la lista vinculada, y el campo fwd del nodo anterior en la lista vinculada debe
+        establecerse para apuntar a el nuevo nodo. En el caso (2) y el caso (4), el campo bwd del nuevo nodo debe
+        establecerse en NULL, y el campo fwd del nodo raíz debe establecerse para apuntar al nuevo nodo.</li>
+    </ul>
 
-  <p class="zw">Si cree que estas descripciones no son muy claras, la implementación concisa del Procedimiento 12.4
-    puede ayudarlo a profundizar su comprensión.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+    <p class="zw">Si cree que estas descripciones no son muy claras, la implementación concisa del Procedimiento 12.4
+      puede ayudarlo a profundizar su comprensión.</p>
+    <pre class="code"><code class="calibre8">/* 
 ** 把一个值插入到一个双链表，rootp是一个指向根节点的指针，
 ** value是欲插入的新值。
 ** 返回值：如果欲插值原先已存在于链表中，函数返回0；
@@ -620,63 +646,66 @@ if( next != NULL ){
 　　return 1;
 }</code></pre>
 
-  <p class="calibre2"><strong class="calibre3">Procedimiento 12.4 Función de inserción de lista concisa de doble
-      enlace</strong></p>
+    <p class="calibre2"><strong class="calibre3">Procedimiento 12.4 Función de inserción de lista concisa de doble
+        enlace</strong></p>
 
-  <p class="calibre11">dll_ins1.c</p>
+    <p class="calibre11">dll_ins1.c</p>
 
-  <p class="zw">Al principio, la función señala este punto al nodo raíz. El siguiente puntero siempre apunta al nodo
-    después de este. La idea es que estos dos punteros avancen sincrónicamente hasta que se inserte un nuevo nodo entre
-    los dos. El bucle for comprueba el valor del nodo al que apunta next para determinar si ha alcanzado la posición que
-    debe insertarse.</p>
+    <p class="zw">Al principio, la función señala este punto al nodo raíz. El siguiente puntero siempre apunta al nodo
+      después de este. La idea es que estos dos punteros avancen sincrónicamente hasta que se inserte un nuevo nodo
+      entre
+      los dos. El bucle for comprueba el valor del nodo al que apunta next para determinar si ha alcanzado la posición
+      que
+      debe insertarse.</p>
 
-  <p class="zw">Si se encuentra un nuevo valor en la lista vinculada, la función simplemente regresa. De lo contrario,
-    el bucle termina cuando llega al final de la lista vinculada o encuentra una posición de inserción adecuada. En
-    cualquier caso, el nuevo nodo debe insertarse después del nodo al que apunta este. Tenga en cuenta que no asignamos
-    memoria para el nuevo valor antes de decidir si realmente debería insertarse en la lista vinculada. Si se asigna
-    memoria por adelantado, si se encuentra que el nuevo valor ya existe en la lista vinculada, puede ocurrir una
-    pérdida de memoria.</p>
+    <p class="zw">Si se encuentra un nuevo valor en la lista vinculada, la función simplemente regresa. De lo contrario,
+      el bucle termina cuando llega al final de la lista vinculada o encuentra una posición de inserción adecuada. En
+      cualquier caso, el nuevo nodo debe insertarse después del nodo al que apunta este. Tenga en cuenta que no
+      asignamos
+      memoria para el nuevo valor antes de decidir si realmente debería insertarse en la lista vinculada. Si se asigna
+      memoria por adelantado, si se encuentra que el nuevo valor ya existe en la lista vinculada, puede ocurrir una
+      pérdida de memoria.</p>
 
-  <p class="zw">Las cuatro situaciones se implementan por separado. Observemos el caso 1 insertando 12 en la lista
-    vinculada. La siguiente figura muestra el estado de varias variables después de que termina el ciclo for.</p>
+    <p class="zw">Las cuatro situaciones se implementan por separado. Observemos el caso 1 insertando 12 en la lista
+      vinculada. La siguiente figura muestra el estado de varias variables después de que termina el ciclo for.</p>
 
-  <p class="tu"><img alt="" src="../images/00256.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00256.jpeg" class="calibre14"></p>
 
-  <p class="zw">Luego, la función asigna memoria para el nuevo nodo. Después de ejecutar las siguientes declaraciones,
-  </p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">newnode-&gt;fwd = next;
+    <p class="zw">Luego, la función asigna memoria para el nuevo nodo. Después de ejecutar las siguientes declaraciones,
+    </p>
+    <pre class="code"><code class="calibre8">newnode-&gt;fwd = next;
 this-&gt;fwd = newnode;</code></pre>
 
-  <p class="zw">La lista vinculada se ve así:</p>
+    <p class="zw">La lista vinculada se ve así:</p>
 
-  <p class="tu"><img alt="" src="../images/00257.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00257.jpeg" class="calibre14"></p>
 
-  <p class="zw">Luego, ejecute la siguiente declaración:</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">newnode-&gt;bwd = this;
+    <p class="zw">Luego, ejecute la siguiente declaración:</p>
+    <pre class="code"><code class="calibre8">newnode-&gt;bwd = this;
 　　 next-&gt;bwd = newnode;</code></pre>
 
-  <p class="zw">Esto completa el proceso de insertar el nuevo valor en la lista vinculada:</p>
+    <p class="zw">Esto completa el proceso de insertar el nuevo valor en la lista vinculada:</p>
 
-  <p class="tu"><img alt="" src="../images/00258.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00258.jpeg" class="calibre14"></p>
 
-  <p class="zw">Estudie el código para determinar cómo manejar los casos restantes y asegúrese de que todos funcionen
-    correctamente.</p>
+    <p class="zw">Estudie el código para determinar cómo manejar los casos restantes y asegúrese de que todos funcionen
+      correctamente.</p>
 
-  <h5 class="sigil_not_in_toc">Simplifica la función de inserción</h5>
+    <h5 class="sigil_not_in_toc">Simplifica la función de inserción</h5>
 
-  <p class="zw"><br class="calibre1"></p>
-
-  <p class="editing-tag">insinuación:</p>
-
-  <blockquote class="ti_shi">
     <p class="zw"><br class="calibre1"></p>
 
-    <p class="calibre2">Los programadores cuidadosos notarán que hay muchas similitudes en los grupos de instrucciones
-      if anidados en la función, y los buenos programadores se aburrirán con tanto código repetitivo en el programa.
-      Entonces, ahora usaremos dos técnicas para eliminar estos códigos duplicados. La primera técnica es la
-      factorización de declaraciones, como se muestra en el siguiente ejemplo:</p>
-  </blockquote>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">if( x == 3) {
+    <p class="editing-tag">insinuación:</p>
+
+    <blockquote class="ti_shi">
+      <p class="zw"><br class="calibre1"></p>
+
+      <p class="calibre2">Los programadores cuidadosos notarán que hay muchas similitudes en los grupos de instrucciones
+        if anidados en la función, y los buenos programadores se aburrirán con tanto código repetitivo en el programa.
+        Entonces, ahora usaremos dos técnicas para eliminar estos códigos duplicados. La primera técnica es la
+        factorización de declaraciones, como se muestra en el siguiente ejemplo:</p>
+    </blockquote>
+    <pre class="code"><code class="calibre8">if( x == 3) {
 　　　　　i = 1;
 　　　　　something;
 　　　　　j = 2;
@@ -687,28 +716,28 @@ else {
 　　　　　j = 2;
 }</code></pre>
 
-  <blockquote class="ti_shi">
-    <p class="calibre2">Tenga en cuenta que independientemente de si el valor de la expresión x = = 3 es verdadero o
-      falso, se ejecutarán las declaraciones i = 1 y j = 2. Ejecutar i = 1 antes de if no afectará el resultado de la
-      prueba de x == 3, por lo que ambas declaraciones se pueden extraer, lo que resulta en una declaración más simple
-      pero igualmente completa:</p>
-  </blockquote>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">i = 1；
+    <blockquote class="ti_shi">
+      <p class="calibre2">Tenga en cuenta que independientemente de si el valor de la expresión x = = 3 es verdadero o
+        falso, se ejecutarán las declaraciones i = 1 y j = 2. Ejecutar i = 1 antes de if no afectará el resultado de la
+        prueba de x == 3, por lo que ambas declaraciones se pueden extraer, lo que resulta en una declaración más simple
+        pero igualmente completa:</p>
+    </blockquote>
+    <pre class="code"><code class="calibre8">i = 1；
 if( x == 3 )
 　　　　　something;
 else
 　　　　　something different;
 j = 2;</code></pre>
 
-  <p class="editing-tag">advertir:</p>
+    <p class="editing-tag">advertir:</p>
 
-  <blockquote class="ti_shi">
-    <p class="zw"><br class="calibre1"></p>
+    <blockquote class="ti_shi">
+      <p class="zw"><br class="calibre1"></p>
 
-    <p class="calibre2">Si la declaración antes de si afectará el resultado de la prueba, no la extraiga. Por ejemplo,
-      en el siguiente ejemplo:</p>
-  </blockquote>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">if( x == 3 ){
+      <p class="calibre2">Si la declaración antes de si afectará el resultado de la prueba, no la extraiga. Por ejemplo,
+        en el siguiente ejemplo:</p>
+    </blockquote>
+    <pre class="code"><code class="calibre8">if( x == 3 ){
 　　　　　x = 0;
 　　　　　something;
 }
@@ -717,13 +746,13 @@ else {
 　　　　　something different;
 }</code></pre>
 
-  <blockquote class="ti_shi">
-    <p class="calibre2">La declaración x = 0 no se puede refinar porque afectará el resultado de la comparación.</p>
-  </blockquote>
+    <blockquote class="ti_shi">
+      <p class="calibre2">La declaración x = 0 no se puede refinar porque afectará el resultado de la comparación.</p>
+    </blockquote>
 
-  <p class="zw">Refinando la instrucción if anidada más interna del programa 12.4 produce el segmento de código del
-    programa 12.5. Compare este código con la función anterior y confirme que son equivalentes.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/*　
+    <p class="zw">Refinando la instrucción if anidada más interna del programa 12.4 produce el segmento de código del
+      programa 12.5. Compare este código con la función anterior y confirme que son equivalentes.</p>
+    <pre class="code"><code class="calibre8">/*　
 ** 把新节点添加到链表中。
 */
 if( next != NULL ){
@@ -757,49 +786,55 @@ else {
 　　　　　rootp-&gt;bwd = newnode;
 　　　　　}</code></pre>
 
-  <p class="calibre2"><strong class="calibre3">Procedimiento 12.5 Refinamiento de la lógica de inserción para lista
-      doblemente enlazada</strong></p>
+    <p class="calibre2"><strong class="calibre3">Procedimiento 12.5 Refinamiento de la lógica de inserción para lista
+        doblemente enlazada</strong></p>
 
-  <p class="calibre11">dll_ins2.c</p>
+    <p class="calibre11">dll_ins2.c</p>
 
-  <p class="zw">La segunda técnica de simplificación es fácil de ilustrar con el siguiente ejemplo:</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">if( pointer !=NULL )
+    <p class="zw">La segunda técnica de simplificación es fácil de ilustrar con el siguiente ejemplo:</p>
+    <pre class="code"><code class="calibre8">if( pointer !=NULL )
 　　　　 field = pointer;
 else
 　　　　 fileld = NULL;</code></pre>
 
-  <p class="zw">La intención de este código es establecer una variable igual al puntero. Si el puntero no apunta a nada,
-    la variable se establece en NULL. Sin embargo, mire la siguiente declaración:</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">field = pointer;</code></pre>
+    <p class="zw">La intención de este código es establecer una variable igual al puntero. Si el puntero no apunta a
+      nada,
+      la variable se establece en NULL. Sin embargo, mire la siguiente declaración:</p>
+    <pre class="code"><code class="calibre8">field = pointer;</code></pre>
 
-  <p class="zw">Si el valor del puntero no es NULL, el campo obtiene una copia de su valor como antes. Sin embargo, si
-    el valor del puntero es NULL, el campo obtendrá una copia de NULL del puntero, lo que tiene el mismo efecto que
-    asignarlo a la constante NULL. Esta instrucción realiza la misma tarea que la instrucción if anterior, pero es
-    significativamente más simple.</p>
+    <p class="zw">Si el valor del puntero no es NULL, el campo obtiene una copia de su valor como antes. Sin embargo, si
+      el valor del puntero es NULL, el campo obtendrá una copia de NULL del puntero, lo que tiene el mismo efecto que
+      asignarlo a la constante NULL. Esta instrucción realiza la misma tarea que la instrucción if anterior, pero es
+      significativamente más simple.</p>
 
-  <p class="zw">La clave para usar esta técnica en el programa 12.5 es encontrar aquellas declaraciones que se ven
-    diferentes pero en realidad realizan la misma tarea, y luego reescribirlas y escribirlas en la misma forma. Podemos
-    reescribir la primera oración del caso 3 y el caso 4 como:</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">newnode-&gt;fwd = next;</code></pre>
+    <p class="zw">La clave para usar esta técnica en el programa 12.5 es encontrar aquellas declaraciones que se ven
+      diferentes pero en realidad realizan la misma tarea, y luego reescribirlas y escribirlas en la misma forma.
+      Podemos
+      reescribir la primera oración del caso 3 y el caso 4 como:</p>
+    <pre class="code"><code class="calibre8">newnode-&gt;fwd = next;</code></pre>
 
-  <p class="zw">Porque la sentencia if acaba de determinar que next == NULL. Este cambio hace que la primera declaración
-    en ambos lados de la declaración if sea igual, por lo que podemos extraerla. Realice esta modificación y estudie el
-    código restante.</p>
+    <p class="zw">Porque la sentencia if acaba de determinar que next == NULL. Este cambio hace que la primera
+      declaración
+      en ambos lados de la declaración if sea igual, por lo que podemos extraerla. Realice esta modificación y estudie
+      el
+      código restante.</p>
 
-  <p class="zw">¿Lo descubriste? Ahora las dos declaraciones if anidadas son iguales, por lo que también se pueden
-    extraer. Los resultados de estos cambios se muestran en el Procedimiento 12.6.</p>
+    <p class="zw">¿Lo descubriste? Ahora las dos declaraciones if anidadas son iguales, por lo que también se pueden
+      extraer. Los resultados de estos cambios se muestran en el Procedimiento 12.6.</p>
 
-  <p class="zw">También podemos mejorar aún más el código. La primera declaración de la cláusula else de la primera
-    declaración if se puede reescribir como:</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">this-&gt;fwd = newnode;</code></pre>
+    <p class="zw">También podemos mejorar aún más el código. La primera declaración de la cláusula else de la primera
+      declaración if se puede reescribir como:</p>
+    <pre class="code"><code class="calibre8">this-&gt;fwd = newnode;</code></pre>
 
-  <p class="zw">Esto se debe a que la instrucción if ya ha determinado este == rootp. Ahora, esta oración reescrita y
-    sus equivalentes también se pueden extraer.</p>
+    <p class="zw">Esto se debe a que la instrucción if ya ha determinado este == rootp. Ahora, esta oración reescrita y
+      sus equivalentes también se pueden extraer.</p>
 
-  <p class="zw">El programa 12.7 es una versión completa con todas las modificaciones. La tarea que realiza es la misma
-    que la función original, pero el volumen es mucho menor. El puntero local se declara como una variable de registro,
-    lo que mejora aún más el tamaño y la velocidad del código.</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+    <p class="zw">El programa 12.7 es una versión completa con todas las modificaciones. La tarea que realiza es la
+      misma
+      que la función original, pero el volumen es mucho menor. El puntero local se declara como una variable de
+      registro,
+      lo que mejora aún más el tamaño y la velocidad del código.</p>
+    <pre class="code"><code class="calibre8">/* 
 ** 把新节点添加到链表中。 
 */
 newnode-&gt;fwd = next;
@@ -817,11 +852,12 @@ if( next != NULL )
 else
 　　　rootp-&gt;bwd = newnode;</code></pre>
 
-  <p class="calibre2"><strong class="calibre3">Procedimiento 12.6 Refinamiento adicional de la lógica de inserción de la
-      lista doblemente enlazada</strong>　</p>
+    <p class="calibre2"><strong class="calibre3">Procedimiento 12.6 Refinamiento adicional de la lógica de inserción de
+        la
+        lista doblemente enlazada</strong>　</p>
 
-  <p class="calibre11">dll_ins3.c</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+    <p class="calibre11">dll_ins3.c</p>
+    <pre class="code"><code class="calibre8">/* 
 ** 把一个新值插入到一个双链表中。rootp是一个指向根节点的指针，
 ** value是需要插入的新值。
 　　** 返回值：如果链表原先已经存在这个值，函数返回0。
@@ -875,37 +911,40 @@ else
 　　　　 return 1;
 }</code></pre>
 
-  <p class="calibre2"><strong class="calibre3">Procedimiento 12.7 La versión final simplificada de la función de
-      inserción de lista doblemente enlazada</strong></p>
+    <p class="calibre2"><strong class="calibre3">Procedimiento 12.7 La versión final simplificada de la función de
+        inserción de lista doblemente enlazada</strong></p>
 
-  <p class="calibre11">dll_ins4.c</p>
+    <p class="calibre11">dll_ins4.c</p>
 
-  <p class="zw">Esta función no se puede mejorar mucho, pero podemos hacer que el código fuente sea más pequeño. El
-    propósito de la primera instrucción if es determinar el valor en el lado derecho de la instrucción de asignación.
-    Podemos reemplazar la declaración if con una expresión condicional. También podemos reemplazar la segunda
-    declaración if con una expresión condicional, pero la importancia de esta modificación no es muy grande.</p>
+    <p class="zw">Esta función no se puede mejorar mucho, pero podemos hacer que el código fuente sea más pequeño. El
+      propósito de la primera instrucción if es determinar el valor en el lado derecho de la instrucción de asignación.
+      Podemos reemplazar la declaración if con una expresión condicional. También podemos reemplazar la segunda
+      declaración if con una expresión condicional, pero la importancia de esta modificación no es muy grande.</p>
 
-  <p class="editing-tag">insinuación:</p>
+    <p class="editing-tag">insinuación:</p>
 
-  <blockquote class="ti_shi">
-    <p class="zw"><br class="calibre1"></p>
+    <blockquote class="ti_shi">
+      <p class="zw"><br class="calibre1"></p>
 
-    <p class="calibre2">El código para el programa 12.8 es más pequeño, pero ¿es realmente mejor? Aunque se ha reducido
-      el número de sentencias, las operaciones de comparación y asignación que se deben realizar siguen siendo las
-      mismas que las anteriores, por lo que este código no corre más rápido que los anteriores. Aquí hay dos diferencias
-      menores: newnode-&gt; bwd y -&gt; bwd = newnode se escriben solo una vez en lugar de dos. ¿Pueden estas
-      diferencias resultar en un código de destino más pequeño? Tal vez lo haga Depende de las medidas de optimización
-      de su compilador. Sin embargo, incluso si produce un código más pequeño, la diferencia es muy pequeña, pero la
-      legibilidad de este código es menor que el código anterior, especialmente para aquellos programadores C
-      inexpertos. Por lo tanto, el programa 12.8 puede ser más difícil de mantener.</p>
+      <p class="calibre2">El código para el programa 12.8 es más pequeño, pero ¿es realmente mejor? Aunque se ha
+        reducido
+        el número de sentencias, las operaciones de comparación y asignación que se deben realizar siguen siendo las
+        mismas que las anteriores, por lo que este código no corre más rápido que los anteriores. Aquí hay dos
+        diferencias
+        menores: newnode-&gt; bwd y -&gt; bwd = newnode se escriben solo una vez en lugar de dos. ¿Pueden estas
+        diferencias resultar en un código de destino más pequeño? Tal vez lo haga Depende de las medidas de optimización
+        de su compilador. Sin embargo, incluso si produce un código más pequeño, la diferencia es muy pequeña, pero la
+        legibilidad de este código es menor que el código anterior, especialmente para aquellos programadores C
+        inexpertos. Por lo tanto, el programa 12.8 puede ser más difícil de mantener.</p>
 
-    <p class="calibre2">Si el tamaño o la velocidad de ejecución del programa es realmente importante, es posible que
-      debamos considerar escribir funciones en lenguaje ensamblador. Pero incluso con un cambio tan grande en la
-      codificación, no hay garantía de que haya mejoras importantes. También considere que el código ensamblador es
-      difícil de escribir, difícil de leer y difícil de mantener. Por lo tanto, solo cuando no tenemos otra alternativa,
-      podemos usar el lenguaje ensamblador.</p>
-  </blockquote>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">/* 
+      <p class="calibre2">Si el tamaño o la velocidad de ejecución del programa es realmente importante, es posible que
+        debamos considerar escribir funciones en lenguaje ensamblador. Pero incluso con un cambio tan grande en la
+        codificación, no hay garantía de que haya mejoras importantes. También considere que el código ensamblador es
+        difícil de escribir, difícil de leer y difícil de mantener. Por lo tanto, solo cuando no tenemos otra
+        alternativa,
+        podemos usar el lenguaje ensamblador.</p>
+    </blockquote>
+    <pre class="code"><code class="calibre8">/* 
 ** 把新节点添加到链表中。
 */
 newnode-&gt;fwd = next;
@@ -913,167 +952,190 @@ this-&gt;fwd = newnode;
 newnode-&gt;bwd = this != rootp ? this : NULL;
 ( next != NULL ? next : rootp )-&gt;bwd = newnode;</code></pre>
 
-  <p class="calibre2"><strong class="calibre3">Procedimiento 12.8 Usar expresiones condicionales para implementar
-      funciones de inserción</strong></p>
+    <p class="calibre2"><strong class="calibre3">Procedimiento 12.8 Usar expresiones condicionales para implementar
+        funciones de inserción</strong></p>
 
-  <p class="calibre11">dll_ins5.c</p>
+    <p class="calibre11">dll_ins5.c</p>
 
-  <h3 id="nav_point_248" class="calibre7">12.3.2 Otras operaciones de lista enlazada</h3>
+    <h3 id="nav_point_248" class="calibre7">12.3.2 Otras operaciones de lista enlazada</h3>
 
-  <p class="zw">Al igual que las listas con enlaces simples, las listas con enlaces dobles requieren más operaciones.
-    Los ejercicios de programación de este capítulo le brindarán más oportunidades prácticas para escribirlos.</p>
+    <p class="zw">Al igual que las listas con enlaces simples, las listas con enlaces dobles requieren más operaciones.
+      Los ejercicios de programación de este capítulo le brindarán más oportunidades prácticas para escribirlos.</p>
 
-  <h2 id="nav_point_249" class="calibre24">12.4 Resumen</h2>
+    <h2 id="nav_point_249" class="calibre24">12.4 Resumen</h2>
 
-  <p class="zw">Una lista enlazada es una estructura de datos que utiliza punteros para almacenar valores. Cada nodo de
-    la lista vinculada contiene un campo que apunta al siguiente nodo de la lista vinculada. Además, un puntero de raíz
-    independiente apunta al primer nodo de la lista vinculada. Dado que a los nodos se les asigna memoria dinámicamente
-    cuando se crean, pueden distribuirse en la memoria. Sin embargo, atravesar la lista vinculada se basa en punteros,
-    por lo que la disposición física de los nodos no importa. Una lista enlazada individualmente solo se puede recorrer
-    en una dirección.</p>
+    <p class="zw">Una lista enlazada es una estructura de datos que utiliza punteros para almacenar valores. Cada nodo
+      de
+      la lista vinculada contiene un campo que apunta al siguiente nodo de la lista vinculada. Además, un puntero de
+      raíz
+      independiente apunta al primer nodo de la lista vinculada. Dado que a los nodos se les asigna memoria
+      dinámicamente
+      cuando se crean, pueden distribuirse en la memoria. Sin embargo, atravesar la lista vinculada se basa en punteros,
+      por lo que la disposición física de los nodos no importa. Una lista enlazada individualmente solo se puede
+      recorrer
+      en una dirección.</p>
 
-  <p class="zw">Para insertar un nuevo valor en una lista enlazada individual ordenada, primero debe encontrar la
-    posición de inserción apropiada en la lista enlazada. Para listas no ordenadas enlazadas individualmente, se pueden
-    insertar nuevos valores en cualquier posición. Vincular un nuevo nodo a la lista vinculada requiere dos pasos.
-    Primero, el campo de enlace del nuevo nodo debe establecerse para que apunte a su nodo subsiguiente de destino. En
-    segundo lugar, el campo de enlace del nodo anterior debe configurarse para apuntar a este nuevo nodo. En muchos
-    otros idiomas, la función de inserción guarda un puntero al nodo anterior para completar el segundo paso. Sin
-    embargo, esta técnica hace que la inserción en la posición inicial de la lista vinculada sea un caso especial que
-    debe manejarse por separado. En lenguaje C, puede eliminar esta situación especial guardando un puntero al campo de
-    enlace que debe modificarse en lugar de guardar un puntero al nodo anterior.</p>
+    <p class="zw">Para insertar un nuevo valor en una lista enlazada individual ordenada, primero debe encontrar la
+      posición de inserción apropiada en la lista enlazada. Para listas no ordenadas enlazadas individualmente, se
+      pueden
+      insertar nuevos valores en cualquier posición. Vincular un nuevo nodo a la lista vinculada requiere dos pasos.
+      Primero, el campo de enlace del nuevo nodo debe establecerse para que apunte a su nodo subsiguiente de destino. En
+      segundo lugar, el campo de enlace del nodo anterior debe configurarse para apuntar a este nuevo nodo. En muchos
+      otros idiomas, la función de inserción guarda un puntero al nodo anterior para completar el segundo paso. Sin
+      embargo, esta técnica hace que la inserción en la posición inicial de la lista vinculada sea un caso especial que
+      debe manejarse por separado. En lenguaje C, puede eliminar esta situación especial guardando un puntero al campo
+      de
+      enlace que debe modificarse en lugar de guardar un puntero al nodo anterior.</p>
 
-  <p class="zw">Cada nodo de la lista de enlace doble contiene dos campos de enlace: uno de ellos apunta al siguiente
-    nodo de la lista enlazada y el otro apunta al nodo anterior de la lista enlazada. La lista de doble enlace tiene dos
-    punteros raíz, que apuntan al primer nodo y al último nodo respectivamente. Por lo tanto, el recorrido de la lista
-    de doble enlace puede comenzar desde cualquier extremo y la dirección se puede cambiar durante el recorrido. Para
-    insertar un nuevo nodo en la lista doblemente enlazada, debemos modificar 4 punteros. Los campos de enlace hacia
-    adelante y hacia atrás del nuevo nodo deben establecerse, y el campo de enlace hacia atrás del nodo anterior y el
-    campo de enlace hacia adelante del siguiente nodo también deben modificarse para que apunten a este nuevo nodo.</p>
+    <p class="zw">Cada nodo de la lista de enlace doble contiene dos campos de enlace: uno de ellos apunta al siguiente
+      nodo de la lista enlazada y el otro apunta al nodo anterior de la lista enlazada. La lista de doble enlace tiene
+      dos
+      punteros raíz, que apuntan al primer nodo y al último nodo respectivamente. Por lo tanto, el recorrido de la lista
+      de doble enlace puede comenzar desde cualquier extremo y la dirección se puede cambiar durante el recorrido. Para
+      insertar un nuevo nodo en la lista doblemente enlazada, debemos modificar 4 punteros. Los campos de enlace hacia
+      adelante y hacia atrás del nuevo nodo deben establecerse, y el campo de enlace hacia atrás del nodo anterior y el
+      campo de enlace hacia adelante del siguiente nodo también deben modificarse para que apunten a este nuevo nodo.
+    </p>
 
-  <p class="zw">El refinamiento de oraciones es una técnica para simplificar el programa eliminando declaraciones
-    redundantes en el programa. Si las cláusulas "then" y "else" de una instrucción if terminan en la misma secuencia de
-    declaraciones, se pueden reemplazar por una sola copia que aparece después de la instrucción if. Las declaraciones
-    en la misma secuencia también se pueden extraer de la posición inicial de la instrucción if, pero este refinamiento
-    no puede cambiar el resultado de la prueba de if. Si diferentes declaraciones realmente realizan la misma función,
-    puede escribirlas de la misma manera y luego usar el refinamiento de declaraciones para simplificar el programa.</p>
+    <p class="zw">El refinamiento de oraciones es una técnica para simplificar el programa eliminando declaraciones
+      redundantes en el programa. Si las cláusulas "then" y "else" de una instrucción if terminan en la misma secuencia
+      de
+      declaraciones, se pueden reemplazar por una sola copia que aparece después de la instrucción if. Las declaraciones
+      en la misma secuencia también se pueden extraer de la posición inicial de la instrucción if, pero este
+      refinamiento
+      no puede cambiar el resultado de la prueba de if. Si diferentes declaraciones realmente realizan la misma función,
+      puede escribirlas de la misma manera y luego usar el refinamiento de declaraciones para simplificar el programa.
+    </p>
 
-  <h2 id="nav_point_250" class="calibre24">12.5 Resumen de advertencias</h2>
+    <h2 id="nav_point_250" class="calibre24">12.5 Resumen de advertencias</h2>
 
-  <p class="zw">1. Queda atrás del final de la lista vinculada.</p>
+    <p class="zw">1. Queda atrás del final de la lista vinculada.</p>
 
-  <p class="zw">2. Tenga cuidado al usar punteros, porque C no proporciona una red de seguridad para su uso.</p>
+    <p class="zw">2. Tenga cuidado al usar punteros, porque C no proporciona una red de seguridad para su uso.</p>
 
-  <p class="zw">3. Refinar las declaraciones de las declaraciones if puede cambiar los resultados de la prueba.</p>
+    <p class="zw">3. Refinar las declaraciones de las declaraciones if puede cambiar los resultados de la prueba.</p>
 
-  <h2 id="nav_point_251" class="calibre24">12.6 Resumen de consejos de programación</h2>
+    <h2 id="nav_point_251" class="calibre24">12.6 Resumen de consejos de programación</h2>
 
-  <p class="zw">1. La eliminación de casos especiales facilita el mantenimiento del código.</p>
+    <p class="zw">1. La eliminación de casos especiales facilita el mantenimiento del código.</p>
 
-  <p class="zw">2. Elimine las declaraciones repetidas en la declaración if refinando la declaración.</p>
+    <p class="zw">2. Elimine las declaraciones repetidas en la declaración if refinando la declaración.</p>
 
-  <p class="zw">3. No se limite a evaluar la calidad del código en función de su tamaño.</p>
+    <p class="zw">3. No se limite a evaluar la calidad del código en función de su tamaño.</p>
 
-  <h2 id="nav_point_252" class="calibre24">12.7 Problema</h2>
+    <h2 id="nav_point_252" class="calibre24">12.7 Problema</h2>
 
-  <p class="zw">1. ¿Se puede reescribir el programa 12.3 sin usar la variable actual? Si puede, compare su respuesta con
-    la función original.</p>
+    <p class="zw">1. ¿Se puede reescribir el programa 12.3 sin usar la variable actual? Si puede, compare su respuesta
+      con
+      la función original.</p>
 
-  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">2. Algunos libros de texto sobre estructura de
-    datos sugieren el uso de "nodos principales" en listas enlazadas individualmente. Este nodo ficticio es siempre el
-    primer elemento de la lista vinculada, lo que elimina el caso especial de insertar al principio de la lista
-    vinculada. Analice los pros y los contras de esta técnica.</p>
+    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">2. Algunos libros de texto sobre estructura
+      de
+      datos sugieren el uso de "nodos principales" en listas enlazadas individualmente. Este nodo ficticio es siempre el
+      primer elemento de la lista vinculada, lo que elimina el caso especial de insertar al principio de la lista
+      vinculada. Analice los pros y los contras de esta técnica.</p>
 
-  <p class="zw">3. En el programa 12.3, ¿dónde inserta la función de inserción el valor repetido? ¿Cuál será el efecto
-    si el operador de comparación se cambia de &lt;a &lt;=?</p>
+    <p class="zw">3. En el programa 12.3, ¿dónde inserta la función de inserción el valor repetido? ¿Cuál será el efecto
+      si el operador de comparación se cambia de &lt;a &lt;=?</p>
 
-  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">4. Analice algunas técnicas, cómo omitir el
-    campo de valor del nodo raíz en la lista de doble enlace.</p>
+    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">4. Analice algunas técnicas, cómo omitir el
+      campo de valor del nodo raíz en la lista de doble enlace.</p>
 
-  <p class="zw">5. ¿Qué pasará si la llamada a malloc en el programa 12.7 se ejecuta al comienzo de la función?</p>
+    <p class="zw">5. ¿Qué pasará si la llamada a malloc en el programa 12.7 se ejecuta al comienzo de la función?</p>
 
-  <p class="zw">6. ¿Se puede ordenar una lista desordenada enlazada individualmente?</p>
+    <p class="zw">6. ¿Se puede ordenar una lista desordenada enlazada individualmente?</p>
 
-  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">7. La lista de índice (lista de concordancia)
-    es una especie de lista enlazada por letras, los nodos de la lista son las palabras que aparecen en un libro o un
-    artículo. Puede utilizar una lista ordenada de cadenas de un solo enlace para implementar una tabla de índice y no
-    insertar palabras repetidas cuando utilice la función de inserción. El problema con este método de implementación es
-    que el tiempo para buscar en la lista vinculada aumentará drásticamente a medida que se expanda la escala de la
-    lista vinculada.</p>
+    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">7. La lista de índice (lista de concordancia)
+      es una especie de lista enlazada por letras, los nodos de la lista son las palabras que aparecen en un libro o un
+      artículo. Puede utilizar una lista ordenada de cadenas de un solo enlace para implementar una tabla de índice y no
+      insertar palabras repetidas cuando utilice la función de inserción. El problema con este método de implementación
+      es
+      que el tiempo para buscar en la lista vinculada aumentará drásticamente a medida que se expanda la escala de la
+      lista vinculada.</p>
 
-  <p class="zw">La figura 12.1 ilustra otra estructura de datos para almacenar una tabla de índice. La idea es
-    descomponer una gran lista enlazada en 26 pequeñas listas enlazadas; todas las palabras de cada lista enlazada
-    comienzan con la misma letra. Inicialmente, cada nodo de la lista enlazada contiene una letra y un puntero a una
-    lista enlazada individual ordenada (almacenada como una cadena) de palabras que comienzan con esa letra.</p>
+    <p class="zw">La figura 12.1 ilustra otra estructura de datos para almacenar una tabla de índice. La idea es
+      descomponer una gran lista enlazada en 26 pequeñas listas enlazadas; todas las palabras de cada lista enlazada
+      comienzan con la misma letra. Inicialmente, cada nodo de la lista enlazada contiene una letra y un puntero a una
+      lista enlazada individual ordenada (almacenada como una cadena) de palabras que comienzan con esa letra.</p>
 
-  <p class="zw">Con esta estructura de datos, ¿hay algún cambio en el tiempo dedicado a buscar una palabra específica en
-    comparación con el uso de una lista enlazada de todas las palabras?</p>
+    <p class="zw">Con esta estructura de datos, ¿hay algún cambio en el tiempo dedicado a buscar una palabra específica
+      en
+      comparación con el uso de una lista enlazada de todas las palabras?</p>
 
-  <p class="tu"><img alt="" src="../images/00259.jpeg" class="calibre14"></p>
+    <p class="tu"><img alt="" src="../images/00259.jpeg" class="calibre14"></p>
 
-  <p class="tu_ti">Figura 12.1 Una tabla de índice</p>
+    <p class="tu_ti">Figura 12.1 Una tabla de índice</p>
 
-  <h2 id="nav_point_253" class="calibre24">12.8 Ejercicios de programación</h2>
+    <h2 id="nav_point_253" class="calibre24">12.8 Ejercicios de programación</h2>
 
-  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★ 1. Escriba una función para contar el número
-    de nodos en una lista enlazada individualmente. Su único parámetro es un puntero al primer nodo de la lista
-    vinculada. ¿Qué información debe saber al escribir esta función? ¿Se puede utilizar esta función para realizar otras
-    tareas?</p>
+    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★ 1. Escriba una función para contar el
+      número
+      de nodos en una lista enlazada individualmente. Su único parámetro es un puntero al primer nodo de la lista
+      vinculada. ¿Qué información debe saber al escribir esta función? ¿Se puede utilizar esta función para realizar
+      otras
+      tareas?</p>
 
-  <p class="zw">★ 2. Escriba una función que busque un valor específico en una lista enlazada individualmente
-    desordenada y devuelva un puntero a ese nodo. Puede asumir que la estructura de datos del nodo está definida en el
-    archivo de encabezado single_linked_list_node.h.</p>
+    <p class="zw">★ 2. Escriba una función que busque un valor específico en una lista enlazada individualmente
+      desordenada y devuelva un puntero a ese nodo. Puede asumir que la estructura de datos del nodo está definida en el
+      archivo de encabezado single_linked_list_node.h.</p>
 
-  <p class="zw">Si desea que esta función sea adecuada para una lista enlazada individualmente ordenada, ¿necesita hacer
-    algunos cambios?</p>
+    <p class="zw">Si desea que esta función sea adecuada para una lista enlazada individualmente ordenada, ¿necesita
+      hacer
+      algunos cambios?</p>
 
-  <p class="zw">★★★ 3. Vuelva a escribir la función dll_insert del programa 12.7 para que los punteros de cabeza y cola
-    se pasen a la función como un puntero separado, en lugar de ser parte de un nodo. En términos de lógica funcional,
-    ¿cuál es el efecto de este cambio?</p>
+    <p class="zw">★★★ 3. Vuelva a escribir la función dll_insert del programa 12.7 para que los punteros de cabeza y
+      cola
+      se pasen a la función como un puntero separado, en lugar de ser parte de un nodo. En términos de lógica funcional,
+      ¿cuál es el efecto de este cambio?</p>
 
-  <p class="zw">★★★★ 4. Escriba una función para organizar todos los nodos de una lista enlazada individualmente en
-    orden inverso. La función debe tener el siguiente prototipo:</p>
-  <pre class="dai_ma_wu_xing_hao"><code class="calibre8">　　　struct NODE * sll_reverse( struct NODE *first);</code></pre>
+    <p class="zw">★★★★ 4. Escriba una función para organizar todos los nodos de una lista enlazada individualmente en
+      orden inverso. La función debe tener el siguiente prototipo:</p>
+    <pre class="code"><code class="calibre8">　　　struct NODE * sll_reverse( struct NODE *first);</code></pre>
 
-  <p class="zw">Declare la estructura de datos del nodo en el archivo de encabezado singly_linked_list_node.h.</p>
+    <p class="zw">Declare la estructura de datos del nodo en el archivo de encabezado singly_linked_list_node.h.</p>
 
-  <p class="zw">El parámetro de la función apunta al primer nodo de la lista vinculada. Cuando se reorganiza la lista
-    vinculada, la función devuelve un puntero al nuevo nodo principal de la lista vinculada. El valor del campo de
-    vínculo del último nodo de la lista vinculada debe establecerse en NULL, y la ejecución de esta función en una lista
-    vinculada vacía (primero == NULL) devolverá NULL.</p>
+    <p class="zw">El parámetro de la función apunta al primer nodo de la lista vinculada. Cuando se reorganiza la lista
+      vinculada, la función devuelve un puntero al nuevo nodo principal de la lista vinculada. El valor del campo de
+      vínculo del último nodo de la lista vinculada debe establecerse en NULL, y la ejecución de esta función en una
+      lista
+      vinculada vacía (primero == NULL) devolverá NULL.</p>
 
-  <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★★ 5. Escriba un programa para eliminar un
-    nodo de una lista enlazada individualmente. El prototipo de la función debería ser el siguiente:</p>
-  <pre
-    class="dai_ma_wu_xing_hao"><code class="calibre8">　　　int sll_remove( struct NODE **rootp, struct NODE *node );</code></pre>
+    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★★ 5. Escriba un programa para eliminar un
+      nodo de una lista enlazada individualmente. El prototipo de la función debería ser el siguiente:</p>
+    <pre class="code"><code class="calibre8">　　　int sll_remove( struct NODE **rootp, struct NODE *node );</code></pre>
 
-  <p class="zw">Puede asumir que la estructura de datos del nodo está definida en el archivo de encabezado
-    single_linked_list_node.h. El primer parámetro de la función es un puntero al puntero raíz de la lista vinculada y
-    el segundo parámetro es un puntero al nodo que se eliminará. Si la lista vinculada no contiene el nodo que se va a
-    eliminar, la función devuelve falso; de lo contrario, elimina el nodo y devuelve verdadero. ¿Cuáles son las ventajas
-    de pasar un puntero al nodo que se eliminará en lugar del valor del nodo que se eliminará como parámetro de la
-    función?</p>
+    <p class="zw">Puede asumir que la estructura de datos del nodo está definida en el archivo de encabezado
+      single_linked_list_node.h. El primer parámetro de la función es un puntero al puntero raíz de la lista vinculada y
+      el segundo parámetro es un puntero al nodo que se eliminará. Si la lista vinculada no contiene el nodo que se va a
+      eliminar, la función devuelve falso; de lo contrario, elimina el nodo y devuelve verdadero. ¿Cuáles son las
+      ventajas
+      de pasar un puntero al nodo que se eliminará en lugar del valor del nodo que se eliminará como parámetro de la
+      función?</p>
 
-  <p class="zw">★★★ 6. Escriba un programa para eliminar un nodo de una lista doblemente enlazada. El prototipo de la
-    función debería ser el siguiente:</p>
-  <pre
-    class="dai_ma_wu_xing_hao"><code class="calibre8">　　　int dll_remove( struct NODE *rootp, struct NODE *node );</code></pre>
+    <p class="zw">★★★ 6. Escriba un programa para eliminar un nodo de una lista doblemente enlazada. El prototipo de la
+      función debería ser el siguiente:</p>
+    <pre class="code"><code class="calibre8">　　　int dll_remove( struct NODE *rootp, struct NODE *node );</code></pre>
 
-  <p class="zw">Puede asumir que la estructura de datos del nodo está definida en el archivo de encabezado
-    Doubly_linked_list_node.h. El primer parámetro de la función es un puntero al nodo que contiene el puntero raíz de
-    la lista vinculada (igual que el programa 12.7), y el segundo parámetro es un puntero al nodo que se eliminará. Si
-    la lista vinculada no contiene el nodo que se va a eliminar, la función devuelve falso; de lo contrario, la función
-    elimina el nodo y devuelve verdadero.</p>
+    <p class="zw">Puede asumir que la estructura de datos del nodo está definida en el archivo de encabezado
+      Doubly_linked_list_node.h. El primer parámetro de la función es un puntero al nodo que contiene el puntero raíz de
+      la lista vinculada (igual que el programa 12.7), y el segundo parámetro es un puntero al nodo que se eliminará. Si
+      la lista vinculada no contiene el nodo que se va a eliminar, la función devuelve falso; de lo contrario, la
+      función
+      elimina el nodo y devuelve verdadero.</p>
 
-  <p class="zw">★★★★★ 7. Escriba una función para insertar una nueva palabra en la tabla de índice descrita en la
-    pregunta 7. La función acepta dos parámetros, un puntero al puntero de la lista y una cadena. Se supone que la
-    cadena contiene una sola palabra. Si la palabra no existe en la tabla de índice, debe copiarse en un nodo asignado
-    dinámicamente e insertarse en la tabla de índice. Si la cadena se inserta correctamente, la función debería devolver
-    verdadero. Si la cadena ya existe en la tabla de índice, o la cadena no comienza con una letra, u ocurren otros
-    errores, la función devuelve falso.</p>
+    <p class="zw">★★★★★ 7. Escriba una función para insertar una nueva palabra en la tabla de índice descrita en la
+      pregunta 7. La función acepta dos parámetros, un puntero al puntero de la lista y una cadena. Se supone que la
+      cadena contiene una sola palabra. Si la palabra no existe en la tabla de índice, debe copiarse en un nodo asignado
+      dinámicamente e insertarse en la tabla de índice. Si la cadena se inserta correctamente, la función debería
+      devolver
+      verdadero. Si la cadena ya existe en la tabla de índice, o la cadena no comienza con una letra, u ocurren otros
+      errores, la función devuelve falso.</p>
 
-  <p class="zw">La función debe mantener una lista enlazada de primer nivel y los nodos están ordenados alfabéticamente.
-    Las restantes listas secundarias vinculadas se organizan en orden de palabras.</p>
+    <p class="zw">La función debe mantener una lista enlazada de primer nivel y los nodos están ordenados
+      alfabéticamente.
+      Las restantes listas secundarias vinculadas se organizan en orden de palabras.</p>
 
+  </div>
 </body>
 
 </html>
