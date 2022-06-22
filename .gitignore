@@ -1,8 +1,9 @@
-work/crudo.txt
-work/toc.ncx
-work/content.opf
-work/META-INF
-work/mimetype
+docs/crudo.txt
+docs/toc.ncx
+docs/content.opf
+docs/META-INF
+docs/mimetype
+docs/page_styles.css
 chinese-version
 scanned
 pointers-on-c-book.code-workspace
