@@ -308,14 +308,14 @@ pre {
   overflow: auto;
   /*white-space: pre-wrap;*/
   word-wrap: break-word;
-} 
+}
 
 .code {
   display: block;
   font-family: Courier, Menlo, Monaco, Consolas, monospace;
   font-size: 0.75em;
   margin: 1.3em 0;
-  
+
 
   /*#000 solid 1px;*/
   border-radius: 5px;
@@ -417,6 +417,18 @@ pre {
   margin: 1em 0;
 }
 
-.roman {
+ol.roman {
   list-style-type: upper-roman;
+  padding-left: 4em;
+}
+
+ol.roman>li:before {
+  display: inline-block;
+  width: 1em;
+  padding-right: 0.5em;
+  text-align: right;
+}
+
+ol > li::marker {
+  font-weight: bold;
 }
