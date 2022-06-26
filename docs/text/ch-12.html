@@ -2,7 +2,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Desconocido</title>
+  <title>Chapter 12 Using Structures and Pointers</title>
 
   <link href="../stylesheet.css" rel="stylesheet" type="text/css">
   <link href="../page_styles.css" rel="stylesheet" type="text/css">
@@ -1010,7 +1010,7 @@ newnode-&gt;bwd = this != rootp ? this : NULL;
     <p class="zw">1. Can Program 12.3 be written without using a current variable? If so, compare the
       resulting function to the original.</p>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">2. Some data structures textbooks suggest
+    <p class="zw hand">2. Some data structures textbooks suggest
       using a "header node" in a singly linked
       list. This dummy node is always the first element in the list and eliminates the
       special case code for inserting at the beginning of the list. Discuss the pros and cons
@@ -1020,7 +1020,7 @@ newnode-&gt;bwd = this != rootp ? this : NULL;
       value? What would be the effect of changing the comparison from &lt; to &lt;=?
     </p>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">4. Discuss techniques for omitting the value
+    <p class="zw hand">4. Discuss techniques for omitting the value
       field from the root node of a doubly
       linked list.</p>
 
@@ -1029,7 +1029,7 @@ newnode-&gt;bwd = this != rootp ? this : NULL;
 
     <p class="zw">6. Is it possible to sort the nodes in an unordered, singly linked list?</p>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">7. A concordance list is an alphabetic list
+    <p class="zw hand">7. A concordance list is an alphabetic list
       of the words that appear in a book or article.
       You can implement a concordance list using an ordered, singly linked list of strings
       with an insertion function that does not add duplicate words to the list. The
@@ -1051,7 +1051,7 @@ newnode-&gt;bwd = this != rootp ? this : NULL;
 
     <h2 id="nav_point_253" class="calibre24">12.8 Programming Exercises</h2>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★ 1. Write a function that counts the number,
+    <p class="zw hand">★ 1. Write a function that counts the number,
       of nodes in a singly linked list. It should take a pointer to the first node in the list as its only argument.
       What must you know in order to write this function? What other jobs can this function perform?</p>
 
@@ -1077,7 +1077,7 @@ newnode-&gt;bwd = this != rootp ? this : NULL;
       in the list will contain NULL, and in the event of an empty list (first == NULL) the
       function should return NULL.</p>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★★ 5. Write a program to remove a node from
+    <p class="zw hand">★★★ 5. Write a program to remove a node from
       a singly linked list. The function should have the following prototype:</p>
     <pre class="code"><code class="calibre8">　　　int sll_remove( struct NODE **rootp, struct NODE *node );</code></pre>
 

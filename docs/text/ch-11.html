@@ -9,242 +9,218 @@
 
 <body id="E9OE0-e167752e5b154d43a225b5f350ab7738" class="calibre">
   <div class="container">
-    <h1 id="nav_point_229" class="not-in-toc">Capítulo 11 Asignación de memoria dinámica</h1>
+    <h1 id="nav_point_229" class="not-in-toc">Chapter 11 Dynamic Memory Allocation</h1>
 
-    <p class="zw">Los elementos de la matriz se almacenan en ubicaciones consecutivas en la memoria. Cuando se declara
-      una
-      matriz, la memoria que necesita se asigna en tiempo de compilación. Sin embargo, también puede utilizar la
-      asignación de memoria dinámica para asignarle memoria en tiempo de ejecución. En este capítulo, estudiaremos la
-      diferencia entre estas dos técnicas y veremos cuándo debemos usar la asignación de memoria dinámica y cómo
-      realizar
-      la asignación de memoria dinámica.</p>
+    <p class="zw">The elements of an array are stored in contiguous locations in memory. When an array
+      is declared, its memory is allocated at compile time. However, you can also allocate
+      the memory at runtime with dynamic memory allocation. In this chapter, we will
+      examine the differences between these techniques and see when and how to use
+      dynamic memory allocation.</p>
 
-    <h2 id="nav_point_230" class="calibre24">11.1 Por qué utilizar la asignación de memoria dinámica</h2>
+    <h2 id="nav_point_230" class="calibre24">11.1 Why Use Dynamic Allocation</h2>
 
-    <p class="zw">Cuando declara una matriz, debe especificar la longitud de la matriz con una constante de tiempo de
-      compilación. Sin embargo, la longitud de la matriz a menudo se conoce en tiempo de ejecución, porque el espacio de
-      memoria que requiere depende de los datos de entrada. Por ejemplo, un programa para calcular las calificaciones de
-      los estudiantes y las calificaciones promedio puede necesitar almacenar datos para todos los estudiantes en una
-      clase, pero la cantidad de estudiantes en diferentes clases puede ser diferente. En estos casos, el método que
-      usamos generalmente es declarar una matriz más grande, que puede contener la mayoría de los elementos que puedan
-      aparecer.</p>
+    <p class="zw">When declaring arrays, the array size must be given as a compile-time constant. Often,
+      the actual size needed for the array is not known until run time because the amount of
+      space depends upon the input data. For example, a program that computes student
+      grades and averages might need to store data for all of the students in a class, but
+      different classes will have different numbers of students. In these situations, the usual
+      approach is to declare an array that is as big as it ever will need to be.</p>
 
-    <p class="editing-tag">insinuación:</p>
+    <p class="editing-tag">TIP</p>
 
     <blockquote class="ti_shi">
       <p class="zw"><br class="calibre1"></p>
 
-      <p class="calibre2">La ventaja de este método es la simplicidad, pero tiene varias desventajas. En primer lugar,
-        este tipo de declaración introduce restricciones artificiales en el programa, si el número de elementos que
-        necesita utilizar el programa excede la longitud de la declaración, no puede manejar esta situación. Para evitar
-        esta situación, la forma obvia es declarar la matriz más grande, pero este enfoque empeora su segundo defecto.
-        Si
-        el número real de elementos requeridos por el programa es relativamente pequeño, se desperdicia la mayor parte
-        del
-        espacio de memoria de la enorme matriz. La tercera desventaja de este método es que si los datos de entrada
-        exceden el rango de la matriz, el programa debe responder de manera razonable. No debería fallar con una
-        excepción, pero no debería imprimir un resultado que parezca correcto pero que en realidad sea incorrecto. La
-        lógica necesaria para lograr esto es realmente muy simple, pero es fácil para las personas formar el concepto de
-        "las matrices nunca se desbordarán" en sus mentes, lo que las induce a no implementar este método.</p>
+      <p class="calibre2">This approach has the advantage of being simple, but it has several disadvantages.
+        First, such declarations build an artificial limitation into the program, making it
+        incapable of handling problems larger than the size used in the declaration. The
+        obvious solution is to make the array even bigger, but the second problem then
+        becomes even worse. Nearly all of the memory used for a huge array is wasted when
+        the number of elements actually required is small. A third disadvantage is that the
+        program must respond in a reasonable way when there is more input than the array
+        can hold. It should not fail with an exception, and it must not print answers that look
+        valid but in fact are wrong. The required logic is simple enough, but the assumption
+        that "the array will never overflow" makes it very tempting to not bother
+        implementing it.</p>
     </blockquote>
 
-    <h2 id="nav_point_231" class="calibre24">11.2 malloc y libre</h2>
+    <h2 id="nav_point_231" class="calibre24">11.2 Malloc and Free</h2>
 
-    <p class="zw">La biblioteca de funciones de C proporciona dos funciones, malloc y free, que se utilizan para
-      realizar
-      la asignación y liberación de memoria dinámica, respectivamente. Estas funciones mantienen una reserva de memoria
-      disponible. Cuando un programa necesita algo de memoria adicional, llama a la función malloc, malloc extrae una
-      memoria adecuada del grupo de memoria y devuelve un puntero a esta memoria al programa. Esta memoria no se
-      inicializa de ninguna manera en este momento. Si es muy importante inicializar esta memoria, debe inicializarla
-      usted mismo o utilizar la función calloc (descrita en la siguiente sección). Cuando una parte de la memoria
-      previamente asignada ya no está en uso, el programa llama a la función libre para devolverla al grupo de memoria
-      para necesidades futuras.</p>
+    <p class="zw">The C library provides two functions, malloc and free, that perform dynamic memory
+      allocation and deallocation. These functions maintain a pool of available memory.
+      When a program needs additional memory, it calls malloc, which takes an appropriate
+      piece of memory from the pool and returns a pointer to this block of memory to the
+      program. The memory is not initialized in any way. If it is important that the memory
+      be initialized, you must either do it yourself or use the calloc function (described in
+      the next section). When a previously allocated piece of memory is no longer needed,
+      free is called to return it to the pool for later reuse.</p>
 
-    <p class="zw">Los prototipos de estas dos funciones se muestran a continuación, y ambas están declaradas en el
-      archivo
-      de encabezado stdlib.h.</p>
+    <p class="zw">The prototypes for these two functions are shown below, and are in stdlib.h.</p>
     <pre class="code"><code class="calibre8">void　　*malloc( size_t size );
 void　　free( void *pointer );</code></pre>
 
-    <p class="zw">El parámetro de malloc es el número de bytes (caracteres) de memoria que se asignarán <a id="ac111"
-        href="#anchor111" class="calibre5"><sup class="calibre15">[1]</sup></a> . Si la memoria disponible en el grupo
-      de memoria puede
-      cumplir con este requisito, malloc devuelve un puntero al comienzo del bloque de memoria asignado.</p>
+    <p class="zw">The argument to malloc is the number of bytes (characters) of memory that are
+      needed <a id="ac111" href="#anchor111" class="calibre5"><sup class="calibre15">[1]</sup></a> . If the desired
+      amount of memory is available, malloc returns a pointer to the
+      beginning of the allocated block.</p>
 
-    <p class="zw">Lo que asigna malloc es una pieza de memoria contigua. Por ejemplo, si se le solicita que asigne 100
-      bytes de memoria, entonces la memoria que realmente asigna son 100 bytes consecutivos y no se ubicará en dos o más
-      bloques de memoria diferentes. Al mismo tiempo, la memoria realmente asignada por malloc puede ser un poco más de
-      lo
-      que solicitó. Sin embargo, este comportamiento lo define el compilador, por lo que no puede esperar que asigne
-      definitivamente más memoria de la solicitada.</p>
+    <p class="zw"> malloc allocates contiguous blocks of memory. For example, a request for 100
+      bytes will be satisfied with 100 adjacent bytes, never with two or more separate
+      chunks of memory. Also, malloc may actually allocate a chunk of memory slightly
+      larger than requested. However, this behavior is implementation dependent, so you
+      should not count on getting more memory than you requested.</p>
 
-    <p class="zw">¿Qué sucede si el grupo de memoria está vacío o su memoria disponible no puede satisfacer su
-      solicitud?
-      En este caso, la función malloc solicita al sistema operativo más memoria y realiza tareas de asignación en esta
-      nueva memoria. Si el sistema operativo no puede proporcionar más memoria a malloc, malloc devuelve un puntero
-      NULL.
-      Por lo tanto, es muy importante verificar cada puntero devuelto por malloc para asegurarse de que no sea NULL.</p>
+    <p class="zw">What if the pool of memory is empty, or it does not contain a big enough block?
+      In this case, malloc calls the operating system to obtain more memory and begins
+      allocating pieces from this new chunk. If the operating system is unable to give more
+      memory to malloc, then a NULL pointer is returned. Thus it is vital that the pointer
+      returned by every call to malloc be checked to ensure that it is not NULL.</p>
 
-    <p class="zw">El parámetro libre debe ser NULL o un valor devuelto previamente por malloc, calloc o realloc
-      (descrito
-      más adelante). Pasar un parámetro NULL a free no tiene ningún efecto.</p>
+    <p class="zw">The argument to free must either be NULL or a value that was previously
+      returned from malloc, calloc, or realloc (described below). Passing a NULL
+      argument to free has no effect.</p>
 
-    <p class="zw">¿Cómo sabe malloc si la memoria que solicitó debe almacenar números enteros, valores de punto
-      flotante,
-      estructuras o matrices? No lo sabe: malloc devuelve un puntero de tipo void * por este motivo. El estándar dice
-      que
-      un puntero de tipo void * se puede convertir en cualquier otro tipo de puntero. Sin embargo, algunos compiladores,
-      especialmente los más antiguos, pueden requerir que use la conversión de tipo coercitiva al realizar la
-      conversión.
-    </p>
+    <p class="zw">How does malloc know whether you want to store integers, floating-point
+      values, structures, or arrays in the memory you've requested? It doesn't—malloc
+      returns a pointer of type void * for precisely this reason. The Standard states that a
+      void * pointer can be converted to any other pointer type. Some compiler though,
+      especially older ones, may require you to use a cast for the conversion.</p>
 
-    <p class="zw">Para las máquinas que requieren alineación de límites, la posición inicial de la memoria devuelta por
-      malloc siempre cumplirá con los requisitos del tipo más estricto de alineación de límites.</p>
+    <p class="zw">On machines with boundary alignment requirements, the memory returned by
+      malloc will always begin on a boundary that is suitable for the data type with the most
+      stringent alignment requirements.</p>
 
-    <h2 id="nav_point_232" class="calibre24">11.3 calloc y realloc</h2>
+    <h2 id="nav_point_232" class="calibre24">11.3 Calloc and Realloc</h2>
 
-    <p class="zw">También hay dos funciones de asignación de memoria, calloc y realloc. Sus prototipos son los
-      siguientes:
-    </p>
+    <p class="zw">There are two additional memory allocation functions, calloc and realloc. Their
+      prototypes are shown below.</p>
     <pre class="code"><code class="calibre8">void　　*calloc( size_t num_elements,
 　　　　　　　　　 size_t element_size );
 void　　realloc( void *ptr, size_t new_size );</code></pre>
 
-    <p class="zw">calloc también se usa para asignar memoria. La principal diferencia entre malloc y calloc es que este
-      último lo inicializa a 0 antes de devolver un puntero a la memoria. Esta inicialización suele ser conveniente,
-      pero
-      si su programa solo quiere almacenar algunos valores en una matriz, este proceso de inicialización es una pérdida
-      de
-      tiempo. Otra pequeña diferencia entre calloc y malloc es la forma en que solicitan la cantidad de memoria. Los
-      parámetros de calloc incluyen el número de elementos requeridos y el número de bytes por elemento. Basándose en
-      estos valores, puede calcular la memoria total que debe asignarse.</p>
+    <p class="zw">calloc also allocates memory. The major difference between malloc and calloc is that
+      the latter initializes the memory to zero before returning a pointer to it. This
+      initialization is often convenient, but is a waste of time if the first thing your program
+      does is to store values into the array. A minor difference between calloc and malloc is
+      the way the amount of memory is requested, calloc takes the number of elements
+      desired and the number of bytes in each element. From these values it computes the
+      total number of bytes needed.</p>
 
-    <p class="zw">La función de reasignación se utiliza para modificar el tamaño de un bloque de memoria asignado
-      previamente. Con esta función, puede ampliar o reducir un bloque de memoria. Si se usa para expandir un bloque de
-      memoria, el contenido original de esta memoria aún se conserva, la memoria recién agregada se agrega a la parte
-      posterior del bloque de memoria original y la nueva memoria no se inicializa de ninguna manera. Si se utiliza para
-      reducir un bloque de memoria, se eliminará parte de la memoria al final del bloque de memoria y se mantendrá el
-      contenido original de la parte restante de la memoria.</p>
+    <p class="zw">The realloc function is used to change the size of a previously allocated block
+      of memory. You can make a block larger or smaller with this function If a block is
+      made larger, its old contents remain unchanged and additional memory is added to
+      the end of the block. The new memory is not initialized in any way. If the block is
+      made smaller, then memory is taken off of the end. What remains of the original
+      contents are unchanged.</p>
 
-    <p class="zw">Si no se puede cambiar el tamaño del bloque de memoria original, realloc asignará otra memoria del
-      tamaño correcto y copiará el contenido de la memoria original al nuevo bloque. Por lo tanto, después de usar
-      realloc, ya no puede usar el puntero a la memoria anterior, sino que debe usar el nuevo puntero devuelto por
-      realloc.</p>
+    <p class="zw">If the original block cannot be resized, realloc will allocate a different block of the
+      right size and copy the contents of the old block to the new one. Thus, you must not
+      use the old pointer to the block after a call to realloc. Use the new pointer that is
+      returned instead.</p>
 
-    <p class="zw">Finalmente, si el primer parámetro de la función realloc es NULL, entonces su comportamiento es
-      exactamente el mismo que malloc.</p>
+    <p class="zw">Finally, if the first argument to realloc is NULL, then it behaves exactly like
+      malloc.</p>
 
-    <h2 id="nav_point_233" class="calibre24">11.4 Uso de memoria asignada dinámicamente</h2>
+    <h2 id="nav_point_233" class="calibre24">11.4 Using Dynamically Allocated Memory</h2>
 
-    <p class="zw">Aquí hay un ejemplo, usa malloc para asignar un bloque de memoria.</p>
+    <p class="zw">Here is an example that obtains a chunk of memory from malloc.</p>
 
     <p class="calibre13"><img alt="" src="../images/00236.gif" class="calibre14"></p>
 
-    <p class="zw">El símbolo NULL está definido en stdio.h, en realidad es la constante literal 0. Actúa como un
-      recordatorio visual aquí, recordándonos que el valor a probar es un puntero y no un número entero.</p>
+    <p class="zw">The symbol NULL is defined in stdio.h as the literal constant zero. It acts as a visual
+      reminder that the value being tested is a pointer type rather than an integer.</p>
 
-    <p class="zw">Si la asignación de memoria es exitosa, entonces tenemos un puntero a 100 bytes. En una máquina con un
-      número entero de 4 bytes, esta memoria se tratará como una matriz de 25 elementos enteros, porque pi es un puntero
-      a
-      un número entero.</p>
+    <p class="zw">If there was memory available, we will now have a pointer to 100 bytes. On a
+      machine with 4-byte integers, the memory will be treated as an array of 25 integers
+      because pi is a pointer to an integer.</p>
 
-    <p class="editing-tag">insinuación:</p>
+    <p class="editing-tag">TIP</p>
 
     <blockquote class="ti_shi">
       <p class="zw"><br class="calibre1"></p>
 
-      <p class="calibre2">Sin embargo, si su objetivo es obtener suficiente memoria para almacenar 25 enteros, aquí hay
-        un
-        truco mejor para lograr este objetivo.</p>
+      <p class="calibre2">If your goal is to get enough memory for 25 integers, though, here is a much better
+        technique for obtaining it.</p>
     </blockquote>
     <pre class="code"><code class="calibre8">pi = malloc( 25 * sizeof( int ) );</code></pre>
 
-    <p class="zw">Este método es mejor porque es portátil. Puede obtener resultados correctos incluso en máquinas con
-      diferentes longitudes de enteros.</p>
+    <p class="zw">This approach is better because it is portable. It works properly even on machines with
+      different size integers.</p>
 
-    <p class="zw">Ahora que tiene un puntero, ¿cómo usa esta memoria? Por supuesto, puede usar el acceso indirecto y la
-      aritmética de punteros para acceder a diferentes posiciones enteras de la matriz. El siguiente ciclo hace
-      precisamente eso. Inicializa cada elemento de la matriz recién asignada a 0:</p>
+    <p class="zw">Now that you have a pointer, how do you use the memory? Of course you can
+      use indirection and pointer arithmetic to access different integer locations in this array,
+      as in this loop, which sets each element of the newly allocated array to zero:</p>
 
     <p class="calibre13"><img alt="" src="../images/00237.gif" class="calibre14"></p>
 
-    <p class="zw">Como puede ver, puede usar no solo punteros, sino también subíndices. El segundo ciclo a continuación
-      realiza las mismas tareas que el anterior.</p>
+    <p class="zw">As you have seen, you can use a subscript on the pointer as well. This second loop
+      performs the same work as the previous one.</p>
 
     <p class="calibre13"><img alt="" src="../images/00238.gif" class="calibre14"></p>
 
-    <h2 id="nav_point_234" class="calibre24">11.5 Errores comunes de memoria dinámica</h2>
+    <h2 id="nav_point_234" class="calibre24">11.5 Common Dynamic Memory Errors</h2>
 
-    <p class="zw">A menudo, se producen muchos errores en programas que utilizan la asignación de memoria dinámica.
-      Estos
-      errores incluyen desreferenciar punteros NULL, cruzar el límite cuando se opera en memoria asignada, liberar
-      memoria
-      que no está asignada dinámicamente, intentar liberar parte de una memoria asignada dinámicamente y continuar
-      usando
-      una memoria dinámica después de que se haya liberado.</p>
+    <p class="zw">There are many errors that can occur in programs that use dynamic memory
+      allocation. These include dereferencing NULL pointers, going outside the bounds of
+      the memory that was allocated, freeing memory blocks that were not dynamically
+      allocated, attempting to free a portion of a dynamic block, and continuing to use
+      dynamic memory after it has been freed.</p>
 
-    <p class="editing-tag">advertir:</p>
+    <p class="editing-tag">CAUTION!</p>
 
     <blockquote class="ti_shi">
       <p class="zw"><br class="calibre1"></p>
 
-      <p class="calibre2">El error más común de la asignación de memoria dinámica es olvidarse de verificar si la
-        memoria
-        solicitada se asignó correctamente. El programa 11.1 muestra una técnica para realizar esta verificación de
-        errores de manera muy confiable. La macro MALLOC acepta el número de elementos y el tipo de cada elemento,
-        calcula
-        el número total de bytes de memoria necesarios y llama a alloc para obtener memoria <a id="ac112"
-          href="#anchor112" class="calibre5"><sup class="calibre23">[2]</sup></a> . alloc llama a malloc y comprueba que
-        el puntero devuelto
-        no sea NULL.</p>
+      <p class="calibre2">The most common error with dynamic memory allocation is forgetting to check
+        whether the requested memory was allocated. Program 11.1 presents a technique that
+        makes this error checking almost foolproof. The MALLOC macro takes the number of
+        elements and type of each element, computes the total number of bytes needed, and
+        calls alloc to obtain the memory <a id="ac112" href="#anchor112" class="calibre5"><sup
+            class="calibre23">[2]</sup></a> . alloc calls malloc and then checks to make sure
+        that the pointer returned was not NULL.</p>
 
-      <p class="calibre2">La última dificultad de este método es la primera instrucción #define inusual. Se utiliza para
-        evitar la llamada directa ocasional a malloc debido a que otros bloques de código se insertan directamente en el
-        programa. Después de agregar esta instrucción, si el programa llama ocasionalmente a malloc, el programa no
-        podrá
-        compilar debido a errores de sintaxis. La directiva #undef debe agregarse a alloc para que pueda llamar a malloc
-        sin cometer errores.</p>
+      <p class="calibre2">The final piece of this puzzle is the very first #define. It prevents accidental
+        calls directly to malloc by substituting junk into the program. If an accidental call is
+        made, the program will not compile due to syntax errors. The #undef is needed in
+        alloc so that it can call malloc without error.</p>
     </blockquote>
 
     <p class="zw"><br class="calibre1"></p>
 
-    <p class="editing-tag">advertir:</p>
+    <p class="editing-tag">CAUTION!</p>
 
     <blockquote class="ti_shi">
       <p class="zw"><br class="calibre1"></p>
 
-      <p class="calibre2">La segunda fuente más grande de errores en la asignación de memoria dinámica es que se excede
-        el
-        límite de la memoria asignada al operar la memoria. Por ejemplo, si obtiene una matriz de 25 enteros, si el
-        valor
-        del subíndice es menor que 0 o mayor que 24 al realizar una operación de referencia de subíndice, se producirán
-        dos tipos de problemas.</p>
+      <p class="calibre2">The second biggest source of error with dynamically allocated memory is going
+        outside of the bounds of the memory that was allocated. For example, if you have
+        obtained an array of 25 integers, accessing elements with subscripts less than zero or
+        greater than 24 can cause two types of problems.</p>
 
-      <p class="calibre2">El primer problema es obvio: la memoria a la que se accede puede contener los valores de otras
-        variables. Modificarlo destruirá esa variable y modificar esa variable destruirá el valor que almacena allí.
-        Este
-        tipo de error es muy difícil de encontrar.</p>
+      <p class="calibre2">The first problem is obvious; the memory being accessed might be holding
+        some other variable. Changing it here will destroy the variable, and changing the
+        variable will destroy any value you store here. These kinds of bugs are very difficult to
+        track down.</p>
 
-      <p class="calibre2">El segundo problema no es tan obvio. En algunas implementaciones de malloc y free, mantienen
-        la
-        reserva de memoria disponible en forma de lista enlazada. El acceso a áreas fuera de la memoria asignada puede
-        destruir esta lista vinculada, lo que puede causar una excepción y terminar el programa.</p>
+      <p class="calibre2">The second problem is not so obvious. Some implementations of malloc and
+        free keep the pool of available storage as a linked list. Modifying location outside the bounds of allocated
+        memory can corrupt this list, which can cause exceptions that
+        terminate the program.</p>
     </blockquote>
     <pre class="code"><code class="calibre8">/* 
-** 定义一个不易发生错误的内存分配器。 
+** Definitions for a less error-prone memory allocator.
 */
 #include &lt; stdlib.h&gt;
 
-#define　malloc　　　不要直接调用malloc!
+#define　malloc　　　DON'T CALL malloc DIRECTLY!
 #define　MALLOC(num,type) (type *)alloc( (num) * sizeof(type) )
 extern　void　*alloc( size_t size );</code></pre>
 
-    <p class="calibre2"><strong class="calibre3">Procedimiento 11.1a Asignador de comprobación de errores:
-        interfaz</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 11.1a Error checking allocator: interface</strong></p>
 
     <p class="calibre11">alloc.h</p>
     <pre class="code"><code class="calibre8">/* 
-** 不易发生错误的内存分配器的实现 
+** Implementation for a less error-prone memory allocator.
 */
 #include &lt;stdio.h&gt;
 #include "alloc.h"
@@ -255,7 +231,8 @@ extern　void　*alloc( size_t size );</code></pre>
 　　 {
 　　 void　*new_mem;
 　　 /*
-　　 ** 请求所需的内存，并检查确实分配成功
+　　 ** Ask for the requested memory, and check that we really
+　　 ** got it.
 　　 */
 　　 new_mem = malloc( size );
 if( new_mem == NULL ){
@@ -265,12 +242,11 @@ exit( 1 );
 return new_mem;
 }</code></pre>
 
-    <p class="calibre2"><strong class="calibre3">Procedimiento 11.1b Asignador de comprobación de errores:
-        implementación</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 11.1b Error checking allocator: implementation</strong></p>
 
     <p class="calibre11">alloc.c</p>
     <pre class="code"><code class="calibre8">/* 
-** 一个使用很少引起错误的内存分配器的程序 
+** A program that uses the less error-prone memory allocator.
 */
 #include "alloc.h"
 
@@ -280,93 +256,85 @@ function()
 　　　int　*new_memory;
 
 　　　/*
-　　　** 获得一串整型数的空间
+　　　** Get space for a bunch of integers
 　　　*/
 　　　new_memory = MALLOC( 25, int );
 　　　/* ... */
 }</code></pre>
 
-    <p class="calibre2"><strong class="calibre3">El procedimiento 11.1c utiliza el asignador de verificación de
-        errores</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 11.1c Using the error checking allocator</strong></p>
 
     <p class="calibre11">a_client.c</p>
 
-    <p class="zw">Cuando falla un programa que utiliza la asignación dinámica de memoria, la gente puede fácilmente
-      echar
-      la culpa del problema al malloc y a las funciones gratuitas. Pero rara vez son los culpables. De hecho, el
-      problema
-      casi siempre está en su propio programa y, a menudo, se debe al acceso a áreas fuera de la memoria asignada.</p>
+    <p class="zw">When a program that uses dynamically allocated memory fails, it is tempting to
+      blame the problems on malloc and free. They are rarely the culprit, though. In
+      practice, the problem is nearly always in your program and is frequently caused by
+      accessing data outside of the allocated memory.</p>
 
-    <p class="editing-tag">advertir:</p>
+    <p class="editing-tag">CAUTION!</p>
 
     <blockquote class="ti_shi">
       <p class="zw"><br class="calibre1"></p>
 
-      <p class="calibre2">Cuando usa gratis, pueden ocurrir varios errores. El puntero pasado a free debe ser un puntero
-        devuelto por malloc, calloc o realloc. Pasar un puntero a la función libre y dejar que libere una parte de la
-        memoria que no está asignada dinámicamente puede hacer que el programa finalice inmediatamente o en un momento
-        posterior. Intentar liberar una parte de la memoria asignada dinámicamente también puede causar problemas
-        similares, como los siguientes:</p>
-    </blockquote>
+      <p class="calibre2">Different errors can occur when using free. The pointer passed to free must be a
+        pointer that was obtained from malloc, calloc, or realloc. Calling free with a pointer
+        to memory that was not dynamically allocated can cause the program to terminate
+        either right away or at some later time. Similar problems can be caused by attempting
+        to free only a portion of a dynamically allocated block, like this:</p>
 
-    <p class="calibre13"><img alt="" src="../images/00239.gif" class="calibre14"></p>
+      <p class="calibre13"><img alt="" src="../images/00239.gif" class="calibre14"></p>
 
-    <blockquote class="ti_shi">
-      <p class="calibre2">No se permite liberar parte de una memoria. La memoria asignada dinámicamente debe liberarse
-        en
-        su totalidad. Sin embargo, la función de reasignación puede reducir una memoria asignada dinámicamente y liberar
-        efectivamente parte de la memoria en su cola.</p>
+      <p class="calibre2">Freeing a portion of a block is not allowed; the whole block must be freed. However,
+        the realloc function can make a dynamically allocated chunk of memory smaller,
+        effectively freeing the end of it.</p>
     </blockquote>
 
     <p class="zw"><br class="calibre1"></p>
 
-    <p class="editing-tag">advertir:</p>
+    <p class="editing-tag">CAUTION!</p>
 
     <blockquote class="ti_shi">
       <p class="zw"><br class="calibre1"></p>
 
-      <p class="calibre2">Finalmente, debe tener cuidado de no acceder a la memoria que ha sido liberada por la función
-        gratuita. Esta advertencia parece obvia, pero todavía hay un problema sutil aquí. Suponga que hace una copia de
-        un
-        puntero a la memoria asignada dinámicamente, y varias copias de este puntero están esparcidas por todo el
-        programa. No puede garantizar que cuando utilice uno de los punteros, el otro puntero haya liberado la memoria a
-        la que apunta. Por otro lado, debe asegurarse de que todos los lugares del programa que usan esta memoria dejen
-        de
-        usarla antes de que se publique.</p>
+      <p class="calibre2">Finally, you must be careful not to access memory that has been free'd. This warning
+        may seem obvious, but there is a subtle problem here after all. Suppose copies are
+        made of the pointer to a dynamically allocated block, and these copies are sent off to
+        many different parts of the program. It is difficult to make sure that none of these
+        other areas in the program use their copies of the pointer after the memory has been
+        freed. Conversely, you must be sure that all parts of the program are finished using a
+        chunk of memory before freeing it.</p>
     </blockquote>
 
-    <p class="zw"><strong class="calibre3">Pérdida de memoria</strong></p>
+    <p class="zw"><strong class="calibre3">11.5.1 Memory Leaks</strong></p>
 
-    <p class="zw">Cuando la memoria asignada dinámicamente ya no sea necesaria, debe liberarse para poder reasignarla
-      para
-      su uso en el futuro. Asignar memoria pero no liberarla después de su uso provocará una pérdida de memoria. En
-      aquellos sistemas operativos donde todos los programas en ejecución comparten un conjunto de memoria común, una
-      pérdida de memoria exprimirá la memoria disponible poco a poco y, finalmente, la dejará sin nada. Para deshacerse
-      de
-      este dilema, solo reinicie el sistema.</p>
+    <p class="zw">Dynamically allocated memory should be freed when it is no longer needed so that it
+      can be reused later for other purposes. Allocating memory but not freeing it later
+      causes a memory leak. With operating systems that share a common pool of memory
+      among all executing programs, memory leaks dribble away the available memory so
+      that eventually there isn't any left. Rebooting the computer is the only recovery for this
+      situation.</p>
 
-    <p class="zw">Otros sistemas operativos pueden recordar el segmento de memoria que pertenece actualmente a cada
-      programa, de modo que cuando un programa termina, toda la memoria asignada pero no liberada se devuelve al grupo
-      de
-      memoria. Pero incluso en tales sistemas, las pérdidas de memoria siguen siendo un problema grave, porque un
-      programa
-      que asigna memoria continuamente pero no libera memoria eventualmente se quedará sin memoria disponible. En este
-      punto, el programa defectuoso no podrá continuar con la ejecución y su falla puede hacer que se pierda todo el
-      trabajo actualmente completado.</p>
+    <p class="zw">Other operating systems keep track of which pieces of memory each program
+      currently has, so that when a program terminates all of the memory that it had
+      allocated but had not freed is returned to the pool. Memory leaks are a serious
+      problem even on these systems, because a program that continually allocates memory
+      without ever freeing any will eventually exhaust the available memory. At this point,
+      the defective program will not be able to continue executing, and its failure may result
+      in the loss of the work completed so far.</p>
 
-    <h2 id="nav_point_235" class="calibre24">11.6 Ejemplos de asignación de memoria</h2>
+    <h2 id="nav_point_235" class="calibre24">11.6 Memory Allocation Examples</h2>
 
-    <p class="zw">Un uso común de la asignación de memoria dinámica es asignar espacio de memoria para matrices cuya
-      longitud solo se conoce en tiempo de ejecución. El programa 11.2 lee una lista de números enteros, los ordena en
-      orden ascendente y finalmente imprime esta lista.</p>
+    <p class="zw">A common use for dynamic memory allocation is obtaining space for arrays whose
+      sizes are not known until run time. Program 11.2 reads a list of integers, sorts them
+      into ascending sequence, and prints the list.</p>
     <pre class="code"><code class="calibre8">/* 
-** 读取、排序和打印一列整型值。
+** Read, sort, and print a list of integer values.
 */
 #include &lt;stdlib.h&gt;
 #include &lt;stdio.h&gt;
 
 /*　
-** 该函数由'qsort'调用，用于比较整型值。
+** Function called by 'qsort' to compare integer values
 */
 int
 compare_integers( void const *a, void const *b )
@@ -385,7 +353,7 @@ main()
 　　 int　i;
 
 　　 /*
-　　 ** 观察共有多少个值。 
+　　 ** See how many numbers there will be.
 */
 printf( "How many values are there? " );
 if( scanf( "%d", &amp;n_values ) != 1 || n_values &lt;= 0 ){ 
@@ -394,7 +362,7 @@ if( scanf( "%d", &amp;n_values ) != 1 || n_values &lt;= 0 ){
 }
 
 /* 
-** 分配内存，用于存储这些值。 
+** Get memory to store them.。 
 */ 
 array = malloc( n_values * sizeof( int ) );
 if( array == NULL ){
@@ -403,7 +371,7 @@ if( array == NULL ){
 }
 
 /*
-** 读取这些数值。
+** Read the numbers.
 */
 for( i = 0; i &lt; n_values; i += 1 ){
 　　　printf( "? " );
@@ -415,44 +383,43 @@ for( i = 0; i &lt; n_values; i += 1 ){
 }
 
 /*
-** 对这些值排序。
+** Sort the values.
 */
 qsort( array, n_values, sizeof( int ), compare_integers );
 
 /*
-** 打印这些值。
+** Print them out.
 */
 for( i = 0; i &lt; n_values; i += 1 )
 　　　printf( "%d\n", array[i] );
 
 /*
-** 释放内存并退出。
+** Free the memory and exit.
 */
  free( array );
  return EXIT_SUCCESS;
 }</code></pre>
 
-    <p class="calibre2"><strong class="calibre3">Procedimiento 11.2 Ordenar una lista de valores enteros</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 11.2 Sort a list of integers</strong></p>
 
     <p class="calibre11">sort.c</p>
 
-    <p class="zw">La memoria utilizada para contener esta lista se asigna dinámicamente, por lo que cuando escribe su
-      programa, no tiene que adivinar cuántos valores el usuario podría querer ordenar. El número de valores que se
-      pueden
-      ordenar solo está limitado por la cantidad de memoria dinámica asignada a este programa. Sin embargo, cuando el
-      programa ordena una lista pequeña, la memoria que realmente asigna es la memoria que realmente necesita, por lo
-      que
-      no hay desperdicio.</p>
+    <p class="zw">Memory to hold the list is dynamically allocated so that when you are writing
+      the program you don't have to guess how many values the user might wish to sort.
+      The only limit on the number of values that can be sorted is the amount of dynamic
+      memory available to the program. When small lists are sorted, though, only as much
+      memory as is actually needed is allocated, so memory is not wasted.</p>
 
-    <p class="zw">Ahora consideremos un programa que lee una cadena. Si no conoce la longitud de la cadena más larga de
-      antemano, no puede usar matrices ordinarias como búfer. Por el contrario, puede utilizar la asignación dinámica de
-      memoria. Cuando encuentre una línea de entrada cuya longitud exceda el búfer, puede reasignar un búfer más grande
-      y
-      cargar el resto de la línea en él. La implementación de esta técnica se reserva como ejercicio de programación.
-    </p>
+    <p class="zw">Now consider a program that reads strings. If you don't know the length of the
+      longest string in advance you cannot use an ordinary array as a buffer. Instead, use
+      dynamically allocated memory. When you find an input line that doesn't fit, reallocate
+      a larger buffer and read the remainder of the line into it. The implementation of this
+      technique is left as a programming exercise.</p>
     <pre class="code"><code class="calibre8">/* 
-** 用动态分配内存制作一个字符串的一份拷贝。注意：调用程序应该负责检查这块内
-** 存是否成功分配！这样做允许调用程序以任何它所希望的方式对错误作出反应。
+** Make a copy of a string in dynamically allocated memory. Note:
+** caller is responsible for checking whether the memory was
+** allocated! This allows the caller to respond to an error in
+** any way they wish.
 */
 #include &lt; stdlib.h&gt;
 #include &lt; string.h&gt;
@@ -463,12 +430,13 @@ strdup( char const *string )
 　　　 char　*new_string;
 
 　　　 /* 
-　　　 ** 请求足够长度的内存，用于存储字符串和它的结尾NUL字节。 
+　　　 ** Ask for enough memory to hold the string and its
+　　　 ** terminating NUL byte.
 　　　 */
 　　　 new_string = malloc( strlen( string ) + 1 );
 
 　　　 /* 
-　　　 ** 如果我们得到内存，就复制字符串。 
+　　　 ** If we got the memory, copy the string.
 　　　 */
 　　　 if( new_string != NULL )
 　　　　　　strcpy( new_string, string );
@@ -476,68 +444,60 @@ strdup( char const *string )
 　　　 return new_string;
 }</code></pre>
 
-    <p class="calibre2"><strong class="calibre3">Procedimiento 11.3 Copiar una cadena</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 11.3 Duplicate a string </strong></p>
 
     <p class="calibre11">strdup.c</p>
 
-    <p class="zw">La entrada se lee en el búfer, una línea a la vez. En este punto, se puede determinar la longitud de
-      la
-      cadena y luego se asigna memoria para almacenar la cadena. Finalmente, la cadena se copia a la nueva memoria. De
-      esta forma, el búfer se puede utilizar para leer la siguiente línea de entrada.</p>
+    <p class="zw">The input is read into this buffer, one line at a time. The length of the string is
+      determined, and then memory is allocated to hold it. Finally, the string is copied into
+      the new memory so the buffer can be used to read the next line.</p>
 
-    <p class="zw">La función denominada strdup en el programa 11.3 devuelve una copia de la cadena de entrada, que se
-      almacena en una memoria asignada dinámicamente. La función primero intenta obtener suficiente memoria para
-      almacenar
-      esta copia. La capacidad de la memoria debe ser un byte más que la longitud de la cadena para almacenar el byte
-      NUL
-      al final de la cadena. Si la memoria se asigna correctamente, la cadena se copia en esta nueva memoria.
-      Finalmente,
-      la función devuelve un puntero a esta memoria. Tenga en cuenta que si la asignación de memoria falla por alguna
-      razón, el valor de new_string será NULL. En este caso, la función devolverá un puntero NULL.</p>
+    <p class="zw">The function in Program 11.3, called strdup, returns a copy of its input string in
+      dynamically allocated memory. The function first tries to obtain enough memory to
+      hold the copy. The additional byte beyond the string length is needed to hold the NUL
+      byte that terminates the string. If the memory was successfully allocated, the string is
+      copied into the new memory. Finally, a pointer to the new memory is returned.
+      Notice that new_string will be NULL if the allocation failed for some reason, so a
+      NULL pointer would be returned in this case.</p>
 
-    <p class="zw">Esta función es muy conveniente y muy útil. De hecho, aunque el estándar no lo menciona, muchos
-      entornos
-      lo utilizan como parte de la biblioteca.</p>
+    <p class="zw">This function is very handy. It is so useful, in fact, that many environments
+      include it as part of the library even though the Standard does not mention it.</p>
 
-    <p class="zw">Nuestro último ejemplo ilustra cómo puede usar la asignación de memoria dinámica para eliminar el
-      desperdicio de espacio de memoria causado por el uso de registros variantes. El programa 11.4 es una versión
-      modificada del ejemplo del sistema de inventario en el Capítulo 10. El procedimiento 11.4a contiene una
-      declaración
-      de registros de inventario.</p>
+    <p class="zw">Our final example illustrates how you can use dynamic memory allocation to
+      eliminate wasted memory with variant records. Program 11.4 is a modification of the
+      inventory system example from Chapter 10. Program 11.4a contains the declarations
+      for the inventory records.</p>
 
-    <p class="zw">Como antes, el sistema de inventario debe procesar dos tipos de registros, uno para piezas y otro para
-      ensamblaje. La primera estructura guarda la información especial de la pieza (aquí solo se muestra una parte de
-      esta
-      estructura) y la segunda estructura guarda la información especial del conjunto. La última declaración se utiliza
-      para los registros de inventario y contiene información común sobre piezas y conjuntos y una pieza variante.</p>
+    <p class="zw">As before, the inventory system must handle two types of records, those for
+      parts and those for subassemblies. The first structure holds the information specific to
+      a part (only a portion of this structure is shown), and the second holds information
+      about subassemblies. The last declaration is for the inventory record. It contains some
+      common data needed for both subassemblies and parts and a variant portion.</p>
 
-    <p class="zw">Dado que los diferentes campos de la pieza variante tienen diferentes longitudes (de hecho, la
-      longitud
-      del registro de ensamblaje es variable), la unión contiene un puntero a la estructura en lugar de la estructura en
-      sí. La asignación dinámica permite que el programa cree un registro de inventario, el tamaño de la memoria que
-      utiliza es la longitud del artículo que se va a almacenar, para que la memoria no se desperdicie.</p>
+    <p class="zw">Because the different fields in the variant part are different sizes (in fact, the
+      subassembly record is variable size), the union contains pointers to structures rather
+      than the structures. Dynamic allocation lets the program create an inventory record
+      that is the correct size for the item being stored, so there is no wasted memory.</p>
 
-    <p class="zw">El programa 11.4b es una función que crea un registro de inventario para cada ensamblaje. Esta tarea
-      depende del número de piezas diferentes contenidas en el ensamblaje, por lo que este valor se pasa a la función
-      como
-      parámetro.</p>
+    <p class="zw">Program 11.4b is a function that creates an inventory record for a subassembly.
+      This task depends on the number of different parts the subassembly contains, so this
+      value is passed as an argument.</p>
 
-    <p class="zw">Esta función asigna memoria para tres cosas: registros de inventario, estructura de ensamblaje y una
-      matriz de piezas en la estructura de ensamblaje. Si alguna de estas asignaciones falla, se liberará toda la
-      memoria
-      asignada y la función devuelve un puntero NULL. De lo contrario, los campos type e info.subassy-&gt; n_parts se
-      inicializan y la función devuelve un puntero al registro.</p>
+    <p class="zw">This function allocates three things: the inventory record, the subassembly
+      structure, and the array of parts in the subassembly structure. If any of these
+      allocations fails, any memory that was already obtained is freed and a NULL pointer is
+      returned. Otherwise, the type and info.subassy-&gt;n_parts fields are initialized and a
+      pointer to the record is returned.</p>
 
-    <p class="zw">La asignación de memoria para los registros de inventario de piezas es más fácil que para los
-      registros
-      de inventario de ensamblaje porque solo requiere dos asignaciones de memoria. Por lo tanto, esta función no se
-      explica aquí.</p>
+    <p class="zw">Obtaining memory for an inventory record to store a part is a little easier than
+      for a subassembly because only two allocations are needed. This function is therefore
+      not illustrated here.</p>
     <pre class="code"><code class="calibre8">/* 
-** 存货记录的声明。
+** Declarations for the inventory record.
 */
 
 /*
-** 包含零件专用信息的结构。 
+** Structure that contains information about a part.
 */
 typedef struct　{
 　　　　　int　cost;　　
@@ -546,7 +506,7 @@ typedef struct　{
 } Partinfo;
 
 /*　
-** 存储装配件专用信息的结构。
+** Structure to hold information about a subassembly.
 */
 typedef　struct　{
 　　　　　　int　n_parts;
@@ -557,7 +517,7 @@ struct　SUBASSYPART {
 } Subassyinfo;
 
 /* 
-** 存货记录结构，它是一个变体记录。
+** Structure for an inventory record, which is a variant record.
 */
 typedef　struct　{
 char　partno[10];
@@ -569,11 +529,11 @@ union　　 {
 } info;
 } Invrec;</code></pre>
 
-    <p class="calibre2"><strong class="calibre3">Procedimiento 11.4a Declaración del sistema de inventario</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 11.4a Inventory system declarations</strong></p>
 
     <p class="calibre11">inventor.h</p>
     <pre class="code"><code class="calibre8">/* 
-** 用于创建SUBASSEMBLY(装配件)存货记录的函数。
+** Function to create a SUBASSEMBLY inventory record.
 */
 
 #include &lt; stdlib.h&gt;
@@ -586,24 +546,25 @@ create_subassy_record( int n_parts )
 Invrec　*new_rec; 
 
 　　/* 
-　　** 试图为Invrec部分分配内存。
+　　** Try to get memory for the Invrec portion.
 　　*/
 　　new_rec = malloc( sizeof( Invrec ) );
 　　if( new_rec != NULL ){
 　　/* 
-　　** 内存分配成功，现在存储SUBASSYINFO部分。
+　　** That worked; now get the SUBASSYINFO portion.
 　　*/
 　　　 new_rec-&gt;info.subassy =
 　　　　　 malloc( sizeof( Subassyinfo ) );
 　　　if( new_rec-&gt;info.subassy != NULL ){
 　　/* 
-　 ** 为零件获取一个足够大的数组。
+　 ** Get an array big enough for the parts.
 　 */
 　　　new_rec-&gt;info.subassy-&gt;part = malloc(
 　　　　　n_parts * sizeof( struct SUBASSYPART ) );
 　　　if( new_rec-&gt;info.subassy-&gt;part != NULL ){
 　　/* 
-　　** 获取内存，填充我们已知道值的字段，然后返回。 
+　　** Got the memory; fill in the fields
+　　** whose values we know and return.
 　　*/
 　　　　new_rec-&gt;type = SUBASSY;
 　　　　new_rec-&gt;info.subassy-&gt;n_parts =
@@ -612,7 +573,7 @@ Invrec　*new_rec;
 　　　}
 
 　　/* 
-　　** 内存已用完，释放我们原先分配的内存。
+　　** Out of memory: free what we've got so far.
 　　*/
 　　　free( new_rec-&gt;info.subassy );
 　　}
@@ -621,21 +582,20 @@ Invrec　*new_rec;
 return NULL;
 }</code></pre>
 
-    <p class="calibre2"><strong class="calibre3">Procedimiento 11.4b crear registros de variantes de forma
-        dinámica</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 11.4b Dynamic creation of a variant record</strong></p>
 
     <p class="calibre11">invcreat.c</p>
 
-    <p class="zw">El programa 11.4c contiene la última parte de este ejemplo: una función para destruir registros de
-      inventario. Esta función es aplicable a ambos tipos de registros de inventario. Utiliza una instrucción de cambio
-      para determinar el tipo de registro que se le pasa y libera toda la memoria asignada dinámicamente a todos los
-      campos de este registro. Finalmente, este registro se elimina.</p>
+    <p class="zw">Program 11.4c contains the last part of this example: a function that destroys
+      inventory records. This function works for either type of inventory record. It uses a
+      switch statement to determine the type of record it was given and then frees all
+      dynamically allocated fields in the record. Finally, the record is deleted.</p>
 
-    <p class="zw">En este caso, un error común es liberar el registro antes de que se libere la memoria señalada por el
-      campo en el registro. Después de que se publique el registro, es posible que no pueda acceder de manera segura a
-      ninguno de los campos que contiene.</p>
+    <p class="zw">A common mistake made in situations like this one is to free the record before
+      freeing the memory pointed to by fields in the record. After the record has been freed,
+      you may no longer safely access any of the fields that it contains.</p>
     <pre class="code"><code class="calibre8">/* 
-** 释放存货记录的函数。
+** Function to discard an inventory record.
 */
 
 #include &lt;stdlib.h&gt;
@@ -645,7 +605,7 @@ void
 discard_inventory_record( Invrec *record )
 {
 　　 /* 
-　　 ** 删除记录中的变体部分　　
+　　 ** Delete the variant parts of the record
 　　 */
 　　 switch( record-&gt;type ){
 　　 case SUBASSY:
@@ -659,159 +619,155 @@ discard_inventory_record( Invrec *record )
 　　 }
 
 　　 /* 
-　　 ** 删除记录的主体部分 
+　　 ** Delete the main part of the record
 　　 */
 　　 free( record );
-　　 }</code></pre>
+}</code></pre>
 
-    <p class="calibre2"><strong class="calibre3">Procedimiento 11.4c Destrucción de registros variantes</strong></p>
+    <p class="calibre2"><strong class="calibre3">Program 11.4c Destruction of a variant record</strong></p>
 
     <p class="calibre11">invdelet.c</p>
 
-    <p class="zw">Aunque el siguiente fragmento de código no parece muy claro de un vistazo, su eficiencia es
-      ligeramente
-      superior a la del programa 11.4c.</p>
+    <p class="zw">Although it is a little less obvious, the following code fragment is a slightly
+      more efficient implementation of Program 11.4c.</p>
 
     <p class="calibre13"><img alt="" src="../images/00240.gif" class="calibre14"></p>
 
-    <p class="zw">Este código no distingue entre piezas y conjuntos al publicar la parte variante del registro.
-      Cualquier
-      miembro de la unión puede pasar a la función libre, porque a esta última no le importa el tipo de contenido al que
-      apunta el puntero.</p>
+    <p class="zw">This code does not distinguish between subassemblies and parts when freeing the
+      variant part of the record. Either member of the union can be used, as free does not
+      care which type of pointer it gets.</p>
 
-    <h2 id="nav_point_236" class="calibre24">11.7 Resumen</h2>
+    <h2 id="nav_point_236" class="calibre24">11.7 Summary</h2>
 
-    <p class="zw">Cuando se declara la matriz, se debe conocer su longitud en el momento de la compilación. La
-      asignación
-      de memoria dinámica permite al programa asignar espacio de memoria para una matriz cuya longitud solo se conoce en
-      tiempo de ejecución.</p>
+    <p class="zw">When an array is declared, its size must be known at compile time. Dynamic allocation
+      allows a program to create space for an array whose size isn't known until runtime.</p>
 
-    <p class="zw">Tanto las funciones malloc como calloc se utilizan para asignar dinámicamente un bloque de memoria y
-      devolver un puntero al bloque de memoria. El parámetro de malloc es el número de bytes de memoria que se
-      asignarán.
-      La diferencia es que los parámetros de calloc son la cantidad de elementos que necesita asignar y la longitud de
-      cada elemento. La función calloc inicializa la memoria a cero antes de regresar, y la memoria no se inicializa de
-      ninguna manera cuando regresa la función malloc. Llamar a la función de reasignación puede cambiar el tamaño de
-      una
-      pieza de memoria que se ha asignado dinámicamente. Una forma posible de aumentar el tamaño de un bloque de memoria
-      es copiar todos los datos del bloque de memoria original en un bloque de memoria nuevo y más grande. Cuando un
-      bloque de memoria asignado dinámicamente ya no está en uso, se debe llamar a la función libre para devolverlo al
-      grupo de memoria disponible. Una vez que se libera la memoria, ya no se puede acceder a ella.</p>
+    <p class="zw">The malloc and calloc functions both allocate memory and return a pointer to
+      it. The argument to malloc is the number of bytes of memory needed. In contrast,
+      calloc requires the number of elements you want and the size of each element. calloc
+      initializes the memory to zero before returning, whereas malloc leaves the memory
+      uninitialized. The realloc function is called to change the size of an existing block of
+      dynamically allocated memory. Increases in size may be accomplished by copying the
+      data from the existing block to a new, larger block. When a dynamically allocated
+      block is no longer needed, free is called to return it to the pool of available memory.
+      Memory must not be accessed after it has been freed.</p>
 
-    <p class="zw">Si la asignación de memoria solicitada falla, las funciones malloc, calloc y realloc devolverán un
-      puntero NULL. Las consecuencias de acceder incorrectamente al área fuera de la memoria asignada son similares a
-      acceder a una matriz fuera de los límites, pero este error también puede destruir la reserva de memoria disponible
-      y
-      hacer que el programa falle. Si no se devuelve un puntero de una función anterior malloc, calloc o realloc, no se
-      puede pasar como parámetro a la función libre. No se puede simplemente liberar parte de un recuerdo.</p>
+    <p class="zw">The pointer returned by malloc, calloc, and realloc will be NULL if the
+      requested allocation could not be performed. Erroneously accessing memory outside
+      of an allocated block may cause the same errors as accessing memory outside of an
+      array, but can also corrupt the pool of available memory and lead to a program failure.
+      You may not pass a pointer to free that was not obtained from an earlier call to malloc,
+      calloc, or realloc. Nor may you free a portion of a block.</p>
 
-    <p class="zw">La pérdida de memoria significa que después de que la memoria se asigna dinámicamente, no se libera
-      cuando ya no se usa. Las pérdidas de memoria aumentarán el tamaño del programa y pueden provocar que el programa o
-      el sistema se bloqueen.</p>
+    <p class="zw">A memory leak is memory that has been dynamically allocated but has not
+      been freed and is no longer in use. Memory leaks increase the size of the program,
+      and may lead to a crash of the program or the system.</p>
 
-    <h2 id="nav_point_237" class="calibre24">11.8 Resumen de advertencias</h2>
+    <h2 id="nav_point_237" class="calibre24">11.8 Summary of Cautions</h2>
 
-    <p class="zw">1. No compruebe si el puntero devuelto por la función malloc es NULL.</p>
+    <p class="zw">1. Not checking the pointer returned from malloc for NULL (page 307).</p>
 
-    <p class="zw">2. Acceda a áreas fuera de la memoria asignada dinámicamente.</p>
+    <p class="zw">2. Accessing outside the bounds of dynamically allocated memory (page 307).</p>
 
-    <p class="zw">3. Pase un puntero a la función libre que no es devuelta por la función malloc.</p>
+    <p class="zw">3. Passing a pointer to free that did not originally come from malloc (page 309).</p>
 
-    <p class="zw">4. Acceda a él después de que se libere la memoria dinámica.</p>
+    <p class="zw">4. Accessing dynamic memory after it has been freed (page 309).</p>
 
-    <h2 id="nav_point_238" class="calibre24">11.9 Resumen de consejos de programación</h2>
+    <h2 id="nav_point_238" class="calibre24">11.9 Summary of Programming Tips</h2>
 
-    <p class="zw">1. La asignación de memoria dinámica ayuda a eliminar las limitaciones que existen dentro del
-      programa.
-    </p>
+    <p class="zw">1. Dynamic allocation helps eliminate built-in limitations in the program (page 303).</p>
 
-    <p class="zw">2. Utilice sizeof para calcular la longitud del tipo de datos para mejorar la portabilidad del
-      programa.
-    </p>
+    <p class="zw">2. Using sizeof to compute the size of data types enhances portability (page 306).</p>
 
-    <h2 id="nav_point_239" class="calibre24">11.10 Problema</h2>
+    <h2 id="nav_point_239" class="calibre24">11.10 Questions</h2>
 
-    <p class="zw">1. En su sistema, ¿cuál es la longitud máxima de la matriz estática que puede declarar? Con la
-      asignación de memoria dinámica, ¿cuál es el bloque de memoria máximo que puede obtener?</p>
+    <p class="zw">1. What is the largest static array that you can declare on your system? The largest
+      dynamically allocated piece of memory?</p>
 
-    <p class="zw">2. Cuando solicita asignar 500 bytes de memoria a la vez, ¿qué tan grande es la cantidad total de
-      memoria asignada dinámicamente que realmente obtiene? ¿Qué pasa cuando solicita asignar 5000 bytes a la vez? ¿Hay
-      alguna diferencia entre ellos? Si es así, ¿cómo se explica?</p>
+    <p class="zw">2. What is the total amount of memory that you can dynamically allocate on your
+      system when you ask for it 500 bytes at a time? When you ask for it 5000 bytes at a
+      time? Is there a difference? If so, how do you explain it?</p>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">3. En un programa que lee una cadena de un
-      archivo, ¿hay algún valor que pueda usarse lógicamente como la longitud del búfer de entrada?</p>
+    <p class="zw hand">3. In a program that reads strings from a
+      file, is there any value that can logically be
+      used for the size of the input buffer?</p>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">4. Algunos compiladores de C proporcionan una
-      función llamada alloca, que se diferencia de la función malloc en que asigna memoria en la pila. ¿Cuáles son las
-      ventajas y desventajas de este tipo de asignación?</p>
+    <p class="zw hand">4. Some C implementations provide a function
+      called alloca, which differs from
+      malloc in that it allocates memory on the stack. What are the advantages and
+      disadvantages of this type of allocation?</p>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">5. El siguiente programa se utiliza para leer
-      números enteros. El rango de números enteros está entre 1 y el tamaño leído de la entrada estándar. Devuelve el
-      número de ocurrencias de cada valor. Este programa contiene varios errores, ¿puedes encontrarlos?</p>
+    <p class="zw hand">5. The following program, which is supposed
+      to read integers in the range one
+      through size from the standard input and return counts of how many times each
+      value occurs, contains several errors. What are they?</p>
+    <pre class="code"><code class="calibre8">#include &lt;stdlib.h&gt;
 
-    <p class="calibre13"><img alt="" src="../images/00241.gif" width="40%" class="calibre33"></p>
-    <pre class="code"><code class="calibre8">/*
-**获得足够的内存来容纳计数。
-*/
-arry = (int *)malloc ( size * 2)
+int *
+frequency( int size )
+{
+　　 int   *array;
+　　 int   i;
 
-/*
-**调整指针，让它后退一个整型位置，这样我们就可以使用范围1-size的下标。
-*/
-arry - = 1;
+　　 /*
+　　 ** Get enough memory to hold the counts.
+　　 */
+　　 array = (int *)malloc( size * 2);
 
-/*
-**把各个元素值清零。
-for ( i =0; i &lt;=size; i +=1 )
-　　　　　array[i]= 0 ;
+　　 /*
+　　 ** Adjust the pointer back one integer so we
+　　 ** can use subscripts in the range 1 – size.
+　　 */
+　　 array -= 1;
 
-/*
-**计数每个值出现的次数，然后还回结果。
-*/ 
-while(scanf( *%d*, &amp;i ) = = )　)
-　　　　arry[ i ]　+=1;
+　　 /*
+　　 ** Clear the values to zero
+　　 */
+　　 for ( i = 0; i &lt;=size; i +=1 )
+　　　　　array[i] = 0;
 
-　　　　free(arry);
-　　　　return arry;
+　　 /*
+　　 ** Count how many times each value appears,
+　　 ** then return the answers.
+　　 */ 
+　　 while( scanf( "%d", &amp;i ) == 1 )
+　　　　array[ i ]　+=1;
+
+　　 free( array );
+　　 return array;
 }</code></pre>
 
-    <p class="zw">6. Suponga que necesita escribir un programa y desea minimizar el uso de la pila. ¿Puede ayudarlo la
-      asignación de memoria dinámica? ¿Qué pasa con el uso de datos escalares?</p>
+    <p class="zw">6. Suppose you are writing a program and wish to minimize the amount of stack 
+      space it uses. Will allocating arrays dynamically help? How about scalars?</p>
 
-    <p class="zw">7. En el programa 11.4b, ¿cuáles son las consecuencias de eliminar dos llamadas de función libres?</p>
+    <p class="zw">7. What would be the effect of deleting the two calls to free in Program 11.4b?</p>
 
-    <h2 id="nav_point_240" class="calibre24">11.11 Ejercicios de programación</h2>
+    <h2 id="nav_point_240" class="calibre24">11.11 Programming Exercises</h2>
 
-    <p class="zw">★ 1. Intente escribir la función calloc usted mismo. La función malloc se usa dentro de la función
-      para
-      obtener memoria.</p>
+    <p class="zw">★ 1. Write your own version of the calloc function, using malloc to obtain memory.</p>
 
-    <p class="zw"><img alt="" src="../images/00005.jpeg" class="calibre25">★★ 2. Escriba una función que lea una lista
-      de
-      números enteros de la entrada estándar, almacene estos valores en una matriz asignada dinámicamente y devuelva
-      esta
-      matriz. La función juzga si la lista de entrada ha terminado observando EOF. El primer número de la matriz es el
-      número de valores contenidos en la matriz, seguido de estos valores enteros.</p>
+    <p class="zw hand">★★ 2. Write a function that reads a list of integers from the standard input and returns 
+      the values in a dynamically allocated array. The end of the input list is determined 
+      by watching for EOF. The first number in the array should be a count of how many 
+      values the array contains. This number is followed by the values.</p>
 
-    <p class="zw">★★★ 3. Escriba una función que lea una cadena de la entrada estándar, copie la cadena en la memoria
-      asignada dinámicamente y devuelva una copia de la cadena. ¡Esta función no debería imponer ninguna restricción a
-      la
-      longitud de la cadena de lectura!</p>
+    <p class="zw">★★★ 3. Write a function that reads a string from the standard input and returns a copy of 
+      the string in dynamically allocated memory. The function may not impose any 
+      limit on the size of the string being read!</p>
 
-    <p class="zw">★★★ 4. Escriba un programa para crear una estructura de datos como se muestra en la siguiente figura.
-      Los últimos tres objetos son todos estructuras asignadas dinámicamente. El primer objeto puede ser un puntero
-      estático a la estructura. No es necesario que este programa sea demasiado completo; discutiremos esta estructura
-      de
-      datos en el próximo capítulo.</p>
+    <p class="zw">★★★ 4. Write a program to create the data structure in the following diagram. The last 
+      three objects are structures which are dynamically allocated. The first object, which 
+      may be static, is a pointer to a structure. You do not need to make this program 
+      general—we will discuss this data structure in the next chapter.</p>
 
     <p class="tu"><img alt="" src="../images/00242.jpeg" class="calibre14"></p>
     <hr class="calibre4">
 
-    <p class="calibre2"><a id="anchor111" href="#ac111" class="calibre5">[1]</a> Tenga en cuenta que el tipo de este
-      parámetro es size_t, que es un tipo sin firmar, definido en stdlib.h.</p>
+    <p class="calibre2"><a id="anchor111" href="#ac111" class="calibre5">[1]</a> Note that the type of this argument is
+      size_t, which is an unsigned type. It is defined in stdlib.h.</p>
 
-    <p class="calibre2"><a id="anchor112" href="#ac112" class="calibre5">[2] La</a> macro #define se describe en detalle
-      en el Capítulo 14.</p>
+    <p class="calibre2"><a id="anchor112" href="#ac112" class="calibre5">[2]</a> #define macros are described in detail
+      in Chapter 14.</p>
 
   </div>
 </body>
