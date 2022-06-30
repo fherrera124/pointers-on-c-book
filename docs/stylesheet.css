@@ -146,9 +146,11 @@ td {
 }
 
 .calibre14 {
-  width: 60%;
-  min-width: 300px;
-  /*auto*/
+  width: auto;
+}
+
+.large {
+  width: 100%;
 }
 
 .calibre15 {
@@ -315,8 +317,6 @@ pre {
   font-family: Courier, Menlo, Monaco, Consolas, monospace;
   font-size: 0.75em;
   margin: 1.3em 0;
-
-
   /*#000 solid 1px;*/
   border-radius: 5px;
   /*added*/
@@ -324,8 +324,6 @@ pre {
   /*added*/
   overflow-x: auto;
 }
-
-
 
 .di_1ji_wu_xu_lie_biao {
   display: list-item;
@@ -429,11 +427,37 @@ ol.roman>li:before {
   text-align: right;
 }
 
-ol > li::marker {
+ol>li::marker {
   font-weight: bold;
 }
 
 .hand:before {
-  content:url('images/00005.jpeg');
+  content: url('images/00005.jpeg');
   margin-left: -1.4em;
+}
+
+.two-columns {
+  font-size: medium;
+  width: 80%;
+  padding-left: 3em;
+}
+
+.left {
+  float: left;
+  width: 40%;
+  margin: 1px;
+}
+
+.right {
+  float: left;
+  width: 45%;
+  margin: 1px;
+}
+
+.clear {
+  clear: both;
+}
+
+.line {
+  margin: 10px 0;
 }
